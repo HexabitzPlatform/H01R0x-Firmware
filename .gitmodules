@@ -2,3 +2,7 @@
 	path = BOS
 	url = https://bitbucket.org/hexabitz/bos
 	branch = master
+[submodule "thirdparty"]
+	path = thirdparty
+	url = https://bitbucket.org/hexabitz/thirdparty
+	branch = master
