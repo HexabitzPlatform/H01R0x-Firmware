@@ -9,11 +9,8 @@
 		Required MCU resources : 
 		
 			>> USARTs 1,2,3,4,5,6 for module ports.
-			>> Timer 2 for RGB LED periodic timer.
-			>> Timer 3 for RGB Red LED dutycycle.
-			>> Timer 14 for RGB Green LED dutycycle.
-			>> Timer 16 for RGB Blue LED dutycycle.
-			>> GPIOB 0,1,2 for RGB LED.
+			>> Timer 3 (Ch2-Ch4) for RGB PWM.
+			>> GPIOB 0, GPIOB 1, GPIOA 7 for RGB LED.
 			
 */
 	
@@ -31,34 +28,25 @@ UART_HandleTypeDef huart6;
 
 
 /* Private variables ---------------------------------------------------------*/
-#ifdef H01R0
-TIM_HandleTypeDef htim2;
+
+
 TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
 uint8_t globalRed = 0, globalGreen = 0, globalBlue = 0;
-#endif
-#ifdef H01R1
-TIM_HandleTypeDef htim3;
-#endif
-uint8_t RGB_LED_State = 0;
-uint8_t RGB_LED_Intensity_Old = 0;
-uint8_t rgbLedMode = 0;
-uint8_t rgbRed = 0, rgbGreen = 0, rgbBlue = 0, rgbColor = 0; 
+
+
+uint8_t RGB_LED_State = 0, rgbLedMode = 0, rgbColor = 0, rgbRed = 0, rgbGreen = 0, rgbBlue = 0; 
 uint32_t rgbPeriod = 0, rgbDC = 0; int16_t rgbCount = 0;
 TaskHandle_t RGBledTaskHandle = NULL;
 
 /* Private function prototypes -----------------------------------------------*/	
-#ifdef H01R0
-void TIM2_Init(void);
-void TIM3_Init(void);
-void TIM14_Init(void);
-void TIM16_Init(void);
-H01R0_Status RGB_LED_intensity(uint8_t intensityRed, uint8_t intensityGreen, uint8_t intensityBlue);
-#endif
-#ifdef H01R1
-void TIM3_Init(void);
-#endif
+
+static void RGBpulse(uint8_t mode);
+static void RGBsweepBasic(void);
+static void RGBsweepFine(void);
+static void RGBdim(uint8_t mode);
+static void TIM3_Init(void);
+
 
 /* Create CLI commands --------------------------------------------------------*/
 
@@ -237,208 +225,8 @@ H01R0_Status H01R0_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8
 
 /*-----------------------------------------------------------*/
 
-#ifdef H01R0
-/* TIM2 init function - LED periodic 1 msec timebase */
-void TIM2_Init(void)
-{
-	TIM_ClockConfigTypeDef sClockSourceConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-	
-	/* Peripheral clock enable */
-	__TIM2_CLK_ENABLE();
-
-	/* Peripheral interrupt init*/
-	HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(TIM2_IRQn);
-
-	/* Timer base configuration */
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 48;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1000;
-	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_Base_Init(&htim2);
-	
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig);
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
-}
-/*-----------------------------------------------------------*/
-/* TIM3 init function - Red LED dutycycle */
-void TIM3_Init(void)
-{
-	TIM_ClockConfigTypeDef sClockSourceConfig;
-	TIM_MasterConfigTypeDef sMasterConfig;
-	
-	/* Peripheral clock enable */
-	__TIM3_CLK_ENABLE();
-
-	/* Peripheral interrupt init*/
-	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(TIM3_IRQn);
-
-	/* Timer base configuration */
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 48;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 0;
-	htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_Base_Init(&htim3);
-	
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig);
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
-}
-/* TIM14 init function - Green LED dutycycle */
-void TIM14_Init(void)
-{
-	/* Peripheral clock enable */
-	__TIM14_CLK_ENABLE();
-
-	/* Peripheral interrupt init*/
-	HAL_NVIC_SetPriority(TIM14_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(TIM14_IRQn);
-
-	/* Timer base configuration */
-  htim14.Instance = TIM14;
-  htim14.Init.Prescaler = 48;
-  htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 0;
-	htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_Base_Init(&htim14);
-}
-/* TIM16 init function - Red LED dutycycle */
-void TIM16_Init(void)
-{
-	/* Peripheral clock enable */
-	__TIM16_CLK_ENABLE();
-
-	/* Peripheral interrupt init*/
-	HAL_NVIC_SetPriority(TIM16_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(TIM16_IRQn);
-
-	/* Timer base configuration */
-  htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 48;
-  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 0;
-	htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim16.Init.RepetitionCounter = 0;
-  HAL_TIM_Base_Init(&htim16);
-}
-/*-----------------------------------------------------------*/
-/* This function handles TIM2 global interrupt (LED periodic base).
-*/
-void TIM2_IRQHandler(void)
-{	
-	HAL_TIM_IRQHandler(&htim2);
-	
-	if (globalRed) {
-		HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_SET);
-		HAL_TIM_Base_Start_IT(&htim3);
-	}
-	if (globalGreen) {
-		HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_SET);
-		HAL_TIM_Base_Start_IT(&htim14);
-	}
-	if (globalBlue) {
-		HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_SET);
-		HAL_TIM_Base_Start_IT(&htim16);
-	}
-}
-/*-----------------------------------------------------------*/
-/* This function handles TIM3 global interrupt (Red LED dutycycle).
-*/
-void TIM3_IRQHandler(void)
-{	
-	HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_RESET);
-	
-	HAL_TIM_IRQHandler(&htim3);
-	
-	HAL_TIM_Base_Stop_IT(&htim3);
-}
-/* This function handles TIM14 global interrupt (Green LED dutycycle).
-*/
-void TIM14_IRQHandler(void)
-{	
-	HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_RESET);
-	
-	HAL_TIM_IRQHandler(&htim14);
-	
-	HAL_TIM_Base_Stop_IT(&htim14);
-}
-/* This function handles TIM16 global interrupt (Blue LED dutycycle).
-*/
-void TIM16_IRQHandler(void)
-{	
-	HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_RESET);
-	
-	HAL_TIM_IRQHandler(&htim16);
-	
-	HAL_TIM_Base_Stop_IT(&htim16);
-}
-/*-----------------------------------------------------------*/
-/* Calculate LED intensity dutycycle (1-100%) and restart the timers.
-*/
-H01R0_Status RGB_LED_intensity(uint8_t intensityRed, uint8_t intensityGreen, uint8_t intensityBlue)
-{
-	H01R0_Status result = H01R0_OK;
-	
-	if (globalRed && (intensityRed > 0) && (intensityRed < 100)) 
-	{
-		/* Periodic timer */
-		HAL_TIM_Base_Start_IT(&htim2);
-		/* Dutycycle (percentage of 1 msec) */
-		htim3.Init.Period = intensityRed * 10;		
-		HAL_TIM_Base_Init(&htim3);
-		HAL_TIM_Base_Start_IT(&htim3);
-	} 
-	else if (globalRed && intensityRed != 100) {
-		result = H01R0_ERR_WrongIntensity;
-		return result;
-	}
-
-	if (globalGreen && (intensityGreen > 0) && (intensityGreen < 100)) 
-	{
-		/* Periodic timer */
-		HAL_TIM_Base_Start_IT(&htim2);
-		/* Dutycycle (percentage of 1 msec) */
-		htim14.Init.Period = intensityGreen * 10;		
-		HAL_TIM_Base_Init(&htim14);
-		HAL_TIM_Base_Start_IT(&htim14);
-	} 
-	else if (globalGreen && intensityGreen != 100) {
-		result = H01R0_ERR_WrongIntensity;
-		return result;
-	}
-
-	if (globalBlue && (intensityBlue > 0) && (intensityBlue < 100)) 
-	{
-		/* Periodic timer */
-		HAL_TIM_Base_Start_IT(&htim2);
-		/* Dutycycle (percentage of 1 msec) */
-		htim16.Init.Period = intensityBlue * 10;		
-		HAL_TIM_Base_Init(&htim16);
-		HAL_TIM_Base_Start_IT(&htim16);
-	} 
-	else if (globalBlue && intensityBlue != 100) {
-		result = H01R0_ERR_WrongIntensity;
-		return result;
-	}
-	
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
 /* RGBledTask function */
-void RGBledTask(void * argument)
+static void RGBledTask(void * argument)
 {
 
   /* Infinite loop */
@@ -447,51 +235,51 @@ void RGBledTask(void * argument)
 		/* Switch RGB LED according to its mode */
 		switch (rgbLedMode)
 		{
-			case RGB_pulseRGB :			
+			case RGB_PULSE_RGB :			
 				RGBpulse(rgbLedMode);
 				break;
 			
-			case RGB_pulseColor :
+			case RGB_PULSE_COLOR :
 				RGBpulse(rgbLedMode);
 				break;
 			
-			case RGB_sweepBasic :
+			case RGB_SWEEP_BASIC :
 				RGBsweepBasic();
 				break;
 
-			case RGB_sweepFine :
+			case RGB_SWEEP_FINE :
 				RGBsweepFine();
 				break;
 			
-			case RGB_dimUp :
+			case RGB_DIM_UP :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimUpWait :
+			case RGB_DIM_UP_WAIT :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimDown :
+			case RGB_DIM_DOWN :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimDownWait :
+			case RGB_DIM_DOWN_WAIT :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimUpDown :
+			case RGB_DIM_UP_DOWN :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimDownUp :
+			case RGB_DIM_DOWN_UP :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimUpDownWait :
+			case RGB_DIM_UP_DOWN_WAIT :
 				RGBdim(rgbLedMode);
 				break;
 			
-			case RGB_dimDownUpWait :
+			case RGB_DIM_DOWN_UP_WAIT :
 				RGBdim(rgbLedMode);
 				break;
 			
@@ -505,12 +293,11 @@ void RGBledTask(void * argument)
 
 }
 
-#endif
 /*-----------------------------------------------------------*/
-#ifdef H01R1
+
 /* TIM3 init function - Front-end RED LED PWM Timer 16-bit 
 */
-void TIM3_Init(void)
+static void TIM3_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -521,22 +308,29 @@ void TIM3_Init(void)
   __TIM3_CLK_ENABLE();
 	
 	/**TIM3 GPIO Configuration    
-	PB0     ------> TIM3_CH3 
 	*/
-	GPIO_InitStruct.Pin = GPIO_PIN_0;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Pin = _RGB_RED_PIN;
 	GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	HAL_GPIO_Init(_RGB_RED_PORT, &GPIO_InitStruct);
 
+	GPIO_InitStruct.Pin = _RGB_GREEN_PIN;
+	GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
+	HAL_GPIO_Init(_RGB_GREEN_PORT, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = _RGB_BLUE_PIN;
+	GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
+	HAL_GPIO_Init(_RGB_BLUE_PORT, &GPIO_InitStruct);
+	
 	/* Peripheral interrupt init */
 	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
-	/* Timer base configuration */
+	/* Timer base configuration - 1 MHz */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 48;
+  htim3.Init.Prescaler = (uint32_t)(HAL_RCC_GetSysClockFreq()/1000000);
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 0;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -551,330 +345,55 @@ void TIM3_Init(void)
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
 
+	/* Timer PWM channels */
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
+  HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, _RGB_RED_TIM_CH);
+	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, _RGB_GREEN_TIM_CH);
+	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, _RGB_BLUE_TIM_CH);
 
 }
+
 /*-----------------------------------------------------------*/
 /* --- Load and start red LED PWM ---
 			Inputs:
-					period Signal period in usec.
-					width Width of 'on' signal in usec.
+					red Duty cycle of red LED (0-255).
+					green Duty cycle of green LED (0-255).
+					blue Duty cycle of blue LED (0-255).
+					intensity RGB LED intensity (0-100).
 */
-void startPWM_RED(uint16_t period, uint16_t width)
+static H01R0_Status startPWM(uint8_t red, uint8_t blue, uint8_t green, uint8_t intensity)
 {
-		htim3.Instance->CCR3 = width;
-	
-		htim3.Init.Period = period;
-		HAL_TIM_Base_Init(&htim3);
-	
-		HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);		
-}
-/*-----------------------------------------------------------*/
-/* This function handles TIM3 global interrupt.
-*/
-void TIM3_IRQHandler(void)
-{	
-		HAL_TIM_IRQHandler(&htim3);
-}
-#endif	
+	htim3.Instance->CCR2 = (float)intensity * ((float)red/255.0f) * 65535.0f;
+	htim3.Instance->CCR3 = (float)intensity * ((float)green/255.0f) * 65535.0f;
+	htim3.Instance->CCR4 = (float)intensity * ((float)blue/255.0f) * 65535.0f;
 
-/* -----------------------------------------------------------------------
-	|																APIs	 																 	|
-   ----------------------------------------------------------------------- 
-*/
-#ifdef H01R0
-/* --- H01R0 module initialization. 
-*/
-void H01R0_Init(void)
-{
-	GPIO_InitTypeDef GPIO_InitStruct;
+	htim3.Init.Period = (uint32_t) (1000000/RGB_PWM_FREQ);
 	
-	/* Peripheral clock enable */
-	__GPIOB_CLK_ENABLE();
+	if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+		return	H01R0_ERROR;
+
+	if (HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3) != HAL_OK)	
+		return	H01R0_ERROR;
 	
-	/* RGB LED GPIO */
-	GPIO_InitStruct.Pin = _RGB_LED_RED | _RGB_LED_GREEN | _RGB_LED_BLUE;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-	HAL_GPIO_Init(_RGB_LED_PORT, &GPIO_InitStruct);
-	
-	/* Array ports */
-  MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
-  MX_USART4_UART_Init();
-  MX_USART5_UART_Init();
-  MX_USART6_UART_Init();
-	
-	/* RGB LED Periodic timer */
-	TIM2_Init();
-	/* Red LED dutycycle */
-	TIM3_Init();
-	/* Green LED dutycycle */
-	TIM14_Init();
-	/* Blue LED dutycycle */
-	TIM16_Init();
-
-	/* Create the RGB LED task */
-	xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
-}
-#endif
-#ifdef H01R1
-/* --- H01R1 module initialization. 
-*/
-void H01R1_Init(void)
-{
-	/* LED PWM Timers */
-	TIM3_Init();
-	//TIM14_Init();
-	//TIM16_Init();
-}
-#endif
-
-/*-----------------------------------------------------------*/
-
-#ifdef H01R0
-/* --- Set RGB colors on LED (continuously) using PWM intensity modulation. 
-*/
-H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity)
-{
-	H01R0_Status result = H01R0_OK;
-	uint8_t intensityRed = 0, intensityGreen = 0, intensityBlue = 0, temp = 0;
-
-	if (!intensity) {	
-		temp = rgbLedMode;			/* Backup rgbLedMode so that it's not reset */
-		RGB_LED_off();
-		rgbLedMode = temp;
-	} else if (intensity > 100) {
-		result = H01R0_ERR_WrongIntensity;
-		return result;
-	} else {
-			
-		/* Stop the timers */
-		HAL_TIM_Base_Stop_IT(&htim2);
-		HAL_TIM_Base_Stop_IT(&htim3);
-		HAL_TIM_Base_Stop_IT(&htim14);
-		HAL_TIM_Base_Stop_IT(&htim16);
-		
-		/* RED LED */
-		if (red == 0) {
-			globalRed = 0;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_RESET);
-		} else if (red == 255) {
-			globalRed = 1; intensityRed = intensity;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_SET);
-		} else if (red > 0 || red < 255) {
-			globalRed = 1; intensityRed = ((float)red/255)*intensity;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_SET);
-		} else {
-			result = H01R0_ERR_WrongColor;
-			return result;
-		}		
-			
-		/* GREEN LED */
-		if (green == 0) {
-			globalGreen = 0;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_RESET);
-		} else if (green == 255) {
-			globalGreen = 1; intensityGreen = intensity;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_SET);
-		} else if (green > 0 || green < 255) {
-			globalGreen = 1; intensityGreen = ((float)green/255)*intensity;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_SET);
-		} else {
-			result = H01R0_ERR_WrongColor;
-			return result;
-		}	
-
-		/* BLUE LED */
-		if (blue == 0) {
-			globalBlue = 0;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_RESET);
-		} else if (blue == 255) {
-			globalBlue = 1; intensityBlue = intensity;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_SET);
-		} else if (blue > 0 || blue < 255) {
-			globalBlue = 1; intensityBlue = ((float)blue/255)*intensity;
-			HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_SET);
-		} else {
-			result = H01R0_ERR_WrongColor;
-			return result;
-		}	
-		
-		/* Adjust intensity */
-		result = RGB_LED_intensity(intensityRed, intensityGreen, intensityBlue);
-	}
-	
-	return result;
-}
-#endif
-/*-----------------------------------------------------------*/
-
-/* --- Set LED color from a predefined color list (continuously) 
-				using PWM intensity modulation. 
-*/
-H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity)
-{
-	H01R0_Status result = H01R0_OK;
-	uint8_t temp = 0;
-	
-	if (!intensity) {	
-		temp = rgbLedMode;			/* Backup rgbLedMode so that it's not reset */
-		RGB_LED_off();	
-		rgbLedMode = temp;
-	} else {	
-		switch (color)
-		{
-			case BLACK 		: result = RGB_LED_off();
-				break;
-			case WHITE 		: result = RGB_LED_on(intensity);
-				break;
-			case RED 			: result = RGB_LED_setRGB(255,0,0,intensity);
-				break;
-			case BLUE 		: result = RGB_LED_setRGB(0,0,255,intensity);
-				break;
-			case YELLOW 	: result = RGB_LED_setRGB(255,255,0,intensity);
-				break;
-			case CYAN 		: result = RGB_LED_setRGB(0,255,255,intensity);
-				break;
-			case MAGENTA 	: result = RGB_LED_setRGB(255,0,255,intensity);
-				break;
-			case GREEN 		: result = RGB_LED_setRGB(0,255,0,intensity);
-				break;
-			default				:	result = H01R0_ERR_WrongColor;
-				break;
-		}
-	}
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
-/* --- Turn on RGB LED (white color) --- 
-*/
-H01R0_Status RGB_LED_on(uint8_t intensity)
-{
-	H01R0_Status result = H01R0_OK;
-#ifdef H01R0
-	
-	if (!intensity) {	
-		RGB_LED_off();	
-	} else {
-		
-		/* Stop the timers */
-		HAL_TIM_Base_Stop_IT(&htim2);
-		HAL_TIM_Base_Stop_IT(&htim3);
-		HAL_TIM_Base_Stop_IT(&htim14);
-		HAL_TIM_Base_Stop_IT(&htim16);
-		globalRed = 1; globalGreen = 1; globalBlue = 1;
-		
-		HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_SET);
-		
-		/* Calculate dutycycle and restart the timers */
-		result = RGB_LED_intensity(intensity, intensity, intensity);	
-	}
-	
-	/* Update LED state */
-	RGB_LED_State = 1;
-	RGB_LED_Intensity_Old = intensity;	
-	
-#endif
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
-/* --- Turn off RGB LED --- 
-*/
-H01R0_Status RGB_LED_off(void)
-{
-	H01R0_Status result = H01R0_OK;
-#ifdef H01R0
-	globalRed = 0; globalGreen = 0; globalBlue = 0;
-	HAL_TIM_Base_Stop_IT(&htim2);
-	HAL_TIM_Base_Stop_IT(&htim3);
-	HAL_TIM_Base_Stop_IT(&htim14);
-	HAL_TIM_Base_Stop_IT(&htim16);
-	HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_RED, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_GREEN, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(_RGB_LED_PORT, _RGB_LED_BLUE, GPIO_PIN_RESET);
-
-	/* Update LED state */
-	RGB_LED_State = 0;
-	RGB_LED_Intensity_Old = 0;
-	rgbLedMode = 0;			/* If you do not want to reset the mode, you need to backup rgbLedMode before calling RGB_LED_off */
-#endif
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
-/* --- Toggle RGB LED --- 
-*/
-H01R0_Status RGB_LED_toggle(uint8_t intensity)
-{
-	H01R0_Status result = H01R0_OK;
-	
-	if (RGB_LED_State)
-		result = RGB_LED_off();
-	else
-		result = RGB_LED_on(intensity);
-	
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
-/* --- Activate the RGB LED pulse command with RGB values. Set repeat to -1 for periodic signals --- 
-*/
-H01R0_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat)
-{
-	H01R0_Status result = H01R0_OK;
-	
-	rgbRed = red; rgbGreen = green; rgbBlue = blue;
-	rgbPeriod = period; rgbDC = dc; rgbCount = repeat;
-	
-	rgbLedMode = RGB_pulseRGB;
-	
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
-/* --- Activate the RGB LED pulse command with a specific color. Set repeat to -1 for periodic signals --- 
-*/
-H01R0_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat)
-{
-	H01R0_Status result = H01R0_OK;
-	
-	rgbColor = color;
-	rgbPeriod = period; rgbDC = dc; rgbCount = repeat;
-	
-	rgbLedMode = RGB_pulseColor;
-	
-	return result;
+	return	H01R0_OK;
 }
 
 /*-----------------------------------------------------------*/
 
 /* --- Pulse the RGB LED --- 
 */
-void RGBpulse(uint8_t mode)
+static void RGBpulse(uint8_t mode)
 {
 	uint8_t temp = 0;
 	
 	if (rgbCount > 0 || rgbCount == -1) 
 	{
-		if (mode == RGB_pulseRGB)
+		if (mode == RGB_PULSE_RGB)
 			RGB_LED_setRGB(rgbRed, rgbGreen, rgbBlue, 100);
-		else if (mode == RGB_pulseColor)
+		else if (mode == RGB_PULSE_COLOR)
 			RGB_LED_setColor(rgbColor, 100);	
 		osDelay(rgbDC);
 		temp = rgbLedMode;			/* Backup rgbLedMode so that it's not reset */
@@ -893,23 +412,9 @@ void RGBpulse(uint8_t mode)
 
 /*-----------------------------------------------------------*/
 
-/* --- Activate the RGB LED sweep mode. Set repeat to -1 for periodic signals. Minimum period for fine sweep is 6 x 256 = 1536 ms --- 
-*/
-H01R0_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
-{
-	H01R0_Status result = H01R0_OK;
-	
-	rgbPeriod = period; rgbCount = repeat;
-	rgbLedMode = mode;
-
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
 /* --- RGB LED basic color sweep --- 
 */
-void RGBsweepBasic(void)
+static void RGBsweepBasic(void)
 {
 	static uint32_t temp;
 		
@@ -943,7 +448,7 @@ void RGBsweepBasic(void)
 
 /* --- RGB LED fine color sweep --- 
 */
-void RGBsweepFine(void)
+static void RGBsweepFine(void)
 {
 	static uint32_t temp;
 		
@@ -999,57 +504,42 @@ void RGBsweepFine(void)
 
 /*-----------------------------------------------------------*/
 
-/* --- Activate RGB LED dim mode using one of the basic colors. Set repeat to -1 for periodic signals --- 
-*/
-H01R0_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat)
-{
-	H01R0_Status result = H01R0_OK;
-	
-	rgbColor = color;
-	rgbPeriod = period; rgbDC = wait; rgbCount = repeat;
-	rgbLedMode = mode;
-	
-	return result;
-}
-
-/*-----------------------------------------------------------*/
-
 /* --- Dim the RGB LED --- 
 */
-void RGBdim(uint8_t mode)
+static void RGBdim(uint8_t mode)
 {
 	uint8_t temp = 0;
 	
 	if (rgbCount > 0 || rgbCount == -1) 
 	{
 		temp = rgbLedMode;			/* Store mode so that it's not reset */
-		if (mode == RGB_dimUp) {
+		if (mode == RGB_DIM_UP) {
 			for(uint8_t i=0 ; i<=100 ; i++)
 			{
 				RGB_LED_setColor(rgbColor, i);	
 				osDelay(rgbPeriod/100);
 			}	
-		} else if (mode == RGB_dimUpWait) {
+		} else if (mode == RGB_DIM_UP_WAIT) {
 			for(uint8_t i=0 ; i<=100 ; i++)
 			{
 				RGB_LED_setColor(rgbColor, i);	
 				osDelay((rgbPeriod-rgbDC)/100);
 			}				
 			osDelay(rgbDC);		
-		} else if (mode == RGB_dimDown) {
+		} else if (mode == RGB_DIM_DOWN) {
 			for(uint8_t i=101 ; i>0 ; i--)
 			{
 				RGB_LED_setColor(rgbColor, i-1);	
 				osDelay(rgbPeriod/100);
 			}			
-		} else if (mode == RGB_dimDownWait) {
+		} else if (mode == RGB_DIM_DOWN_WAIT) {
 			for(uint8_t i=101 ; i>0 ; i--)
 			{
 				RGB_LED_setColor(rgbColor, i-1);	
 				osDelay((rgbPeriod-rgbDC)/100);
 			}	
 			osDelay(rgbDC);
-		} else if (mode == RGB_dimUpDown) {
+		} else if (mode == RGB_DIM_UP_DOWN) {
 			for(uint8_t i=0 ; i<=100 ; i++)
 			{
 				RGB_LED_setColor(rgbColor, i);	
@@ -1060,7 +550,7 @@ void RGBdim(uint8_t mode)
 				RGB_LED_setColor(rgbColor, i-1);	
 				osDelay(rgbPeriod/200);
 			}				
-		} else if (mode == RGB_dimDownUp) {
+		} else if (mode == RGB_DIM_DOWN_UP) {
 			for(uint8_t i=101 ; i>0 ; i--)
 			{
 				RGB_LED_setColor(rgbColor, i-1);	
@@ -1071,7 +561,7 @@ void RGBdim(uint8_t mode)
 				RGB_LED_setColor(rgbColor, i);	
 				osDelay(rgbPeriod/200);
 			}				
-		} else if (mode == RGB_dimUpDownWait) {
+		} else if (mode == RGB_DIM_UP_DOWN_WAIT) {
 			for(uint8_t i=0 ; i<=100 ; i++)
 			{
 				RGB_LED_setColor(rgbColor, i);	
@@ -1083,7 +573,7 @@ void RGBdim(uint8_t mode)
 				osDelay((rgbPeriod-rgbDC)/200);
 			}		
 			osDelay(rgbDC);
-		} else if (mode == RGB_dimDownUpWait) {
+		} else if (mode == RGB_DIM_DOWN_UP_WAIT) {
 			for(uint8_t i=101 ; i>0 ; i--)
 			{
 				RGB_LED_setColor(rgbColor, i-1);	
@@ -1108,6 +598,220 @@ void RGBdim(uint8_t mode)
 }
 
 /*-----------------------------------------------------------*/
+
+/* -----------------------------------------------------------------------
+	|																APIs	 																 	|
+   ----------------------------------------------------------------------- 
+*/
+
+/* --- H01R0 module initialization. 
+*/
+void H01R0_Init(void)
+{
+	/* Peripheral clock enable */
+	_RGB_RED_GPIO_CLK();
+	_RGB_GREEN_GPIO_CLK();
+	_RGB_BLUE_GPIO_CLK();
+	
+	/* Array ports */
+  MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
+  MX_USART4_UART_Init();
+  MX_USART5_UART_Init();
+  MX_USART6_UART_Init();
+	
+	/* LED PWM Timer */
+	TIM3_Init();
+
+	/* Create the RGB LED task */
+	xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Turn on RGB LED (white color) --- 
+*/
+H01R0_Status RGB_LED_on(uint8_t intensity)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	if (intensity == 0) 
+	{	
+		htim3.Instance->CCR2 = 0;
+		htim3.Instance->CCR3 = 0;
+		htim3.Instance->CCR4 = 0;	
+
+		RGB_LED_State = 0;
+		
+		return H01R0_OK;		
+	} 
+	else if (intensity <= 100)
+	{
+		result = startPWM(255, 255, 255, intensity);
+		
+		if (result == H01R0_OK)	RGB_LED_State = 1;
+		
+		return result; 
+	}
+	else
+		return H01R0_ERR_WrongIntensity;
+	
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Turn off RGB LED --- 
+*/
+H01R0_Status RGB_LED_off(void)
+{
+	if (HAL_TIM_Base_Stop(&htim3) != HAL_OK)	
+		return H01R0_ERROR;
+	
+	htim3.Instance->CCR2 = 0;
+	htim3.Instance->CCR3 = 0;
+	htim3.Instance->CCR4 = 0;	
+	
+	RGB_LED_State = 0;
+	rgbLedMode = 0;
+	
+	return H01R0_OK;
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Toggle RGB LED --- 
+*/
+H01R0_Status RGB_LED_toggle(uint8_t intensity)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	if (RGB_LED_State)
+		result = RGB_LED_off();
+	else
+		result = RGB_LED_on(intensity);
+	
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Set RGB colors on LED (continuously) using PWM intensity modulation. 
+*/
+H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity)
+{
+	if (intensity == 0) 	
+		return RGB_LED_on(0);
+	else if (intensity > 100) 
+		return H01R0_ERR_WrongIntensity;
+	else
+		return startPWM(red, green, blue, intensity);
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Set LED color from a predefined color list (continuously) 
+				using PWM intensity modulation. 
+*/
+H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	if (!intensity) 
+		return RGB_LED_on(0);
+	else if (intensity > 100) 
+		return H01R0_ERR_WrongIntensity;
+	else 
+	{	
+		switch (color)
+		{
+			case BLACK 		: result = RGB_LED_off();
+				break;
+			case WHITE 		: result = RGB_LED_on(intensity);
+				break;
+			case RED 			: result = RGB_LED_setRGB(255,0,0,intensity);
+				break;
+			case BLUE 		: result = RGB_LED_setRGB(0,0,255,intensity);
+				break;
+			case YELLOW 	: result = RGB_LED_setRGB(255,255,0,intensity);
+				break;
+			case CYAN 		: result = RGB_LED_setRGB(0,255,255,intensity);
+				break;
+			case MAGENTA 	: result = RGB_LED_setRGB(255,0,255,intensity);
+				break;
+			case GREEN 		: result = RGB_LED_setRGB(0,255,0,intensity);
+				break;
+			default				:	result = H01R0_ERR_WrongColor;
+				break;
+		}
+	}
+	
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Activate the RGB LED pulse command with RGB values. Set repeat to -1 for periodic signals --- 
+*/
+H01R0_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	rgbRed = red; rgbGreen = green; rgbBlue = blue;
+	rgbPeriod = period; rgbDC = dc; rgbCount = repeat;
+	
+	rgbLedMode = RGB_PULSE_RGB;
+	
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Activate the RGB LED pulse command with a specific color. Set repeat to -1 for periodic signals --- 
+*/
+H01R0_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	rgbColor = color;
+	rgbPeriod = period; rgbDC = dc; rgbCount = repeat;
+	
+	rgbLedMode = RGB_PULSE_COLOR;
+	
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Activate the RGB LED sweep mode. Set repeat to -1 for periodic signals. Minimum period for fine sweep is 6 x 256 = 1536 ms --- 
+*/
+H01R0_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	rgbPeriod = period; rgbCount = repeat;
+	rgbLedMode = mode;
+
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- Activate RGB LED dim mode using one of the basic colors. Set repeat to -1 for periodic signals --- 
+*/
+H01R0_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat)
+{
+	H01R0_Status result = H01R0_OK;
+	
+	rgbColor = color;
+	rgbPeriod = period; rgbDC = wait; rgbCount = repeat;
+	rgbLedMode = mode;
+	
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+
 
 /* -----------------------------------------------------------------------
 	|															Commands																 	|
@@ -1491,9 +1195,9 @@ portBASE_TYPE sweepCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 	/* Obtain the 1st parameter string. */
 	pcParameterString1 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 1, &xParameterStringLength1);
 	if (!strncmp( ( char * ) pcParameterString1, "basic", xParameterStringLength1) || !strncmp( ( char * ) pcParameterString1, "BASIC", xParameterStringLength1))
-		mode = RGB_sweepBasic;
+		mode = RGB_SWEEP_BASIC;
 	else if (!strncmp( ( char * ) pcParameterString1, "fine", xParameterStringLength1) || !strncmp( ( char * ) pcParameterString1, "FINE", xParameterStringLength1))
-		mode = RGB_sweepFine;
+		mode = RGB_SWEEP_FINE;
 	
 	/* Obtain the 2nd parameter string. */
 	pcParameterString2 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 2, &xParameterStringLength2);
@@ -1567,21 +1271,21 @@ portBASE_TYPE dimCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const i
 	/* Obtain the 2nd parameter string. */
 	pcParameterString2 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 2, &xParameterStringLength2);
 	if (!strncmp( ( char * ) pcParameterString2, "up", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UP", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "Up", xParameterStringLength2))
-		mode = RGB_dimUp;
+		mode = RGB_DIM_UP;
 	else if (!strncmp( ( char * ) pcParameterString2, "upwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UPWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UpWait", xParameterStringLength2))
-		mode = RGB_dimUpWait;
+		mode = RGB_DIM_UP_WAIT;
 	else if (!strncmp( ( char * ) pcParameterString2, "down", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWN", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "Down", xParameterStringLength2))
-		mode = RGB_dimDown;
+		mode = RGB_DIM_DOWN;
 	else if (!strncmp( ( char * ) pcParameterString2, "downwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWNWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DownWait", xParameterStringLength2))
-		mode = RGB_dimDownWait;
+		mode = RGB_DIM_DOWN_WAIT;
 	else if (!strncmp( ( char * ) pcParameterString2, "updown", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UPDOWN", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UpDown", xParameterStringLength2))
-		mode = RGB_dimUpDown;
+		mode = RGB_DIM_UP_DOWN;
 	else if (!strncmp( ( char * ) pcParameterString2, "downup", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWNUP", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DownUp", xParameterStringLength2))
-		mode = RGB_dimDownUp;
+		mode = RGB_DIM_DOWN_UP;
 	else if (!strncmp( ( char * ) pcParameterString2, "updownwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UPDOWNWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UpDownWait", xParameterStringLength2))
-		mode = RGB_dimUpDownWait;
+		mode = RGB_DIM_UP_DOWN_WAIT;
 	else if (!strncmp( ( char * ) pcParameterString2, "downupwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWNUPWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DownUpWait", xParameterStringLength2))
-		mode = RGB_dimDownUpWait;
+		mode = RGB_DIM_DOWN_UP_WAIT;
 	
 	/* Obtain the 3rd parameter string. */
 	pcParameterString3 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 3, &xParameterStringLength3);

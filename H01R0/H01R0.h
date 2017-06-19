@@ -73,19 +73,31 @@
 
 /* Module-specific Definitions */
 #ifdef H01R0
-	#define _RGB_LED_PORT			GPIOB
-	#define _RGB_LED_RED			GPIO_PIN_2
-	#define _RGB_LED_GREEN		GPIO_PIN_0
-	#define _RGB_LED_BLUE			GPIO_PIN_1
+	#define _RGB_RED_PORT							GPIOA
+	#define _RGB_RED_PIN							GPIO_PIN_7
+	#define _RGB_RED_TIM_CH						TIM_CHANNEL_2
+	#define _RGB_RED_GPIO_CLK()				__GPIOA_CLK_ENABLE();
+	#define _RGB_GREEN_PORT						GPIOB
+	#define _RGB_GREEN_PIN						GPIO_PIN_0
+	#define _RGB_GREEN_TIM_CH					TIM_CHANNEL_3
+	#define _RGB_GREEN_GPIO_CLK()			__GPIOB_CLK_ENABLE();
+	#define _RGB_BLUE_PORT						GPIOB
+	#define _RGB_BLUE_PIN							GPIO_PIN_1
+	#define _RGB_BLUE_TIM_CH					TIM_CHANNEL_4
+	#define _RGB_BLUE_GPIO_CLK()			__GPIOB_CLK_ENABLE();
+	
+	#define RGB_PWM_FREQ				((float) 20000 )
+	#define RGB_PWM_PERIOD			((float) (1/RGB_PWM_FREQ) )
 #endif
 
 /* H01R0_Status Type Definition */  
 typedef enum 
 {
   H01R0_OK = 0,
-	H01R0_ERR_UnknownMessage = 1,
-  H01R0_ERR_WrongColor = 2,
-	H01R0_ERR_WrongIntensity = 3,
+	H01R0_ERROR,
+	H01R0_ERR_UnknownMessage,
+  H01R0_ERR_WrongColor,
+	H01R0_ERR_WrongIntensity,
 } H01R0_Status;
 
 /* Indicator LED */
@@ -95,9 +107,10 @@ typedef enum
 /* Color Enumerations */
 enum BasicColors{BLACK=1, WHITE, RED, BLUE, YELLOW, CYAN, MAGENTA, GREEN};
 
+
 /* RGB LED Mode Enumerations */
-enum RGBLedMode{RGB_pulseRGB=1, RGB_pulseColor, RGB_sweepBasic, RGB_sweepFine, RGB_dimUp, RGB_dimUpWait, RGB_dimDown, RGB_dimDownWait,\
-	RGB_dimUpDown, RGB_dimDownUp, RGB_dimUpDownWait, RGB_dimDownUpWait};
+enum RGBLedMode{RGB_PULSE_RGB=1, RGB_PULSE_COLOR, RGB_SWEEP_BASIC, RGB_SWEEP_FINE, RGB_DIM_UP, RGB_DIM_UP_WAIT, RGB_DIM_DOWN, RGB_DIM_DOWN_WAIT,\
+	RGB_DIM_UP_DOWN, RGB_DIM_DOWN_UP, RGB_DIM_UP_DOWN_WAIT, RGB_DIM_DOWN_UP_WAIT};
 
 
 /* Export UART variables */
@@ -116,10 +129,10 @@ extern void MX_USART4_UART_Init(void);
 extern void MX_USART5_UART_Init(void);
 extern void MX_USART6_UART_Init(void);
 
-extern uint8_t RGB_LED_State;
-extern uint8_t RGB_LED_Intensity_Old;
-extern uint8_t rgbLedMode;
-extern uint8_t rgbRed, rgbGreen, rgbBlue, rgbColor; 
+extern TIM_HandleTypeDef htim3;
+	
+extern uint8_t RGB_LED_State, RGB_LED_Intensity_Old;
+extern uint8_t rgbLedMode, rgbRed, rgbGreen, rgbBlue, rgbColor; 
 extern uint32_t rgbPeriod, rgbDC; 
 extern int16_t rgbCount;
 
@@ -141,27 +154,17 @@ extern int16_t rgbCount;
 	|																APIs	 																 	|
    ----------------------------------------------------------------------- 
 */
-#ifdef H01R0
-	extern void H01R0_Init(void);
-	extern H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
-#endif
-#ifdef H01R1
-	extern void H01R1_Init(void);
-	extern void startPWM_RED(uint16_t period, uint16_t width);
-#endif
-extern H01R0_Status H01R0_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst);
-extern H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity);
+
+extern void H01R0_Init(void);
 extern H01R0_Status RGB_LED_on(uint8_t intensity);
 extern H01R0_Status RGB_LED_off(void);
 extern H01R0_Status RGB_LED_toggle(uint8_t intensity);
+extern H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity);
+extern H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
 extern H01R0_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat);
 extern H01R0_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat);
-extern void RGBpulse(uint8_t mode);
 extern H01R0_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat);
-extern void RGBsweepBasic(void);
-extern void RGBsweepFine(void);
 extern H01R0_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat);
-extern void RGBdim(uint8_t mode);
 
 /* -----------------------------------------------------------------------
 	|															Commands																 	|

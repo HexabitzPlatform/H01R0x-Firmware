@@ -279,6 +279,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 /*-----------------------------------------------------------*/
+/* This function handles TIM3 global interrupt.
+*/
+void TIM3_IRQHandler(void)
+{	
+		HAL_TIM_IRQHandler(&htim3);
+}
+
+/*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
 {
