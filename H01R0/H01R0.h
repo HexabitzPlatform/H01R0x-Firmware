@@ -102,15 +102,15 @@
 	#define RGB_PWM_PERIOD			((float) (1/RGB_PWM_FREQ) )
 #endif
 
-/* H01R0_Status Type Definition */  
+/* Module_Status Type Definition */  
 typedef enum 
 {
   H01R0_OK = 0,
-	H01R0_ERROR,
 	H01R0_ERR_UnknownMessage,
   H01R0_ERR_WrongColor,
 	H01R0_ERR_WrongIntensity,
-} H01R0_Status;
+	H01R0_ERROR = 255
+} Module_Status;
 
 /* Indicator LED */
 #define _IND_LED_PORT		GPIOA
@@ -167,16 +167,15 @@ extern int16_t rgbCount;
    ----------------------------------------------------------------------- 
 */
 
-extern void H01R0_Init(void);
-extern H01R0_Status RGB_LED_on(uint8_t intensity);
-extern H01R0_Status RGB_LED_off(void);
-extern H01R0_Status RGB_LED_toggle(uint8_t intensity);
-extern H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity);
-extern H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
-extern H01R0_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat);
-extern H01R0_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat);
-extern H01R0_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat);
-extern H01R0_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat);
+extern Module_Status RGB_LED_on(uint8_t intensity);
+extern Module_Status RGB_LED_off(void);
+extern Module_Status RGB_LED_toggle(uint8_t intensity);
+extern Module_Status RGB_LED_setColor(uint8_t color, uint8_t intensity);
+extern Module_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
+extern Module_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat);
+extern Module_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat);
+extern Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat);
+extern Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat);
 
 /* -----------------------------------------------------------------------
 	|															Commands																 	|

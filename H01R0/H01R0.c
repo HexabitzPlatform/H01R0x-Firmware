@@ -152,11 +152,37 @@ sweep period (ms) (3rd par.), wait time (ms) (4th par.) and dim repeat times (5t
    ----------------------------------------------------------------------- 
 */
 
+/* --- H01R0 module initialization. 
+*/
+void Module_Init(void)
+{
+	/* Peripheral clock enable */
+	_RGB_RED_GPIO_CLK();
+	_RGB_GREEN_GPIO_CLK();
+	_RGB_BLUE_GPIO_CLK();
+	
+	/* Array ports */
+  MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
+  MX_USART4_UART_Init();
+  MX_USART5_UART_Init();
+  MX_USART6_UART_Init();
+	
+	/* LED PWM Timer */
+	TIM3_Init();
+
+	/* Create the RGB LED task */
+	xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
+}
+
+/*-----------------------------------------------------------*/
+
 /* --- H01R0 message processing task. 
 */
-H01R0_Status H01R0_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst)
+Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint32_t period = 0; uint32_t dc = 0; int32_t repeat = 0;
 	
 	switch (code)
@@ -225,8 +251,30 @@ H01R0_Status H01R0_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8
 
 /*-----------------------------------------------------------*/
 
+/* --- Get the port for a given UART. 
+*/
+uint8_t GetPort(UART_HandleTypeDef *huart)
+{
+	if (huart->Instance == USART4)
+		return P1;
+	else if (huart->Instance == USART2)
+		return P2;
+	else if (huart->Instance == USART6)
+		return P3;
+	else if (huart->Instance == USART3)
+		return P4;
+	else if (huart->Instance == USART1)
+		return P5;
+	else if (huart->Instance == USART5)
+		return P6;
+
+	return 0;
+}
+
+/*-----------------------------------------------------------*/
+
 /* RGBledTask function */
-static void RGBledTask(void * argument)
+void RGBledTask(void * argument)
 {
 
   /* Infinite loop */
@@ -297,7 +345,7 @@ static void RGBledTask(void * argument)
 
 /* TIM3 init function - Front-end RED LED PWM Timer 16-bit 
 */
-static void TIM3_Init(void)
+void TIM3_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -364,7 +412,7 @@ static void TIM3_Init(void)
 					blue Duty cycle of blue LED (0-255).
 					intensity RGB LED intensity (0-100).
 */
-static H01R0_Status startPWM(uint8_t red, uint8_t blue, uint8_t green, uint8_t intensity)
+Module_Status startPWM(uint8_t red, uint8_t blue, uint8_t green, uint8_t intensity)
 {
 	htim3.Instance->CCR2 = (float)intensity * ((float)red/255.0f) * 65535.0f;
 	htim3.Instance->CCR3 = (float)intensity * ((float)green/255.0f) * 65535.0f;
@@ -385,7 +433,7 @@ static H01R0_Status startPWM(uint8_t red, uint8_t blue, uint8_t green, uint8_t i
 
 /* --- Pulse the RGB LED --- 
 */
-static void RGBpulse(uint8_t mode)
+void RGBpulse(uint8_t mode)
 {
 	uint8_t temp = 0;
 	
@@ -414,7 +462,7 @@ static void RGBpulse(uint8_t mode)
 
 /* --- RGB LED basic color sweep --- 
 */
-static void RGBsweepBasic(void)
+void RGBsweepBasic(void)
 {
 	static uint32_t temp;
 		
@@ -448,7 +496,7 @@ static void RGBsweepBasic(void)
 
 /* --- RGB LED fine color sweep --- 
 */
-static void RGBsweepFine(void)
+void RGBsweepFine(void)
 {
 	static uint32_t temp;
 		
@@ -506,7 +554,7 @@ static void RGBsweepFine(void)
 
 /* --- Dim the RGB LED --- 
 */
-static void RGBdim(uint8_t mode)
+void RGBdim(uint8_t mode)
 {
 	uint8_t temp = 0;
 	
@@ -604,37 +652,11 @@ static void RGBdim(uint8_t mode)
    ----------------------------------------------------------------------- 
 */
 
-/* --- H01R0 module initialization. 
-*/
-void H01R0_Init(void)
-{
-	/* Peripheral clock enable */
-	_RGB_RED_GPIO_CLK();
-	_RGB_GREEN_GPIO_CLK();
-	_RGB_BLUE_GPIO_CLK();
-	
-	/* Array ports */
-  MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
-  MX_USART4_UART_Init();
-  MX_USART5_UART_Init();
-  MX_USART6_UART_Init();
-	
-	/* LED PWM Timer */
-	TIM3_Init();
-
-	/* Create the RGB LED task */
-	xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
-}
-
-/*-----------------------------------------------------------*/
-
 /* --- Turn on RGB LED (white color) --- 
 */
-H01R0_Status RGB_LED_on(uint8_t intensity)
+Module_Status RGB_LED_on(uint8_t intensity)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	if (intensity == 0) 
 	{	
@@ -663,7 +685,7 @@ H01R0_Status RGB_LED_on(uint8_t intensity)
 
 /* --- Turn off RGB LED --- 
 */
-H01R0_Status RGB_LED_off(void)
+Module_Status RGB_LED_off(void)
 {
 	if (HAL_TIM_Base_Stop(&htim3) != HAL_OK)	
 		return H01R0_ERROR;
@@ -682,9 +704,9 @@ H01R0_Status RGB_LED_off(void)
 
 /* --- Toggle RGB LED --- 
 */
-H01R0_Status RGB_LED_toggle(uint8_t intensity)
+Module_Status RGB_LED_toggle(uint8_t intensity)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	if (RGB_LED_State)
 		result = RGB_LED_off();
@@ -698,7 +720,7 @@ H01R0_Status RGB_LED_toggle(uint8_t intensity)
 
 /* --- Set RGB colors on LED (continuously) using PWM intensity modulation. 
 */
-H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity)
+Module_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity)
 {
 	if (intensity == 0) 	
 		return RGB_LED_on(0);
@@ -713,9 +735,9 @@ H01R0_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t in
 /* --- Set LED color from a predefined color list (continuously) 
 				using PWM intensity modulation. 
 */
-H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity)
+Module_Status RGB_LED_setColor(uint8_t color, uint8_t intensity)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	if (!intensity) 
 		return RGB_LED_on(0);
@@ -753,9 +775,9 @@ H01R0_Status RGB_LED_setColor(uint8_t color, uint8_t intensity)
 
 /* --- Activate the RGB LED pulse command with RGB values. Set repeat to -1 for periodic signals --- 
 */
-H01R0_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat)
+Module_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	rgbRed = red; rgbGreen = green; rgbBlue = blue;
 	rgbPeriod = period; rgbDC = dc; rgbCount = repeat;
@@ -769,9 +791,9 @@ H01R0_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t
 
 /* --- Activate the RGB LED pulse command with a specific color. Set repeat to -1 for periodic signals --- 
 */
-H01R0_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat)
+Module_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	rgbColor = color;
 	rgbPeriod = period; rgbDC = dc; rgbCount = repeat;
@@ -785,9 +807,9 @@ H01R0_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int
 
 /* --- Activate the RGB LED sweep mode. Set repeat to -1 for periodic signals. Minimum period for fine sweep is 6 x 256 = 1536 ms --- 
 */
-H01R0_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
+Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	rgbPeriod = period; rgbCount = repeat;
 	rgbLedMode = mode;
@@ -799,9 +821,9 @@ H01R0_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
 
 /* --- Activate RGB LED dim mode using one of the basic colors. Set repeat to -1 for periodic signals --- 
 */
-H01R0_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat)
+Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat)
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	rgbColor = color;
 	rgbPeriod = period; rgbDC = wait; rgbCount = repeat;
@@ -820,7 +842,7 @@ H01R0_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t 
 
 portBASE_TYPE onCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	int8_t *pcParameterString1; portBASE_TYPE xParameterStringLength1 = 0; 
 	uint8_t intensity = 0;
@@ -881,7 +903,7 @@ portBASE_TYPE offCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const i
 
 portBASE_TYPE colorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint8_t color = 0; uint8_t intensity = 0; char par[15] = {0};
 	static int8_t *pcParameterString1, *pcParameterString2; 
 	portBASE_TYPE xParameterStringLength1 = 0, xParameterStringLength2 = 0;
@@ -949,7 +971,7 @@ portBASE_TYPE colorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 
 portBASE_TYPE RGBCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint8_t red = 0; uint8_t green = 0; uint8_t blue = 0; uint8_t intensity = 0; 
 	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4; 
 	portBASE_TYPE xParameterStringLength1 = 0, xParameterStringLength2 = 0;
@@ -1001,7 +1023,7 @@ portBASE_TYPE RGBCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const i
 
 portBASE_TYPE toggleCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	
 	int8_t *pcParameterString1; portBASE_TYPE xParameterStringLength1 = 0; 
 	uint8_t intensity = 0;
@@ -1043,7 +1065,7 @@ portBASE_TYPE toggleCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, cons
 
 portBASE_TYPE pulseColorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint8_t color = 0; uint32_t period = 0, dc = 0; int32_t repeat = 0; char par[15] = {0};
 	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4; 
 	portBASE_TYPE xParameterStringLength1 = 0, xParameterStringLength2 = 0;
@@ -1115,7 +1137,7 @@ portBASE_TYPE pulseColorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, 
 
 portBASE_TYPE pulseRGBCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint8_t red = 0; uint8_t green = 0; uint8_t blue = 0; uint32_t period = 0, dc = 0; int32_t repeat = 0;
 	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4; 
 	static int8_t *pcParameterString5, *pcParameterString6;
@@ -1178,7 +1200,7 @@ portBASE_TYPE pulseRGBCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, co
 
 portBASE_TYPE sweepCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint8_t mode = 0; uint32_t period = 0; int32_t repeat = 0; char par[15] = {0};
 	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3; 
 	portBASE_TYPE xParameterStringLength1 = 0, xParameterStringLength2 = 0, xParameterStringLength3 = 0;
@@ -1232,7 +1254,7 @@ portBASE_TYPE sweepCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 
 portBASE_TYPE dimCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-	H01R0_Status result = H01R0_OK;
+	Module_Status result = H01R0_OK;
 	uint8_t color = 0, mode = 0; uint32_t period = 0, wait = 0; int32_t repeat = 0;
 	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4 , *pcParameterString5; 
 	portBASE_TYPE xParameterStringLength1 = 0, xParameterStringLength2 = 0, xParameterStringLength3 = 0; 
