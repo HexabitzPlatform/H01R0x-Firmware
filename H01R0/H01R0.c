@@ -34,18 +34,18 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim16;
 uint8_t globalRed = 0, globalGreen = 0, globalBlue = 0;
 
-
 uint8_t RGB_LED_State = 0, rgbLedMode = 0, rgbColor = 0, rgbRed = 0, rgbGreen = 0, rgbBlue = 0; 
 uint32_t rgbPeriod = 0, rgbDC = 0; int16_t rgbCount = 0;
 TaskHandle_t RGBledTaskHandle = NULL;
 
 /* Private function prototypes -----------------------------------------------*/	
 
-static void RGBpulse(uint8_t mode);
-static void RGBsweepBasic(void);
-static void RGBsweepFine(void);
-static void RGBdim(uint8_t mode);
-static void TIM3_Init(void);
+void RGBledTask(void * argument);
+void RGBpulse(uint8_t mode);
+void RGBsweepBasic(void);
+void RGBsweepFine(void);
+void RGBdim(uint8_t mode);
+void TIM3_Init(void);
 
 
 /* Create CLI commands --------------------------------------------------------*/
@@ -171,7 +171,7 @@ void Module_Init(void)
 	
 	/* LED PWM Timer */
 	TIM3_Init();
-
+	
 	/* Create the RGB LED task */
 	xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
 }
@@ -378,7 +378,7 @@ void TIM3_Init(void)
 
 	/* Timer base configuration - 1 MHz */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = (uint32_t)(HAL_RCC_GetSysClockFreq()/1000000);
+  htim3.Init.Prescaler = (uint32_t)(HAL_RCC_GetSysClockFreq()/PWM_TIMER_CLOCK) - 1;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 0;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -412,18 +412,23 @@ void TIM3_Init(void)
 					blue Duty cycle of blue LED (0-255).
 					intensity RGB LED intensity (0-100).
 */
-Module_Status startPWM(uint8_t red, uint8_t blue, uint8_t green, uint8_t intensity)
+Module_Status startPWM(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity)
 {
-	htim3.Instance->CCR2 = (float)intensity * ((float)red/255.0f) * 65535.0f;
-	htim3.Instance->CCR3 = (float)intensity * ((float)green/255.0f) * 65535.0f;
-	htim3.Instance->CCR4 = (float)intensity * ((float)blue/255.0f) * 65535.0f;
-
-	htim3.Init.Period = (uint32_t) (1000000/RGB_PWM_FREQ);
+	uint32_t period = PWM_TIMER_CLOCK / RGB_PWM_FREQ;
 	
-	if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
-		return	H01R0_ERROR;
+	/* PWM period */
+	htim3.Instance->ARR = period - 1;
+	
+	/* PWM duty cycle */
+	htim3.Instance->CCR2 = ((float)intensity/100.0f) * ((float)red/255.0f) * period;
+	htim3.Instance->CCR3 = ((float)intensity/100.0f) * ((float)green/255.0f) * period;
+	htim3.Instance->CCR4 = ((float)intensity/100.0f) * ((float)blue/255.0f) * period;
 
-	if (HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3) != HAL_OK)	
+	if (HAL_TIM_PWM_Start(&htim3, _RGB_RED_TIM_CH) != HAL_OK)	
+		return	H01R0_ERROR;
+	if (HAL_TIM_PWM_Start(&htim3, _RGB_GREEN_TIM_CH) != HAL_OK)	
+		return	H01R0_ERROR;
+	if (HAL_TIM_PWM_Start(&htim3, _RGB_BLUE_TIM_CH) != HAL_OK)	
 		return	H01R0_ERROR;
 	
 	return	H01R0_OK;

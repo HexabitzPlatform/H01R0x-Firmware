@@ -98,7 +98,8 @@
 	#define _RGB_BLUE_TIM_CH					TIM_CHANNEL_4
 	#define _RGB_BLUE_GPIO_CLK()			__GPIOB_CLK_ENABLE();
 	
-	#define RGB_PWM_FREQ				((float) 20000 )
+	#define PWM_TIMER_CLOCK			16000000
+	#define RGB_PWM_FREQ				24000
 	#define RGB_PWM_PERIOD			((float) (1/RGB_PWM_FREQ) )
 #endif
 
