@@ -13,7 +13,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
-
+#include "H01R0_uart.h"	
+#include "H01R0_gpio.h"	
+#include "H01R0_dma.h"		
+	
 /* Exported definitions -------------------------------------------------------*/
 
 #define	modulePN		_H01R0
