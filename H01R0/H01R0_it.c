@@ -233,7 +233,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	char cRxedChar = 0; uint8_t port = GetPort(huart);
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	
-	if (portStatus[port] != STREAM) 
+	if (portStatus[port] == FREE || portStatus[port] == MSG || portStatus[port] == CLI) 
 	{
 		/* Read buffer */
 		cRxedChar = huart->Instance->RDR;
