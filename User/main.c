@@ -92,7 +92,7 @@ int main(void)
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
 {
-	AddPortButton(MOMENTARY_NO, P1, 0);
+	AddPortButton(MOMENTARY_NO, P1);
 	
 	SetButtonEvents(P1, 1, 1, 1, 3, 0, 10, 0, 0);
 	
