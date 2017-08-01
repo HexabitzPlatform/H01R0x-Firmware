@@ -83,7 +83,7 @@ const CLI_Command_Definition_t colorCommandDefinition =
 {
 	( const int8_t * ) "color", /* The command string to type. */
 	( const int8_t * ) "(H01R0) color:\r\n Set RGB LED color (1st par.) at a specific intensity (0-100%) (2nd par.)\n\rRegistered colors are:\
-\r\nBLACK, WHITE, RED, BLUE, GREEN, YELLOW, CYAN, and MAGENTA \r\n\r\n",
+\r\nblack, white, red, blue, green, yellow, cyan, and magenta \r\n\r\n",
 	colorCommand, /* The function to run. */
 	2 /* Two parameters are expected. */
 };
@@ -931,21 +931,21 @@ portBASE_TYPE colorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 									&xParameterStringLength1	/* Store the parameter string length. */
 								);
 	/* Read the color value. */
-	if (!strncmp((const char *)pcParameterString1, "BLACK", xParameterStringLength1) || !strncmp((const char *)pcParameterString1, "black", xParameterStringLength1))
+	if (!strncmp((const char *)pcParameterString1, "black", xParameterStringLength1))
 		color = BLACK;
-	else if (!strncmp((const char *)pcParameterString1, "WHITE", xParameterStringLength1) || !strncmp(( const char *)pcParameterString1, "white", xParameterStringLength1))
+	else if (!strncmp(( const char *)pcParameterString1, "white", xParameterStringLength1))
 		color = WHITE;
-	else if (!strncmp((const char *)pcParameterString1, "RED", xParameterStringLength1) || !strncmp((const char *)pcParameterString1, "red", xParameterStringLength1))
+	else if (!strncmp((const char *)pcParameterString1, "red", xParameterStringLength1))
 		color = RED;
-	else if (!strncmp((const char *) pcParameterString1, "BLUE", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "blue", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "blue", xParameterStringLength1))
 		color = BLUE;
-	else if (!strncmp((const char *) pcParameterString1, "YELLOW", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "yellow", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "yellow", xParameterStringLength1))
 		color = YELLOW;
-	else if (!strncmp((const char *) pcParameterString1, "CYAN", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "cyan", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "cyan", xParameterStringLength1))
 		color = CYAN;
-	else if (!strncmp((const char *) pcParameterString1, "MAGENTA", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "magenta", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "magenta", xParameterStringLength1))
 		color = MAGENTA;
-	else if (!strncmp((const char *) pcParameterString1, "GREEN", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "green", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "green", xParameterStringLength1))
 		color = GREEN;
 	
 	/* Obtain the 2nd parameter string. */
@@ -1088,21 +1088,21 @@ portBASE_TYPE pulseColorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, 
 	/* Obtain the 1st parameter string. */
 	pcParameterString1 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 1, &xParameterStringLength1);
 	/* Read the color value. */
-	if (!strncmp((const char *)pcParameterString1, "BLACK", xParameterStringLength1) || !strncmp((const char *)pcParameterString1, "black", xParameterStringLength1))
+	if (!strncmp((const char *)pcParameterString1, "black", xParameterStringLength1))
 		color = BLACK;
-	else if (!strncmp((const char *)pcParameterString1, "WHITE", xParameterStringLength1) || !strncmp(( const char *)pcParameterString1, "white", xParameterStringLength1))
+	else if (!strncmp(( const char *)pcParameterString1, "white", xParameterStringLength1))
 		color = WHITE;
-	else if (!strncmp((const char *)pcParameterString1, "RED", xParameterStringLength1) || !strncmp((const char *)pcParameterString1, "red", xParameterStringLength1))
+	else if (!strncmp((const char *)pcParameterString1, "red", xParameterStringLength1))
 		color = RED;
-	else if (!strncmp((const char *) pcParameterString1, "BLUE", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "blue", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "blue", xParameterStringLength1))
 		color = BLUE;
-	else if (!strncmp((const char *) pcParameterString1, "YELLOW", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "yellow", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "yellow", xParameterStringLength1))
 		color = YELLOW;
-	else if (!strncmp((const char *) pcParameterString1, "CYAN", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "cyan", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "cyan", xParameterStringLength1))
 		color = CYAN;
-	else if (!strncmp((const char *) pcParameterString1, "MAGENTA", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "magenta", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "magenta", xParameterStringLength1))
 		color = MAGENTA;
-	else if (!strncmp((const char *) pcParameterString1, "GREEN", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "green", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "green", xParameterStringLength1))
 		color = GREEN;
 	
 	/* Obtain the 2nd parameter string. */
@@ -1115,7 +1115,7 @@ portBASE_TYPE pulseColorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, 
 	
 	/* Obtain the 4th parameter string. */
 	pcParameterString4 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 4, &xParameterStringLength4);
-	if (!strcmp( ( char * ) pcParameterString4, "inf") || !strcmp( ( char * ) pcParameterString4, "INF"))
+	if (!strcmp( ( char * ) pcParameterString4, "inf"))
 		repeat = -1;
 	else
 		repeat = ( int32_t ) atol( ( char * ) pcParameterString4 );
@@ -1180,7 +1180,7 @@ portBASE_TYPE pulseRGBCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, co
 	
 	/* Obtain the 6th parameter string. */
 	pcParameterString6 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 6, &xParameterStringLength6);
-	if (!strcmp( ( char * ) pcParameterString6, "inf") || !strcmp( ( char * ) pcParameterString6, "INF"))
+	if (!strcmp( ( char * ) pcParameterString6, "inf"))
 		repeat = -1;
 	else
 		repeat = ( int32_t ) atol( ( char * ) pcParameterString6 );
@@ -1221,9 +1221,9 @@ portBASE_TYPE sweepCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 	
 	/* Obtain the 1st parameter string. */
 	pcParameterString1 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 1, &xParameterStringLength1);
-	if (!strncmp( ( char * ) pcParameterString1, "basic", xParameterStringLength1) || !strncmp( ( char * ) pcParameterString1, "BASIC", xParameterStringLength1))
+	if (!strncmp( ( char * ) pcParameterString1, "basic", xParameterStringLength1))
 		mode = RGB_SWEEP_BASIC;
-	else if (!strncmp( ( char * ) pcParameterString1, "fine", xParameterStringLength1) || !strncmp( ( char * ) pcParameterString1, "FINE", xParameterStringLength1))
+	else if (!strncmp( ( char * ) pcParameterString1, "fine", xParameterStringLength1))
 		mode = RGB_SWEEP_FINE;
 	
 	/* Obtain the 2nd parameter string. */
@@ -1232,7 +1232,7 @@ portBASE_TYPE sweepCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 	
 	/* Obtain the 3rd parameter string. */
 	pcParameterString3 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 3, &xParameterStringLength3);
-	if (!strcmp( ( char * ) pcParameterString3, "inf") || !strcmp( ( char * ) pcParameterString3, "INF"))
+	if (!strcmp( ( char * ) pcParameterString3, "inf"))
 		repeat = -1;
 	else
 		repeat = ( int32_t ) atol( ( char * ) pcParameterString3 );
@@ -1278,40 +1278,40 @@ portBASE_TYPE dimCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const i
 	/* Obtain the 1st parameter string. */
 	pcParameterString1 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 1, &xParameterStringLength1);
 	/* Read the color value. */
-	if (!strncmp((const char *)pcParameterString1, "BLACK", xParameterStringLength1) || !strncmp((const char *)pcParameterString1, "black", xParameterStringLength1))
+	if (!strncmp((const char *)pcParameterString1, "black", xParameterStringLength1))
 		color = BLACK;
-	else if (!strncmp((const char *)pcParameterString1, "WHITE", xParameterStringLength1) || !strncmp(( const char *)pcParameterString1, "white", xParameterStringLength1))
+	else if (!strncmp(( const char *)pcParameterString1, "white", xParameterStringLength1))
 		color = WHITE;
-	else if (!strncmp((const char *)pcParameterString1, "RED", xParameterStringLength1) || !strncmp((const char *)pcParameterString1, "red", xParameterStringLength1))
+	else if (!strncmp((const char *)pcParameterString1, "red", xParameterStringLength1))
 		color = RED;
-	else if (!strncmp((const char *) pcParameterString1, "BLUE", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "blue", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "blue", xParameterStringLength1))
 		color = BLUE;
-	else if (!strncmp((const char *) pcParameterString1, "YELLOW", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "yellow", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "yellow", xParameterStringLength1))
 		color = YELLOW;
-	else if (!strncmp((const char *) pcParameterString1, "CYAN", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "cyan", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "cyan", xParameterStringLength1))
 		color = CYAN;
-	else if (!strncmp((const char *) pcParameterString1, "MAGENTA", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "magenta", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "magenta", xParameterStringLength1))
 		color = MAGENTA;
-	else if (!strncmp((const char *) pcParameterString1, "GREEN", xParameterStringLength1) || !strncmp((const char *) pcParameterString1, "green", xParameterStringLength1))
+	else if (!strncmp((const char *) pcParameterString1, "green", xParameterStringLength1))
 		color = GREEN;
 	
 	/* Obtain the 2nd parameter string. */
 	pcParameterString2 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 2, &xParameterStringLength2);
-	if (!strncmp( ( char * ) pcParameterString2, "up", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UP", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "Up", xParameterStringLength2))
+	if (!strncmp( ( char * ) pcParameterString2, "up", xParameterStringLength2))
 		mode = RGB_DIM_UP;
-	else if (!strncmp( ( char * ) pcParameterString2, "upwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UPWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UpWait", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "upwait", xParameterStringLength2))
 		mode = RGB_DIM_UP_WAIT;
-	else if (!strncmp( ( char * ) pcParameterString2, "down", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWN", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "Down", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "down", xParameterStringLength2))
 		mode = RGB_DIM_DOWN;
-	else if (!strncmp( ( char * ) pcParameterString2, "downwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWNWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DownWait", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "downwait", xParameterStringLength2))
 		mode = RGB_DIM_DOWN_WAIT;
-	else if (!strncmp( ( char * ) pcParameterString2, "updown", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UPDOWN", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UpDown", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "updown", xParameterStringLength2))
 		mode = RGB_DIM_UP_DOWN;
-	else if (!strncmp( ( char * ) pcParameterString2, "downup", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWNUP", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DownUp", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "downup", xParameterStringLength2))
 		mode = RGB_DIM_DOWN_UP;
-	else if (!strncmp( ( char * ) pcParameterString2, "updownwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UPDOWNWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "UpDownWait", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "updownwait", xParameterStringLength2))
 		mode = RGB_DIM_UP_DOWN_WAIT;
-	else if (!strncmp( ( char * ) pcParameterString2, "downupwait", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DOWNUPWAIT", xParameterStringLength2) || !strncmp( ( char * ) pcParameterString2, "DownUpWait", xParameterStringLength2))
+	else if (!strncmp( ( char * ) pcParameterString2, "downupwait", xParameterStringLength2))
 		mode = RGB_DIM_DOWN_UP_WAIT;
 	
 	/* Obtain the 3rd parameter string. */
@@ -1324,7 +1324,7 @@ portBASE_TYPE dimCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const i
 	
 	/* Obtain the 5th parameter string. */
 	pcParameterString5 = ( int8_t * ) FreeRTOS_CLIGetParameter (pcCommandString, 5, &xParameterStringLength5);
-	if (!strcmp( ( char * ) pcParameterString5, "inf") || !strcmp( ( char * ) pcParameterString5, "INF"))
+	if (!strcmp( ( char * ) pcParameterString5, "inf"))
 		repeat = -1;
 	else
 		repeat = ( int32_t ) atol( ( char * ) pcParameterString5 );
