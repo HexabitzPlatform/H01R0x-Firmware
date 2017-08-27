@@ -92,39 +92,21 @@ int main(void)
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
 {
-	//AddPortButton(MOMENTARY_NO, P1);
-	
-	//SetButtonEvents(P1, 1, 1, 1, 3, 0, 10, 0, 0);
 	
   /* Infinite loop */
   for(;;)
   {
-
+		
+	#if _module == 1
+		BroadcastMessage(0, myID, CODE_ping, 0);
+	#endif
+		
+		Delay_ms(1000);
+		
   }	
 
 }
 
-//void buttonClickedCallback(uint8_t port)
-//{
-//	IND_toggle();
-//}
-//void buttonDblClickedCallback(uint8_t port)
-//{
-//	RGB_LED_toggle(30);
-//}
-//void buttonPressedForXCallback(uint8_t port, uint8_t eventType)
-//{
-//	if (eventType == 1)
-//		RGB_LED_setColor(GREEN, 30);
-//	else if (eventType == 2)
-//		RGB_LED_setColor(MAGENTA, 30);
-//	else if (eventType == 3)
-//		RGB_LED_setColor(RED, 30);
-//}
-//void buttonReleasedForYCallback(uint8_t port, uint8_t eventType)
-//{
-//	
-//}
 
 /*-----------------------------------------------------------*/
 
