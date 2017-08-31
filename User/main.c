@@ -93,9 +93,6 @@ int main(void)
 void FrontEndTask(void * argument)
 {
 	
-	FindBroadcastRoutes(1);
-	
-	
 	#if _module == 1
 	BOS.response = BOS_RESPONSE_NONE;
 	Delay_ms(1000);
