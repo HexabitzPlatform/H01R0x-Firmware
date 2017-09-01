@@ -93,20 +93,20 @@ int main(void)
 void FrontEndTask(void * argument)
 {
 	
-	#if _module == 1
-	BOS.response = BOS_RESPONSE_NONE;
-	Delay_ms(1000);
+	#if _module == 2
+	//BOS.response = BOS_RESPONSE_NONE;
+	//Delay_ms(1000);
 	#endif
 	
   /* Infinite loop */
   for(;;)
   {
 		
-	#if _module == 1
+	#if _module == 2
 		//BroadcastMessage(0, myID, CODE_IND_toggle, 0);
-		BroadcastMessage(0, myID, CODE_ping, 0);
+		//BroadcastMessage(0, myID, CODE_ping, 0);
 		
-		Delay_ms(1000);
+		//Delay_ms(1000);
 	#endif
 		
 		
