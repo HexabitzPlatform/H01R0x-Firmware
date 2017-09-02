@@ -40,7 +40,7 @@
 #include "BOS.h"
 
 /* Include a predefined topology here */
-//#include "topology_ex.h"
+#include "topology_1.h"
 
 /* Private variables ---------------------------------------------------------*/
 

@@ -43,8 +43,6 @@
 
 FlagStatus UartRxReady = RESET;
 FlagStatus UartTxReady = RESET;
-uint8_t PcPort = 0;
-uint32_t CLI_baudrate = DEF_CLI_BAUDRATE;
 
 /* USART1 init function */
 #ifdef _Usart1

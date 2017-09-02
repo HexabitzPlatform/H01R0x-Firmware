@@ -51,7 +51,6 @@
 /* External variables -----------------------------------------------*/
 extern FlagStatus UartRxReady;
 extern FlagStatus UartTxReady;
-extern uint8_t PcPort;
 	 
 	 
 // Blocking (polling-based) read
