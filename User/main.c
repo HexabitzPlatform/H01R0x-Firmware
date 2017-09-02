@@ -40,7 +40,7 @@
 #include "BOS.h"
 
 /* Include a predefined topology here */
-#include "topology_1.h"
+//#include "topology_1.h"
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -93,22 +93,10 @@ int main(void)
 void FrontEndTask(void * argument)
 {
 	
-	#if _module == 2
-	//BOS.response = BOS_RESPONSE_NONE;
-	//Delay_ms(1000);
-	#endif
-	
   /* Infinite loop */
   for(;;)
   {
-		
-	#if _module == 2
-		//BroadcastMessage(0, myID, CODE_IND_toggle, 0);
-		//BroadcastMessage(0, myID, CODE_ping, 0);
-		
-		//Delay_ms(1000);
-	#endif
-		
+	
 		
   }	
 
