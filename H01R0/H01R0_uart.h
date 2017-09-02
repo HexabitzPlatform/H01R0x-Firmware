@@ -47,11 +47,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
 
+	 
 /* External variables -----------------------------------------------*/
 extern FlagStatus UartRxReady;
 extern FlagStatus UartTxReady;
 extern uint8_t PcPort;
-
+	 
 	 
 // Blocking (polling-based) read
 #define readPx(port, buffer, n, timeout) while(HAL_UART_Receive(GetUart(port), (uint8_t *)buffer, n, timeout) != HAL_OK) {}
@@ -68,7 +69,6 @@ extern HAL_StatusTypeDef readPxMutex(uint8_t port, char *buffer, uint16_t n, uin
 extern HAL_StatusTypeDef writePxMutex(uint8_t port, char *buffer, uint16_t n, uint32_t mutexTimeout, uint32_t portTimeout);
 extern HAL_StatusTypeDef readPxITMutex(uint8_t port, char *buffer, uint16_t n, uint32_t mutexTimeout);
 extern HAL_StatusTypeDef writePxITMutex(uint8_t port, char *buffer, uint16_t n, uint32_t mutexTimeout);
-
 
 
 #ifdef __cplusplus

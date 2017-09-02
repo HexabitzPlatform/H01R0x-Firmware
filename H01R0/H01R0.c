@@ -173,7 +173,8 @@ void Module_Init(void)
 	TIM3_Init();
 	
 	/* Create the RGB LED task */
-	xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
+	if (RGBledTaskHandle == NULL)
+		xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
 }
 
 /*-----------------------------------------------------------*/
