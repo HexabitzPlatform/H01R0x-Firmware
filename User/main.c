@@ -39,8 +39,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
 
-/* Include a predefined topology here */
-//#include "topology_1.h"
 
 /* Private variables ---------------------------------------------------------*/
 
