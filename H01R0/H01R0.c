@@ -91,7 +91,7 @@ const CLI_Command_Definition_t colorCommandDefinition =
 /* CLI command structure : RGB */
 const CLI_Command_Definition_t RGBCommandDefinition =
 {
-	( const int8_t * ) "RGB", /* The command string to type. */
+	( const int8_t * ) "rgb", /* The command string to type. */
 	( const int8_t * ) "(H01R0) RGB:\r\n Set RGB LED red (1st par.), green (2nd par.), and blue (3rd par.) values (0-255) at a specific intensity (0-100%) (4th par.)\r\n\r\n",
 	RGBCommand, /* The function to run. */
 	4 /* Four parameters are expected. */
@@ -109,7 +109,7 @@ const CLI_Command_Definition_t toggleCommandDefinition =
 /* CLI command structure : pulseColor */
 const CLI_Command_Definition_t pulseColorCommandDefinition =
 {
-	( const int8_t * ) "pulseColor", /* The command string to type. */
+	( const int8_t * ) "pulsecolor", /* The command string to type. */
 	( const int8_t * ) "(H01R0) pulseColor:\r\n Send a pulse on RGB LED using a specific color (1st par.), pulse period (ms) (2nd par.), pulse duty cycle (ms) (3rd par.) \
 and pulse repeat times (4th par.) (type 'inf' for periodic signal)\r\n\r\n",
 	pulseColorCommand, /* The function to run. */
@@ -119,7 +119,7 @@ and pulse repeat times (4th par.) (type 'inf' for periodic signal)\r\n\r\n",
 /* CLI command structure : pulseRGB */
 const CLI_Command_Definition_t pulseRGBCommandDefinition =
 {
-	( const int8_t * ) "pulseRGB", /* The command string to type. */
+	( const int8_t * ) "pulsergb", /* The command string to type. */
 	( const int8_t * ) "(H01R0) pulseRGB:\r\n Send a pulse on RGB LED using RGB values (1st, 2nd and 3rd par.) (0-255), pulse period (ms) (4th par.), pulse duty cycle (ms) (5th par.) \
 and pulse repeat times (6th par.) (type 'inf' for periodic signal)\r\n\r\n",
 	pulseRGBCommand, /* The function to run. */
