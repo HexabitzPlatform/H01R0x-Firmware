@@ -90,10 +90,41 @@ int main(void)
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
 {
-	
+	Delay_ms(1000);
   /* Infinite loop */
   for(;;)
   {
+	#if _module == 1
+		messageParams[0] = 0; 
+		messageParams[1] = GREEN; 
+		messageParams[2] = 100; 	
+		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_COLOR, 3);
+		RGB_LED_setColor(GREEN, 100);
+		Delay_ms(200);
+		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_OFF, 0);
+		RGB_LED_off();
+		Delay_ms(400);
+		
+		
+//		Delay_ms(50);
+//		messageParams[0] = 50; SendMessageToModule(4, CODE_H01R0_ON, 1);
+//		Delay_ms(50);
+//		messageParams[0] = 50; SendMessageToModule(6, CODE_H01R0_ON, 1);
+//		Delay_ms(50);
+//		messageParams[0] = 50; SendMessageToModule(7, CODE_H01R0_ON, 1);
+//		Delay_ms(50);
+//		messageParams[0] = 50; SendMessageToModule(8, CODE_H01R0_ON, 1);
+////		Delay_ms(100);
+////		SendMessageToModule(2, CODE_H01R0_ON, 1);
+////		Delay_ms(100);
+////		SendMessageToModule(6, CODE_H01R0_ON, 1);
+//		Delay_ms(1000);
+//		//SendMessageToModule(4, CODE_H01R0_OFF, 0);
+//		//SendMessageToModule(5, CODE_H01R0_OFF, 0);
+//		
+//		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_OFF, 0);
+//		Delay_ms(1000);
+	#endif	
 	
 		
   }	
