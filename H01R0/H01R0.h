@@ -157,13 +157,13 @@ extern int16_t rgbCount;
    ----------------------------------------------------------------------- 
 */
 
-#define	CODE_H01R0_on							100
-#define	CODE_H01R0_off						101
-#define	CODE_H01R0_toggle					102
-#define	CODE_H01R0_color					103
-#define	CODE_H01R0_pulse					104
-#define	CODE_H01R0_sweep					105
-#define	CODE_H01R0_dim						106
+#define	CODE_H01R0_ON							100
+#define	CODE_H01R0_OFF						101
+#define	CODE_H01R0_TOGGLE					102
+#define	CODE_H01R0_COLOR					103
+#define	CODE_H01R0_PULSE					104
+#define	CODE_H01R0_SWEEP					105
+#define	CODE_H01R0_DIM						106
 
 	
 /* -----------------------------------------------------------------------

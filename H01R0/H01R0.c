@@ -188,22 +188,22 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 	
 	switch (code)
 	{
-		case CODE_H01R0_on :
+		case CODE_H01R0_ON :
 			RGB_LED_on(cMessage[port-1][4]);
 			break;
 		
-		case CODE_H01R0_off :
+		case CODE_H01R0_OFF :
 			RGB_LED_off();
 			break;
 		
-		case CODE_H01R0_toggle :
+		case CODE_H01R0_TOGGLE :
 			if (RGB_LED_State)
 				RGB_LED_off();
 			else
 				RGB_LED_on(cMessage[port-1][4]);
 			break;
 
-		case CODE_H01R0_color :
+		case CODE_H01R0_COLOR :
 			if (cMessage[port-1][4] == 0) {
 			/* Color definition from color list */
 				RGB_LED_setColor(cMessage[port-1][5], cMessage[port-1][6]);
@@ -213,7 +213,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 			}	
 			break;
 		
-		case CODE_H01R0_pulse :
+		case CODE_H01R0_PULSE :
 			if (cMessage[port-1][4] == 0) {
 			/* Color definition from color list */
 				period = ( (uint32_t) cMessage[port-1][6] << 24 ) + ( (uint32_t) cMessage[port-1][7] << 16 ) + ( (uint32_t) cMessage[port-1][8] << 8 ) + cMessage[port-1][9];
@@ -229,13 +229,13 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 			}				
 			break;
 			
-		case CODE_H01R0_sweep :
+		case CODE_H01R0_SWEEP :
 			period = ( (uint32_t) cMessage[port-1][5] << 24 ) + ( (uint32_t) cMessage[port-1][6] << 16 ) + ( (uint32_t) cMessage[port-1][7] << 8 ) + cMessage[port-1][8];
 			repeat = ( (uint32_t) cMessage[port-1][9] << 24 ) + ( (uint32_t) cMessage[port-1][10] << 16 ) + ( (uint32_t) cMessage[port-1][11] << 8 ) + cMessage[port-1][12];
 			RGB_LED_sweep(cMessage[port-1][4], period, repeat);
 			break;
 		
-		case CODE_H01R0_dim :
+		case CODE_H01R0_DIM :
 			period = ( (uint32_t) cMessage[port-1][6] << 24 ) + ( (uint32_t) cMessage[port-1][7] << 16 ) + ( (uint32_t) cMessage[port-1][8] << 8 ) + cMessage[port-1][9];
 			dc = ( (uint32_t) cMessage[port-1][10] << 24 ) + ( (uint32_t) cMessage[port-1][11] << 16 ) + ( (uint32_t) cMessage[port-1][12] << 8 ) + cMessage[port-1][13];
 			repeat = ( (uint32_t) cMessage[port-1][14] << 24 ) + ( (uint32_t) cMessage[port-1][15] << 16 ) + ( (uint32_t) cMessage[port-1][16] << 8 ) + cMessage[port-1][17];
