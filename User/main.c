@@ -90,40 +90,33 @@ int main(void)
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
 {
-	Delay_ms(1000);
+#if _module == 1
+	Delay_ms(500);
+	BOS.response = BOS_RESPONSE_NONE;
+#endif		
+
   /* Infinite loop */
   for(;;)
   {
 	#if _module == 1
-		messageParams[0] = 0; 
-		messageParams[1] = GREEN; 
-		messageParams[2] = 100; 	
-		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_COLOR, 3);
-		RGB_LED_setColor(GREEN, 100);
-		Delay_ms(200);
-		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_OFF, 0);
-		RGB_LED_off();
-		Delay_ms(400);
+		messageParams[0] = CYAN;									// color
+		messageParams[1] = RGB_DIM_UP_DOWN_WAIT;	// mode
+		messageParams[2] = (uint8_t)(10000>>24);		// period
+		messageParams[3] = (uint8_t)(10000>>16); 	
+		messageParams[4] = (uint8_t)(10000>>8); 
+		messageParams[5] = (uint8_t)(10000); 
+		messageParams[6] = (uint8_t)(500>>24);		// wait
+		messageParams[7] = (uint8_t)(500>>16); 	
+		messageParams[8] = (uint8_t)(500>>8); 
+		messageParams[9] = (uint8_t)(500); 
+		messageParams[10] = 0;											// repeat
+		messageParams[111] = 0; 	
+		messageParams[12] = 0; 
+		messageParams[13] = 1; 
 		
+		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_DIM, 14);
 		
-//		Delay_ms(50);
-//		messageParams[0] = 50; SendMessageToModule(4, CODE_H01R0_ON, 1);
-//		Delay_ms(50);
-//		messageParams[0] = 50; SendMessageToModule(6, CODE_H01R0_ON, 1);
-//		Delay_ms(50);
-//		messageParams[0] = 50; SendMessageToModule(7, CODE_H01R0_ON, 1);
-//		Delay_ms(50);
-//		messageParams[0] = 50; SendMessageToModule(8, CODE_H01R0_ON, 1);
-////		Delay_ms(100);
-////		SendMessageToModule(2, CODE_H01R0_ON, 1);
-////		Delay_ms(100);
-////		SendMessageToModule(6, CODE_H01R0_ON, 1);
-//		Delay_ms(1000);
-//		//SendMessageToModule(4, CODE_H01R0_OFF, 0);
-//		//SendMessageToModule(5, CODE_H01R0_OFF, 0);
-//		
-//		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_OFF, 0);
-//		Delay_ms(1000);
+		Delay_ms(500);
 	#endif	
 	
 		
