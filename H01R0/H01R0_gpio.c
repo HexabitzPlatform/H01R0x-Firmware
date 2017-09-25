@@ -33,7 +33,7 @@
   */
 
 /*
-		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.1 - Copyright (C) 20167 Hexabitz
+		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.2 - Copyright (C) 20167 Hexabitz
     All rights reserved
 */
 

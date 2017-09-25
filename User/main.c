@@ -32,7 +32,7 @@
   */
 	
 /*
-		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.1 - Copyright (C) 2017 Hexabitz
+		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.2 - Copyright (C) 2017 Hexabitz
     All rights reserved
 */
 
@@ -89,35 +89,11 @@ int main(void)
 
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
-{
-#if _module == 1
-	Delay_ms(500);
-	BOS.response = BOS_RESPONSE_NONE;
-#endif		
+{	
 
   /* Infinite loop */
   for(;;)
   {
-	#if _module == 1
-		messageParams[0] = CYAN;									// color
-		messageParams[1] = RGB_DIM_UP_DOWN_WAIT;	// mode
-		messageParams[2] = (uint8_t)(10000>>24);		// period
-		messageParams[3] = (uint8_t)(10000>>16); 	
-		messageParams[4] = (uint8_t)(10000>>8); 
-		messageParams[5] = (uint8_t)(10000); 
-		messageParams[6] = (uint8_t)(500>>24);		// wait
-		messageParams[7] = (uint8_t)(500>>16); 	
-		messageParams[8] = (uint8_t)(500>>8); 
-		messageParams[9] = (uint8_t)(500); 
-		messageParams[10] = 0;											// repeat
-		messageParams[111] = 0; 	
-		messageParams[12] = 0; 
-		messageParams[13] = 1; 
-		
-		SendMessageToModule(BOS_BROADCAST, CODE_H01R0_DIM, 14);
-		
-		Delay_ms(500);
-	#endif	
 	
 		
   }	

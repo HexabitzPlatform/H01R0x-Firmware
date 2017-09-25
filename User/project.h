@@ -1,5 +1,5 @@
 /*
-    BitzOS (BOS) V0.1.1 - Copyright (C) 2017 Hexabitz
+    BitzOS (BOS) V0.1.2 - Copyright (C) 2017 Hexabitz
     All rights reserved
 		
     File Name     : project.h
@@ -15,7 +15,7 @@
 
 
 /* Include a predefined topology here */
-#include "topology_1.h"
+//#include "topology_1.h"
 
 
 
