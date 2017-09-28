@@ -32,7 +32,7 @@
   */
 	
 /*
-		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.1 - Copyright (C) 2017 Hexabitz
+		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.2 - Copyright (C) 2017 Hexabitz
     All rights reserved
 */
 
@@ -89,8 +89,8 @@ int main(void)
 
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
-{
-	
+{	
+
   /* Infinite loop */
   for(;;)
   {
