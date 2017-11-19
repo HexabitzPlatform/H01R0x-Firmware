@@ -150,9 +150,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>3057</LineNumber>
+          <LineNumber>3103</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134228372</Address>
+          <Address>134263470</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -161,23 +161,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\BOS\BOS.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Module_1\../BOS/BOS.c\3057</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>3055</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\BOS\BOS.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\Module_1\../BOS/BOS.c\3103</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -331,6 +315,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>currentID</ItemText>
         </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>groupModules</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -347,6 +336,21 @@
           <count>2</count>
           <WinNumber>2</WinNumber>
           <ItemText>currentID</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>groupAlias</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>moduleAlias</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>groupModules</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

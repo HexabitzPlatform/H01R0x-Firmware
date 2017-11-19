@@ -89,6 +89,18 @@ int main(void)
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
 {
+	Delay_s(2);
+	
+	AddModuleToGroup(1, "base");
+	AddModuleToGroup(2, "base");
+	AddModuleToGroup(3, "base");
+	
+	AddModuleToGroup(1, "ring");
+	AddModuleToGroup(2, "ring");
+	AddModuleToGroup(3, "ring");
+	AddModuleToGroup(4, "ring");
+	AddModuleToGroup(5, "ring");
+	AddModuleToGroup(7, "ring");
 	
   /* Infinite loop */
   for(;;)
