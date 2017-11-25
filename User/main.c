@@ -32,7 +32,7 @@
   */
 	
 /*
-		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.3 - Copyright (C) 2017 Hexabitz
+		MODIFIED by Hexabitz for BitzOS (BOS) V0.1.4 - Copyright (C) 2017 Hexabitz
     All rights reserved
 */
 
@@ -89,18 +89,7 @@ int main(void)
 /* FrontEndTask function */
 void FrontEndTask(void * argument)
 {
-//	Delay_s(2);
-	
-//	AddModuleToGroup(1, "base");
-//	AddModuleToGroup(2, "base");
-//	AddModuleToGroup(3, "base");
-//	
-//	AddModuleToGroup(1, "ring");
-//	AddModuleToGroup(2, "ring");
-//	AddModuleToGroup(3, "ring");
-//	AddModuleToGroup(4, "ring");
-//	AddModuleToGroup(5, "ring");
-//	AddModuleToGroup(7, "ring");
+
 	
   /* Infinite loop */
   for(;;)
