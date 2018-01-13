@@ -252,6 +252,23 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 
 /*-----------------------------------------------------------*/
 
+/* --- Register this module CLI Commands 
+*/
+void RegisterModuleCLICommands(void)
+{
+	FreeRTOS_CLIRegisterCommand( &onCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &offCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &colorCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &RGBCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &toggleCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &pulseColorCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &pulseRGBCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &sweepCommandDefinition );
+	FreeRTOS_CLIRegisterCommand( &dimCommandDefinition );
+}
+
+/*-----------------------------------------------------------*/
+
 /* --- Get the port for a given UART. 
 */
 uint8_t GetPort(UART_HandleTypeDef *huart)
