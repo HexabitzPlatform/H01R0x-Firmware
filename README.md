@@ -39,8 +39,11 @@ We developed a new form of documentation we call it the Factsheet: it's a mix be
 ### If you want to compile the code: ###
 
 1- If you didn't already, download Keil uVision MDK toolchain from [here](http://www2.keil.com/mdk5/uvision/). Get your free [license](http://www.keil.com/) for STM32F0 MCUs!
+
 2- Download or clone this repository source code and open the uVion projext in MDK-ARM folder (it has .uvprojx extension).
+
 3- If you are loading a single module, simple compile the code and load it to module MCU via one of the firmware update methods explaind [here]().
+
 4- If you are loading multiple modules of the same type (connected in an array), then manually modify the module ID in Options for Target >> C/C++ >> Preprocessor Symbols >> Define >> _module=x (where x the module ID) and in Output >> Name of Executable. Recompile the project and load each module according to its ID. You can also create multiple targets as explained in the firmware update [guide]().
 
 ### If you want to load a precompiled HEX file ###
@@ -50,7 +53,9 @@ We developed a new form of documentation we call it the Factsheet: it's a mix be
 ### How do I test? ###
 
 1- If code is loaded correctly, you should see one or few indicator LED blinks when you power-cycle.
+
 2- Use [RealTerm](https://sourceforge.net/projects/realterm/) or any other terminal emulator with a USB-to-USRT cable to access the module CLI. Learn about using the CLI [here]().
+
 3- Check available CLI commands by typing *help* or use the module [factsheet](https://d3s5r33r268y59.cloudfront.net/datasheets/11566/2018-03-01-06-19-35/H01R00%20Factsheet.pdf). Make sure the factsheet BOS version number (at the footer) matches the source code version you have.
 
 ### How do I update the source code for an old project? ###
@@ -62,8 +67,11 @@ We developed a new form of documentation we call it the Factsheet: it's a mix be
 To preseve maximum code portability between projects, we advise you to:
 
 1- Keep all you custom source and header files in the *User* folder.
+
 2- Add your code to the *FrontEndTask()* in *main.c* and add other custom function there including custom interrupt callbacks.
+
 3- Add any external header files you want to include to the *project.h* file.
+
 4- Add any topology header files to *User* folder and include them in *project.h*.
 
 ===============================================
