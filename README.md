@@ -17,10 +17,16 @@ Hexabitz is a new kind of electronic prototyping platforms with game-changing mo
 
 ===============================================
 
+## Submodules ##
+
+- Bitz Operating System - [BOS]()
+- [Thirdparty]()
+
 ## Useful Links ##
 
 - Buy H01R00 module on [Tindie Store](https://www.tindie.com/products/Hexabitz/rgb-led-module-h01r00/)
-- Introdcution to Hexabitz modular prototyping platform on [Hackaday.io](https://hackaday.io/project/76446-hexabitz-modular-electronics-for-real)
+- Check Hexabitz main [website](https://www.hexabitz.com/) and available and planned [modules](https://www.hexabitz.com/modules/).
+- Read the intro to Hexabitz modular prototyping platform on [Hackaday.io](https://hackaday.io/project/76446-hexabitz-modular-electronics-for-real)
 - Overview of hexabitz software [architecture](https://hackaday.io/project/76446-hexabitz-modular-electronics-for-real/log/117213-hexabitz-software-architecture)
 - Hexabitz demo [projects](https://hackaday.io/list/87488-hexabitz-projects)
 
@@ -103,7 +109,7 @@ Check our [website](https://www.hexabitz.com/faq/) for more information or conta
 
 ## Who do I talk to? ##
 
-* Email as at info@hexabitz.com for any inquiries
+* Email us at info@hexabitz.com for any inquiries
 * Or connect with us on [Hackaday.io](https://hackaday.io/Hexabitz)
 
 ## How do I contribute? ##
