@@ -1,4 +1,4 @@
-## H01R00 Module ##
+# H01R00 Module #
 
 **H01R00 is a smart RGB LED module** based on Cree CLVBA-FKA-CC1F1L1BB7R3R3 RGB LED and STM32F0 MCU. It is part of the upcoming Hexabitz modular prototyping system.
 
@@ -17,35 +17,9 @@ Hexabitz is a new kind of electronic prototyping platforms with game-changing mo
 
 ===============================================
 
-## Technical Specifications ##
+## Useful Links ##
 
-- Six array ports and six power ports (+3.3V and GND). 
-
-- Access to 6xUART, 2xI2C, SWD, BOOT0, RESET.
-
-- Cree CLVBA-FKA-CC1F1L1BB7R3R3 RGB LED:
-
- * Dominant Wavelength: Red (619 - 624nm) Green (520 - 540nm) Blue (460 - 480nm).
-
- * Luminous Intensity (mcd) @IF=20mA: Red (224 - 560) Green (280 - 900) Blue (90 - 355).
-
-- STM32F091CBU6 32-bit ARM Cortex-M0 MCU.
-
-- 8MHz external oscillator.
-
-## Physical Properties ##
-
-- **Shape**: Hexagon
-
-- **Size**: 3 cm short diagonal
-
-- **Area**: 7.8 cm^2
-
-- **Soldermask Color**: Dark green
-
-- **Finish**: ENIG (gold) or HASL-LF (tin)
-
-===============================================
+- Buy H01R00 module on [Tindie Store](https://www.tindie.com/products/Hexabitz/rgb-led-module-h01r00/)
 
 ## Documentation ##
 We developed a new form of documentation we call it the Factsheet: it's a mix between a hardware datasheet listing electrical properties and a software cheat-sheet showing you quickly the most important software functions and commands. Factsheets are color-coded and designed to be printed double-sided. We think they will come in handy for your Hexabitz projects. Let us know if you like them! 
@@ -77,18 +51,6 @@ Check our [website](https://www.hexabitz.com/faq/) for more information or conta
 
 ===============================================
 
-
-
-# README #
-
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
 ### How do I get set up? ###
 
 * Summary of set up
@@ -98,13 +60,7 @@ This README would normally document whatever steps are necessary to get your app
 * How to run tests
 * Deployment instructions
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+* Email as at info@hexabitz.com for any inquiries
+* Or connect with us on [Hackaday.io](https://hackaday.io/Hexabitz)
