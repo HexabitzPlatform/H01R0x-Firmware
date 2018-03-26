@@ -1,6 +1,6 @@
 # H01R00 Module #
 
-**H01R00 is a smart RGB LED module** based on Cree CLVBA-FKA-CC1F1L1BB7R3R3 RGB LED and STM32F0 MCU. It is part of the upcoming Hexabitz modular prototyping system.
+**H01R00 is a smart RGB LED module** based on Cree CLVBA-FKA-CC1F1L1BB7R3R3 RGB LED and STM32F0 MCU. It is part of Hexabitz modular prototyping system.
 
 - Use as a stand-alone smart RGB LED and easily control via a Command Line Interface (CLI).
 - Firmware has embedded on / off / toggle, PWM, dimming and color sweep functionality.
@@ -19,8 +19,8 @@ Hexabitz is a new kind of electronic prototyping platforms with game-changing mo
 
 ## Submodules ##
 
-- Bitz Operating System - [BOS]()
-- [Thirdparty]()
+- Bitz Operating System - [BOS](https://bitbucket.org/hexabitz/bos)
+- [Thirdparty](https://bitbucket.org/hexabitz/thirdparty)
 
 ## Useful Links ##
 
@@ -28,6 +28,7 @@ Hexabitz is a new kind of electronic prototyping platforms with game-changing mo
 - Check Hexabitz main [website](https://www.hexabitz.com/) and available and planned [modules](https://www.hexabitz.com/modules/).
 - Read the intro to Hexabitz modular prototyping platform on [Hackaday.io](https://hackaday.io/project/76446-hexabitz-modular-electronics-for-real)
 - Overview of hexabitz software [architecture](https://hackaday.io/project/76446-hexabitz-modular-electronics-for-real/log/117213-hexabitz-software-architecture)
+- Check and in-depth overview of Hexabitz code in this series of [article]().
 - Hexabitz demo [projects](https://hackaday.io/list/87488-hexabitz-projects)
 
 ## Documentation ##
@@ -42,6 +43,10 @@ We developed a new form of documentation we call it the Factsheet: it's a mix be
 
 ## How do I get set up? ##
 
+### If you want to load a precompiled HEX file ###
+
+1- Navigate to MDK-ARM/Objects and load the *Module 1.hex* HEX file using any firmware update method described [here]().
+
 ### If you want to compile the code: ###
 
 1- If you didn't already, download Keil uVision MDK toolchain from [here](http://www2.keil.com/mdk5/uvision/). Get your free [license](http://www.keil.com/) for STM32F0 MCUs!
@@ -51,10 +56,6 @@ We developed a new form of documentation we call it the Factsheet: it's a mix be
 3- If you are loading a single module, simple compile the code and load it to module MCU via one of the firmware update methods explaind [here]().
 
 4- If you are loading multiple modules of the same type (connected in an array), then manually modify the module ID in Options for Target >> C/C++ >> Preprocessor Symbols >> Define >> _module=x (where x the module ID) and in Output >> Name of Executable. Recompile the project and load each module according to its ID. You can also create multiple targets as explained in the firmware update [guide]().
-
-### If you want to load a precompiled HEX file ###
-
-1- Navigate to MDK-ARM/Objects and load the *Module 1.hex* HEX file using any firmware update method described [here]().
 
 ### How do I test? ###
 
@@ -99,9 +100,9 @@ Check our [website](https://www.hexabitz.com/faq/) for more information or conta
 
 ===============================================
 
-## See also these repositories ##
+## See also these module repositories ##
 
-- [H05R00]() - Micro-SD Memory Card Module
+- [H1BR60](https://bitbucket.org/hexabitz/h1br6) - Micro-SD Memory Card Module
 
 - [H09R00]() - 600VAC / 1.2A Solid State Relay Module
 
@@ -116,3 +117,13 @@ Check our [website](https://www.hexabitz.com/faq/) for more information or conta
 
 * We welcome any and all help you can provide with testing, bug fixing and adding new features! Feel free to contact us and share what's going on in your mind.
 * Please send us a pull request if you have some useful code to add!
+
+===============================================
+
+## License ##
+This software / firmware is released with [MIT license](https://opensource.org/licenses/MIT). This means you are free to use it in your own projects/products for personal or commercial applications. You are not required to open-source your projects/products as a result of using Hexabitz code inside it.
+
+To our best knowledge, all third-party components currently included with Hexabitz software follow similar licenses (MIT, modified GPL, etc.). We will do our best to not include third-party components that require licensing or have restricted open-source terms (i.e., forcing you to open-source your project). There is no guarantee, however, that this does not happen. If we ever include a software component that requires buying a license or one that forces restrictive, open-source terms, we will mention this clearly. We advise you to verify the license of each third-party component with its vendor. 
+
+## Disclaimer ##
+HEXABITZ SOFTWARE AND HARDWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE AND HARDWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE AND HARDWARE.
