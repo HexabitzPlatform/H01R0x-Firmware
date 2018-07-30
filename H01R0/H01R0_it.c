@@ -151,13 +151,8 @@ void USART3_8_IRQHandler(void)
 */
 void DMA1_Ch1_IRQHandler(void)
 {
-	/* Streaming DMA 1 */
-	HAL_DMA_IRQHandler(&portPortDMA1);
-	if (DMAStream1total)
-		++DMAStream1count;
-	if (DMAStream1count >= DMAStream1total) {
-		StopPortPortDMA1();
-	}
+	/* Streaming or messaging DMA on P1 */
+	DMA_IRQHandler(P1);
 	
 }
 
@@ -168,17 +163,12 @@ void DMA1_Ch1_IRQHandler(void)
 */
 void DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler(void)
 {
-	/* Messaging DMA 3 */
+	/* Streaming or messaging DMA on P5 */
 	if (HAL_DMA_GET_IT_SOURCE(DMA2,DMA_ISR_TCIF2) == SET) {
-		HAL_DMA_IRQHandler(&portMemDMA3);
-	/* Streaming DMA 2 */
+		DMA_IRQHandler(P5);
+	/* Streaming or messaging DMA on P2 */
 	} else if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF3) == SET) {
-		HAL_DMA_IRQHandler(&portPortDMA2);
-		if (DMAStream2total)
-			++DMAStream2count;
-		if (DMAStream2count >= DMAStream2total) {
-			StopPortPortDMA2();
-		}
+		DMA_IRQHandler(P2);
 	}
 }
 
@@ -189,20 +179,15 @@ void DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler(void)
 */
 void DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler(void)
 {
-	/* Messaging DMA 1 */
+	/* Streaming or messaging DMA on P3 */
 	if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF5) == SET) {
-		HAL_DMA_IRQHandler(&portMemDMA1);
-	/* Messaging DMA 2 */
+		DMA_IRQHandler(P3);
+	/* Streaming or messaging DMA on P4 */
 	} else if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF6) == SET) {
-		HAL_DMA_IRQHandler(&portMemDMA2);
-	/* Streaming DMA 3 */
+		DMA_IRQHandler(P4);
+	/* Streaming or messaging DMA on P6 */
 	} else if (HAL_DMA_GET_IT_SOURCE(DMA2,DMA_ISR_TCIF3) == SET) {
-		HAL_DMA_IRQHandler(&portPortDMA3);
-		if (DMAStream3total)
-			++DMAStream3count;
-		if (DMAStream3count >= DMAStream3total) {
-			StopPortPortDMA3();
-		}
+		DMA_IRQHandler(P6);
 	}
 }
 
