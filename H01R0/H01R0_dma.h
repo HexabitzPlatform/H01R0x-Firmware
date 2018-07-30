@@ -25,11 +25,10 @@
 /* External variables --------------------------------------------------------*/
 
 /* Export DMA structs */
-extern DMA_HandleTypeDef msgRxDMA1, msgRxDMA2, msgRxDMA3, msgRxDMA4, msgRxDMA5, msgRxDMA6;
-extern DMA_HandleTypeDef msgTxDMA1;
-extern DMA_HandleTypeDef streamRxDMA1, streamRxDMA2, streamRxDMA3, streamRxDMA4;
-extern DMA_HandleTypeDef streamTxDMA1, streamTxDMA2, streamTxDMA3, streamTxDMA4;
-extern DMA_HandleTypeDef frontendDMA1, frontendDMA2, frontendDMA3;
+extern DMA_HandleTypeDef msgRxDMA[6];
+extern DMA_HandleTypeDef msgTxDMA[3];
+extern DMA_HandleTypeDef streamDMA[6];
+extern DMA_HandleTypeDef frontendDMA[3];
 	 
 /* External function prototypes ----------------------------------------------*/
 extern void DMA_Init(void);
@@ -38,7 +37,7 @@ extern void DMA_MSG_TX_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch)
 extern void DMA_STREAM_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch);
 extern void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA);
 extern void DMA_MSG_TX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA);
-extern void StopStreamDMA(uint8_t streamNum);
+
 
 
 #ifdef __cplusplus
