@@ -35,6 +35,7 @@ extern void DMA_Init(void);
 extern void DMA_MSG_RX_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch);
 extern void DMA_MSG_TX_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch);
 extern void DMA_STREAM_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch);
+extern void SetupMessagingDMAs(void);
 extern void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA);
 extern void DMA_MSG_TX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA);
 

@@ -41,9 +41,6 @@
 #include "BOS.h"
 
 
-FlagStatus UartRxReady = RESET;
-FlagStatus UartTxReady = RESET;
-
 /* USART1 init function */
 #ifdef _Usart1
 void MX_USART1_UART_Init(void)

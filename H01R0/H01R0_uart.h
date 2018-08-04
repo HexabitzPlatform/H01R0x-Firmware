@@ -49,8 +49,6 @@
 
 	 
 /* External variables -----------------------------------------------*/
-extern FlagStatus UartRxReady;
-extern FlagStatus UartTxReady;
 	 
 	 
 // Blocking (polling-based) read

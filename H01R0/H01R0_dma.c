@@ -156,6 +156,32 @@ void DMA_FRONTEND_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch)
 /* Setup and control functions ------------------------------*/
 /*-----------------------------------------------------------*/
 
+/* Setup and start Messaging DMAs 
+*/
+void SetupMessagingDMAs(void)
+{	
+#ifdef _P1
+	DMA_MSG_RX_Setup(P1uart, &msgRxDMA[0]);
+#endif
+#ifdef _P2	
+	DMA_MSG_RX_Setup(P2uart, &msgRxDMA[1]);
+#endif
+#ifdef _P3		
+	DMA_MSG_RX_Setup(P3uart, &msgRxDMA[2]);
+#endif
+#ifdef _P4		
+	DMA_MSG_RX_Setup(P4uart, &msgRxDMA[3]);
+#endif
+#ifdef _P5		
+	DMA_MSG_RX_Setup(P5uart, &msgRxDMA[4]);
+#endif
+#ifdef _P6		
+	DMA_MSG_RX_Setup(P6uart, &msgRxDMA[5]);
+#endif				
+}
+
+/*-----------------------------------------------------------*/
+
 /* Messaging DMA RX setup (port-to-memory) 
 */
 void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA)
@@ -207,6 +233,7 @@ void DMA_STREAM_Setup(UART_HandleTypeDef* huartSrc, UART_HandleTypeDef* huartDst
 	huartSrc->State = HAL_UART_STATE_READY;
 	HAL_UART_Receive_DMA(huartSrc, (uint8_t *)(&(huartDst->Instance->TDR)), num);
 }
+
 /*-----------------------------------------------------------*/
 
 

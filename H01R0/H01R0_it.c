@@ -39,12 +39,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
 
-/* External variables --------------------------------------------------------*/
 
+/* External variables --------------------------------------------------------*/
+extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
+extern uint8_t UARTTxBuf[3][MSG_TX_BUF_SIZE];
 
 /* External function prototypes ----------------------------------------------*/
-extern TaskHandle_t xCommandConsoleTaskHandle;
-extern void NotifyMessagingTaskFromISR(uint8_t port);
+
 
 
 
@@ -199,8 +200,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 
 	/* Give back the mutex. */
 	xSemaphoreGiveFromISR( PxTxSemaphoreHandle[GetPort(huart)], &( xHigherPriorityTaskWoken ) );
-	
-	UartTxReady = SET;
 }
 
 /*-----------------------------------------------------------*/
@@ -213,60 +212,23 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
   /* Set the UART state ready to be able to start the process again */
   huart->State = HAL_UART_STATE_READY;
 	
-	/* Start receiving again */
-	HAL_UART_Receive_IT(huart, (uint8_t *)&cRxedChar, 1);	
+	/* Resume streaming DMA for this UART port */
+	uint8_t port = GetPort(huart);
+	if (portStatus[port] == STREAM) {
+		HAL_UART_Receive_DMA(huart, (uint8_t *)(&(dmaStreamDst[port-1]->Instance->TDR)), huart->hdmarx->Instance->CNDTR);	
+	/* Or parse the circular buffer and restart messaging DMA for this port */
+	} else {
+		MsgDMAStopped[port-1] = true;		// Set a flag here and let the backend task restart DMA after parsing the buffer	
+	}	
 }
 
 /*-----------------------------------------------------------*/
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	char cRxedChar = 0; uint8_t port = GetPort(huart);
-	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+	// Circular buffer is full.. Do something if needed?
 	
-	if (portStatus[port] == FREE || portStatus[port] == MSG || portStatus[port] == CLI) 
-	{
-		/* Read buffer */
-		cRxedChar = huart->Instance->RDR;
-		
-		/* Received CLI request? */
-		if( cRxedChar == '\r' )
-		{
-			cRxedChar = '\0';
-			PcPort = port; 
-			portStatus[port] = CLI;
-			
-			/* Activate the CLI task */
-			vTaskNotifyGiveFromISR(xCommandConsoleTaskHandle, &( xHigherPriorityTaskWoken ) );		
-		}
-		/* Received messaging request? (any value between 1 and 50 other than \r = 0x0D) */
-		else if( (cRxedChar != '\0') && (cRxedChar <= 50) )
-		{
-			portStatus[port] = MSG;
-			messageLength[port-1] = cRxedChar;			
-				
-			/* Activate DMA transfer */
-			PortMemDMA1_Setup(huart, cRxedChar);
-			
-			cRxedChar = '\0';	
-		}
-		/* Message has been received? */
-		else if( cRxedChar == 0x75 )
-		{
-			/* Notify messaging tasks */
-			NotifyMessagingTaskFromISR(port);		
-		}
-		
-		/* Give back the mutex */
-		xSemaphoreGiveFromISR( PxRxSemaphoreHandle[port], &( xHigherPriorityTaskWoken ) );
-		
-		/* Read this port again */
-		if (portStatus[port] == FREE) {
-			HAL_UART_Receive_IT(huart, (uint8_t *)&cRxedChar, 1);
-		}
-	}
-	
-	UartRxReady = SET;
+
 }
 
 /*-----------------------------------------------------------*/
