@@ -413,6 +413,22 @@ HAL_StatusTypeDef writePxITMutex(uint8_t port, char *buffer, uint16_t n, uint32_
 	return result;
 }
 
+/* --- Non-blocking (DMA-based) write protected with a semaphore --- 
+*/
+HAL_StatusTypeDef writePxDMAMutex(uint8_t port, char *buffer, uint16_t n, uint32_t mutexTimeout)
+{
+	HAL_StatusTypeDef result = HAL_ERROR; 
+
+	if (GetUart(port) != NULL) {	
+		/* Wait for the mutex to be available. */
+		if (osSemaphoreWait(PxTxSemaphoreHandle[port], mutexTimeout) == osOK) {
+			result = HAL_UART_Transmit_DMA(GetUart(port), (uint8_t *)buffer, n);
+		}
+	}
+	
+	return result;
+}
+
 /* --- Update baudrate for this port --- 
 */
 BOS_Status UpdateBaudrate(uint8_t port, uint32_t baudrate)

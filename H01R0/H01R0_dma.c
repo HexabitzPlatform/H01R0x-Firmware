@@ -27,7 +27,7 @@ DMA_HandleTypeDef streamDMA[6] = {0};
 DMA_HandleTypeDef frontendDMA[3] = {0};
 
 extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
-extern uint8_t UARTTxBuf[3][MSG_TX_BUF_SIZE];
+//extern uint8_t UARTTxBuf[3][MSG_TX_BUF_SIZE];
 
 /* Private function prototypes -----------------------------------------------*/
 void SetupDMAInterrupts(DMA_HandleTypeDef *hDMA, uint8_t priority);
