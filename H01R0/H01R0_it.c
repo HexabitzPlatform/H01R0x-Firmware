@@ -170,6 +170,9 @@ void DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler(void)
 	/* Streaming or messaging DMA on P2 */
 	} else if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF3) == SET) {
 		DMA_IRQHandler(P2);
+	/* TX messaging DMA 0 */
+	} else if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF2) == SET) {
+		HAL_DMA_IRQHandler(&msgTxDMA[0]);
 	}
 }
 
@@ -189,6 +192,12 @@ void DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler(void)
 	/* Streaming or messaging DMA on P6 */
 	} else if (HAL_DMA_GET_IT_SOURCE(DMA2,DMA_ISR_TCIF3) == SET) {
 		DMA_IRQHandler(P6);
+	/* TX messaging DMA 1 */
+	} else if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF4) == SET) {
+		HAL_DMA_IRQHandler(&msgTxDMA[1]);
+	/* TX messaging DMA 2 */
+	} else if (HAL_DMA_GET_IT_SOURCE(DMA1,DMA_ISR_TCIF7) == SET) {
+		HAL_DMA_IRQHandler(&msgTxDMA[2]);
 	}
 }
 
@@ -197,6 +206,9 @@ void DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler(void)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+	
+	/* TX DMAs are shared so unsetup them here to be reused */
+	DMA_MSG_TX_UnSetup(huart);
 
 	/* Give back the mutex. */
 	xSemaphoreGiveFromISR( PxTxSemaphoreHandle[GetPort(huart)], &( xHigherPriorityTaskWoken ) );

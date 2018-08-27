@@ -31,6 +31,7 @@ extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
 
 /* Private function prototypes -----------------------------------------------*/
 void SetupDMAInterrupts(DMA_HandleTypeDef *hDMA, uint8_t priority);
+void UnSetupDMAInterrupts(DMA_HandleTypeDef *hDMA);
 void RemapAndLinkDMAtoUARTRx(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA);
 void RemapAndLinkDMAtoUARTTx(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA);
 
@@ -158,7 +159,7 @@ void DMA_FRONTEND_CH_Init(DMA_HandleTypeDef *hDMA, DMA_Channel_TypeDef *ch)
 
 /* Setup and start Messaging DMAs 
 */
-void SetupMessagingDMAs(void)
+void SetupMessagingRxDMAs(void)
 {	
 #ifdef _P1
 	DMA_MSG_RX_Setup(P1uart, &msgRxDMA[0]);
@@ -198,10 +199,20 @@ void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA)
 
 /*-----------------------------------------------------------*/
 
-/* Messaging DMA TX setup (port-to-memory) 
+/* Messaging DMA TX setup (memory-to-port) 
 */
-void DMA_MSG_TX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA)
+void DMA_MSG_TX_Setup(UART_HandleTypeDef *huart)
 {	
+	DMA_HandleTypeDef *hDMA;
+	
+	/* Assign the first free TX DMA */
+	if (msgTxDMA[0].Parent == NULL)
+		hDMA = &msgTxDMA[0];
+	else if (msgTxDMA[1].Parent == NULL)
+		hDMA = &msgTxDMA[1];
+	else if (msgTxDMA[2].Parent == NULL)
+		hDMA = &msgTxDMA[2];  
+	
 	/* Remap and link to UART Tx */
 	RemapAndLinkDMAtoUARTTx(huart, hDMA);
 	
@@ -209,6 +220,20 @@ void DMA_MSG_TX_Setup(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA)
 	SetupDMAInterrupts(hDMA, MSG_DMA_INT_PRIORITY);
 	
 	/* Start DMA stream	when needed */	
+}
+
+/*-----------------------------------------------------------*/
+
+/* Unsetup messaging DMA TX (memory-to-port) since TX DMAs are shared
+*/
+void DMA_MSG_TX_UnSetup(UART_HandleTypeDef *huart)
+{	
+	/* Setup DMA interrupts */
+	UnSetupDMAInterrupts(huart->hdmatx);
+	
+	/* Unlink the TX DMA and UART */
+	huart->hdmatx->Parent = NULL;
+	huart->hdmatx = NULL;
 }
 
 /*-----------------------------------------------------------*/
@@ -269,6 +294,40 @@ void SetupDMAInterrupts(DMA_HandleTypeDef *hDMA, uint8_t priority)
 		case (uint32_t)DMA2_Channel5:
 			HAL_NVIC_SetPriority(DMA1_Ch4_7_DMA2_Ch3_5_IRQn, priority, 0);
 			HAL_NVIC_EnableIRQ(DMA1_Ch4_7_DMA2_Ch3_5_IRQn);			
+			break;
+		
+		default:
+			break;
+	}			
+}
+
+/*-----------------------------------------------------------*/
+
+/* UnSetup DMA interrupts  
+*/
+void UnSetupDMAInterrupts(DMA_HandleTypeDef *hDMA)
+{
+	switch ((uint32_t)hDMA->Instance)
+	{
+		case (uint32_t)DMA1_Channel1:
+			HAL_NVIC_DisableIRQ(DMA1_Ch1_IRQn);	
+			break;
+		
+		case (uint32_t)DMA1_Channel2:
+		case (uint32_t)DMA1_Channel3:
+		case (uint32_t)DMA2_Channel1:
+		case (uint32_t)DMA2_Channel2:
+			HAL_NVIC_DisableIRQ(DMA1_Ch2_3_DMA2_Ch1_2_IRQn);				
+			break;
+			
+		case (uint32_t)DMA1_Channel4:
+		case (uint32_t)DMA1_Channel5:
+		case (uint32_t)DMA1_Channel6:
+		case (uint32_t)DMA1_Channel7:
+		case (uint32_t)DMA2_Channel3:
+		case (uint32_t)DMA2_Channel4:
+		case (uint32_t)DMA2_Channel5:
+			HAL_NVIC_DisableIRQ(DMA1_Ch4_7_DMA2_Ch3_5_IRQn);			
 			break;
 		
 		default:

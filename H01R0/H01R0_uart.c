@@ -418,11 +418,15 @@ HAL_StatusTypeDef writePxITMutex(uint8_t port, char *buffer, uint16_t n, uint32_
 HAL_StatusTypeDef writePxDMAMutex(uint8_t port, char *buffer, uint16_t n, uint32_t mutexTimeout)
 {
 	HAL_StatusTypeDef result = HAL_ERROR; 
+	UART_HandleTypeDef* hUart = GetUart(port);
 
-	if (GetUart(port) != NULL) {	
+	if (hUart != NULL) {	
 		/* Wait for the mutex to be available. */
 		if (osSemaphoreWait(PxTxSemaphoreHandle[port], mutexTimeout) == osOK) {
-			result = HAL_UART_Transmit_DMA(GetUart(port), (uint8_t *)buffer, n);
+			/* Setup TX DMA on this port */
+			DMA_MSG_TX_Setup(hUart);
+			/* Transmit the message */
+			result = HAL_UART_Transmit_DMA(hUart, (uint8_t *)buffer, n);
 		}
 	}
 	
