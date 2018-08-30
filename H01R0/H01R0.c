@@ -181,7 +181,7 @@ void Module_Init(void)
 
 /* --- H01R0 message processing task. 
 */
-Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst)
+Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst, uint8_t shift)
 {
 	Module_Status result = H01R0_OK;
 	uint32_t period = 0; uint32_t dc = 0; int32_t repeat = 0;
@@ -189,7 +189,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 	switch (code)
 	{
 		case CODE_H01R0_ON :
-			RGB_LED_on(cMessage[port-1][4]);
+			RGB_LED_on(cMessage[port-1][shift]);
 			break;
 		
 		case CODE_H01R0_OFF :
@@ -200,46 +200,46 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 			if (RGB_LED_State)
 				RGB_LED_off();
 			else
-				RGB_LED_on(cMessage[port-1][4]);
+				RGB_LED_on(cMessage[port-1][shift]);
 			break;
 
 		case CODE_H01R0_COLOR :
-			if (cMessage[port-1][4] == 0) {
+			if (cMessage[port-1][shift] == 0) {
 			/* Color definition from color list */
-				RGB_LED_setColor(cMessage[port-1][5], cMessage[port-1][6]);
-			} else if (cMessage[port-1][4] == 1) {
+				RGB_LED_setColor(cMessage[port-1][1+shift], cMessage[port-1][2+shift]);
+			} else if (cMessage[port-1][shift] == 1) {
 			/* RGB color */
-				RGB_LED_setRGB(cMessage[port-1][5], cMessage[port-1][6], cMessage[port-1][7], cMessage[port-1][8]);			
+				RGB_LED_setRGB(cMessage[port-1][1+shift], cMessage[port-1][2+shift], cMessage[port-1][3+shift], cMessage[port-1][4+shift]);			
 			}	
 			break;
 		
 		case CODE_H01R0_PULSE :
-			if (cMessage[port-1][4] == 0) {
+			if (cMessage[port-1][shift] == 0) {
 			/* Color definition from color list */
-				period = ( (uint32_t) cMessage[port-1][6] << 24 ) + ( (uint32_t) cMessage[port-1][7] << 16 ) + ( (uint32_t) cMessage[port-1][8] << 8 ) + cMessage[port-1][9];
-				dc = ( (uint32_t) cMessage[port-1][10] << 24 ) + ( (uint32_t) cMessage[port-1][11] << 16 ) + ( (uint32_t) cMessage[port-1][12] << 8 ) + cMessage[port-1][13];
-				repeat = ( (uint32_t) cMessage[port-1][14] << 24 ) + ( (uint32_t) cMessage[port-1][15] << 16 ) + ( (uint32_t) cMessage[port-1][16] << 8 ) + cMessage[port-1][17];
-				RGB_LED_pulseColor(cMessage[port-1][5], period, dc, repeat);
-			} else if (cMessage[port-1][4] == 1) {
+				period = ( (uint32_t) cMessage[port-1][2+shift] << 24 ) + ( (uint32_t) cMessage[port-1][3+shift] << 16 ) + ( (uint32_t) cMessage[port-1][4+shift] << 8 ) + cMessage[port-1][5+shift];
+				dc = ( (uint32_t) cMessage[port-1][6+shift] << 24 ) + ( (uint32_t) cMessage[port-1][7+shift] << 16 ) + ( (uint32_t) cMessage[port-1][8+shift] << 8 ) + cMessage[port-1][9+shift];
+				repeat = ( (uint32_t) cMessage[port-1][10+shift] << 24 ) + ( (uint32_t) cMessage[port-1][11+shift] << 16 ) + ( (uint32_t) cMessage[port-1][12+shift] << 8 ) + cMessage[port-1][13+shift];
+				RGB_LED_pulseColor(cMessage[port-1][1+shift], period, dc, repeat);
+			} else if (cMessage[port-1][shift] == 1) {
 			/* RGB color */
-				period = ( (uint32_t) cMessage[port-1][8] << 24 ) + ( (uint32_t) cMessage[port-1][9] << 16 ) + ( (uint32_t) cMessage[port-1][10] << 8 ) + cMessage[port-1][11];
-				dc = ( (uint32_t) cMessage[port-1][12] << 24 ) + ( (uint32_t) cMessage[port-1][13] << 16 ) + ( (uint32_t) cMessage[port-1][14] << 8 ) + cMessage[port-1][15];
-				repeat = ( (uint32_t) cMessage[port-1][16] << 24 ) + ( (uint32_t) cMessage[port-1][17] << 16 ) + ( (uint32_t) cMessage[port-1][18] << 8 ) + cMessage[port-1][19];
-				RGB_LED_pulseRGB(cMessage[port-1][5], cMessage[port-1][6], cMessage[port-1][7], period, dc, repeat);			
+				period = ( (uint32_t) cMessage[port-1][4+shift] << 24 ) + ( (uint32_t) cMessage[port-1][5+shift] << 16 ) + ( (uint32_t) cMessage[port-1][6+shift] << 8 ) + cMessage[port-1][7+shift];
+				dc = ( (uint32_t) cMessage[port-1][8+shift] << 24 ) + ( (uint32_t) cMessage[port-1][9+shift] << 16 ) + ( (uint32_t) cMessage[port-1][10+shift] << 8 ) + cMessage[port-1][11+shift];
+				repeat = ( (uint32_t) cMessage[port-1][12+shift] << 24 ) + ( (uint32_t) cMessage[port-1][13+shift] << 16 ) + ( (uint32_t) cMessage[port-1][14+shift] << 8 ) + cMessage[port-1][15+shift];
+				RGB_LED_pulseRGB(cMessage[port-1][1+shift], cMessage[port-1][2+shift], cMessage[port-1][3+shift], period, dc, repeat);			
 			}				
 			break;
 			
 		case CODE_H01R0_SWEEP :
-			period = ( (uint32_t) cMessage[port-1][5] << 24 ) + ( (uint32_t) cMessage[port-1][6] << 16 ) + ( (uint32_t) cMessage[port-1][7] << 8 ) + cMessage[port-1][8];
-			repeat = ( (uint32_t) cMessage[port-1][9] << 24 ) + ( (uint32_t) cMessage[port-1][10] << 16 ) + ( (uint32_t) cMessage[port-1][11] << 8 ) + cMessage[port-1][12];
-			RGB_LED_sweep(cMessage[port-1][4], period, repeat);
+			period = ( (uint32_t) cMessage[port-1][1+shift] << 24 ) + ( (uint32_t) cMessage[port-1][2+shift] << 16 ) + ( (uint32_t) cMessage[port-1][3+shift] << 8 ) + cMessage[port-1][4+shift];
+			repeat = ( (uint32_t) cMessage[port-1][5+shift] << 24 ) + ( (uint32_t) cMessage[port-1][6+shift] << 16 ) + ( (uint32_t) cMessage[port-1][7+shift] << 8 ) + cMessage[port-1][8+shift];
+			RGB_LED_sweep(cMessage[port-1][shift], period, repeat);
 			break;
 		
 		case CODE_H01R0_DIM :
-			period = ( (uint32_t) cMessage[port-1][6] << 24 ) + ( (uint32_t) cMessage[port-1][7] << 16 ) + ( (uint32_t) cMessage[port-1][8] << 8 ) + cMessage[port-1][9];
-			dc = ( (uint32_t) cMessage[port-1][10] << 24 ) + ( (uint32_t) cMessage[port-1][11] << 16 ) + ( (uint32_t) cMessage[port-1][12] << 8 ) + cMessage[port-1][13];
-			repeat = ( (uint32_t) cMessage[port-1][14] << 24 ) + ( (uint32_t) cMessage[port-1][15] << 16 ) + ( (uint32_t) cMessage[port-1][16] << 8 ) + cMessage[port-1][17];
-			RGB_LED_dim(cMessage[port-1][4], cMessage[port-1][5], period, dc, repeat);
+			period = ( (uint32_t) cMessage[port-1][2+shift] << 24 ) + ( (uint32_t) cMessage[port-1][3+shift] << 16 ) + ( (uint32_t) cMessage[port-1][4+shift] << 8 ) + cMessage[port-1][5+shift];
+			dc = ( (uint32_t) cMessage[port-1][6+shift] << 24 ) + ( (uint32_t) cMessage[port-1][7+shift] << 16 ) + ( (uint32_t) cMessage[port-1][8+shift] << 8 ) + cMessage[port-1][9+shift];
+			repeat = ( (uint32_t) cMessage[port-1][10+shift] << 24 ) + ( (uint32_t) cMessage[port-1][11+shift] << 16 ) + ( (uint32_t) cMessage[port-1][12+shift] << 8 ) + cMessage[port-1][13+shift];
+			RGB_LED_dim(cMessage[port-1][shift], cMessage[port-1][1+shift], period, dc, repeat);
 			break;
 		
 		default:
