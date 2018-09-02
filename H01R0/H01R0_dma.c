@@ -25,6 +25,7 @@ DMA_HandleTypeDef msgRxDMA[6] = {0};
 DMA_HandleTypeDef msgTxDMA[3] = {0};
 DMA_HandleTypeDef streamDMA[6] = {0};
 DMA_HandleTypeDef frontendDMA[3] = {0};
+CRC_HandleTypeDef hcrc;
 
 extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
 //extern uint8_t UARTTxBuf[3][MSG_TX_BUF_SIZE];
@@ -258,8 +259,6 @@ void DMA_STREAM_Setup(UART_HandleTypeDef* huartSrc, UART_HandleTypeDef* huartDst
 	huartSrc->State = HAL_UART_STATE_READY;
 	HAL_UART_Receive_DMA(huartSrc, (uint8_t *)(&(huartDst->Instance->TDR)), num);
 }
-
-/*-----------------------------------------------------------*/
 
 
 /*-----------------------------------------------------------*/
@@ -566,7 +565,33 @@ void RemapAndLinkDMAtoUARTTx(UART_HandleTypeDef *huart, DMA_HandleTypeDef *hDMA)
 }
 
 /*-----------------------------------------------------------*/
+/* Hardware CRC ---------------------------------------------*/
+/*-----------------------------------------------------------*/
 
+void CRC_Init(void)
+{
+  hcrc.Instance = CRC;
+	hcrc.Init.CRCLength = CRC_POLYLENGTH_8B;		// Do not change this since it is used for message CRC8
+	hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
+  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
+	hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+	hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+	hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+	HAL_CRC_Init(&hcrc);
+}
 
+void HAL_CRC_MspInit(CRC_HandleTypeDef* hcrc)
+{
+	/* Enable peripheral clock */
+	__HAL_RCC_CRC_CLK_ENABLE();
+}
+
+void HAL_CRC_MspDeInit(CRC_HandleTypeDef* hcrc)
+{
+	/* Disable peripheral clock */
+	__HAL_RCC_CRC_CLK_DISABLE();
+}
+
+/*-----------------------------------------------------------*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
