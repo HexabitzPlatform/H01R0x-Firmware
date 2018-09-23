@@ -50,6 +50,7 @@ void TIM3_Init(void);
 
 /* Create CLI commands --------------------------------------------------------*/
 
+portBASE_TYPE demoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 portBASE_TYPE onCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 portBASE_TYPE offCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 portBASE_TYPE colorCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
@@ -60,6 +61,15 @@ portBASE_TYPE pulseRGBCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, co
 portBASE_TYPE sweepCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 portBASE_TYPE dimCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 
+/* CLI command structure : demo */
+const CLI_Command_Definition_t demoCommandDefinition =
+{
+	( const int8_t * ) "demo", /* The command string to type. */
+	( const int8_t * ) "(H01R0) demo:\r\n Run a demo program to test module functionality\r\n\r\n",
+	demoCommand, /* The function to run. */
+	0 /* No parameters are expected. */
+};
+/*-----------------------------------------------------------*/
 /* CLI command structure : on */
 const CLI_Command_Definition_t onCommandDefinition =
 {
@@ -256,6 +266,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 */
 void RegisterModuleCLICommands(void)
 {
+	FreeRTOS_CLIRegisterCommand( &demoCommandDefinition );
 	FreeRTOS_CLIRegisterCommand( &onCommandDefinition );
 	FreeRTOS_CLIRegisterCommand( &offCommandDefinition );
 	FreeRTOS_CLIRegisterCommand( &colorCommandDefinition );
@@ -862,6 +873,38 @@ Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t
 	|															Commands																 	|
    ----------------------------------------------------------------------- 
 */
+
+portBASE_TYPE demoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+{
+	static const int8_t *pcRedMessage = ( int8_t * ) "Red LED is on\r\n";
+	static const int8_t *pcGreenMessage = ( int8_t * ) "Green LED is on\r\n";
+	static const int8_t *pcBlueMessage = ( int8_t * ) "Blue LED is on";
+	
+	/* Remove compile time warnings about unused parameters, and check the
+	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	write buffer length is adequate, so does not check for buffer overflows. */
+	( void ) pcCommandString;
+	( void ) xWriteBufferLen;
+	configASSERT( pcWriteBuffer );
+
+	/* Respond to the command */
+	RGB_LED_off(); RGB_LED_setColor(RED, 50);
+	writePxMutex(PcPort, ( char * ) pcRedMessage, strlen(( char * ) pcRedMessage), 10, 10);
+	Delay_ms(1000);
+	RGB_LED_off(); RGB_LED_setColor(GREEN, 50);
+	writePxMutex(PcPort, ( char * ) pcGreenMessage, strlen(( char * ) pcGreenMessage), 10, 10);
+	Delay_ms(1000);	
+	RGB_LED_off(); RGB_LED_setColor(BLUE, 50);
+	writePxMutex(PcPort, ( char * ) pcBlueMessage, strlen(( char * ) pcBlueMessage), 10, 10);
+	Delay_ms(1000);	
+	strcpy( ( char * ) pcWriteBuffer, "\r\n");
+	
+	/* There is no more data to return after this single string, so return
+	pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
 
 portBASE_TYPE onCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
