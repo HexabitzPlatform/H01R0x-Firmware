@@ -897,6 +897,7 @@ portBASE_TYPE demoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const 
 	RGB_LED_off(); RGB_LED_setColor(BLUE, 50);
 	writePxMutex(PcPort, ( char * ) pcBlueMessage, strlen(( char * ) pcBlueMessage), 10, 10);
 	Delay_ms(1000);	
+	RGB_LED_off();
 	strcpy( ( char * ) pcWriteBuffer, "\r\n");
 	
 	/* There is no more data to return after this single string, so return
