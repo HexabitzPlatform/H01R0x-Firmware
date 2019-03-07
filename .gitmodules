@@ -4,5 +4,4 @@
 	branch = master
 [submodule "Thirdparty"]
 	path = Thirdparty
-	url = https://bitbucket.org/hexabitz/thirdparty
-	branch = master
+	url = https://bitbucket.org/hexabitz/thirdparty/
