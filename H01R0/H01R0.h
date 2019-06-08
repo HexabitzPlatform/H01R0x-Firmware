@@ -1,5 +1,5 @@
 /*
-    BitzOS (BOS) V0.1.5 - Copyright (C) 2017-2018 Hexabitz
+    BitzOS (BOS) V0.1.6 - Copyright (C) 2017-2019 Hexabitz
     All rights reserved
 		
     File Name     : H01R0.c
@@ -106,6 +106,8 @@
 	#define RGB_PWM_PERIOD			((float) (1/RGB_PWM_FREQ) )
 #endif
 
+#define NUM_MODULE_PARAMS		1
+	
 /* Module_Status Type Definition */  
 typedef enum 
 {

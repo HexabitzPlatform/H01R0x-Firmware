@@ -2,7 +2,7 @@
 	path = BOS
 	url = https://github.com/hexabitzinc/BOS
 	branch = master
-[submodule "thirdparty"]
-	path = thirdparty
+[submodule "Thirdparty"]
+	path = Thirdparty
 	url = https://github.com/hexabitzinc/Thirdparty
 	branch = master
