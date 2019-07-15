@@ -75,7 +75,7 @@ void DMA_Init(void)
 	/* Initialize streaming RX DMAs x 0 */
 	// No more channels. Dynamically reconfigure from messaging RX DMAs.
 	
-	/* Initialize frontend DMAs x 3 */
+	/* Initialize frontend DMAs x 3 - Update for each module */
 	//DMA_FRONTEND_CH_Init(&frontendDMA[0], DMA2_Channel5);
 	
 }
@@ -213,6 +213,7 @@ void DMA_MSG_TX_Setup(UART_HandleTypeDef *huart)
 		hDMA = &msgTxDMA[1];
 	else if (msgTxDMA[2].Parent == NULL)
 		hDMA = &msgTxDMA[2];  
+	// TODO return no enough TX DMAs
 	
 	/* Remap and link to UART Tx */
 	RemapAndLinkDMAtoUARTTx(huart, hDMA);
