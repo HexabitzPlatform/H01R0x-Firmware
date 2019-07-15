@@ -239,9 +239,13 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	// Circular buffer is full.. TODO set an overrun flag?
-	
-
+	// Circular buffer is full. Set a global persistant flag via BOS events and a temporary flag via portStatus.
+	BOS.overrun = GetPort(huart);
+	portStatus[GetPort(huart)] = OVERRUN;
+	// Clear the circular RX buffer
+	memset(&UARTRxBuf[GetPort(huart)-1][0], 0, MSG_RX_BUF_SIZE);
+	// Set a port-specific flag here and let the backend task restart DMA
+	MsgDMAStopped[GetPort(huart)-1] = true;	
 }
 
 /*-----------------------------------------------------------*/
