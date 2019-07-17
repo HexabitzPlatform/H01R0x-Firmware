@@ -154,19 +154,6 @@ extern uint8_t rgbLedMode, rgbRed, rgbGreen, rgbBlue, rgbColor;
 extern uint32_t rgbPeriod, rgbDC; 
 extern int16_t rgbCount;
 
-/* -----------------------------------------------------------------------
-	|														Message Codes	 														 	|
-   ----------------------------------------------------------------------- 
-*/
-
-#define	CODE_H01R0_ON							100
-#define	CODE_H01R0_OFF						101
-#define	CODE_H01R0_TOGGLE					102
-#define	CODE_H01R0_COLOR					103
-#define	CODE_H01R0_PULSE					104
-#define	CODE_H01R0_SWEEP					105
-#define	CODE_H01R0_DIM						106
-
 	
 /* -----------------------------------------------------------------------
 	|																APIs	 																 	|
