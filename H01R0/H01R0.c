@@ -179,7 +179,9 @@ void Module_Init(void)
   MX_USART3_UART_Init();
   MX_USART4_UART_Init();
   MX_USART5_UART_Init();
+#ifdef H01R0	
   MX_USART6_UART_Init();
+#endif
 	
 	/* LED PWM Timer */
 	TIM3_Init();
@@ -286,6 +288,7 @@ void RegisterModuleCLICommands(void)
 */
 uint8_t GetPort(UART_HandleTypeDef *huart)
 {
+#ifdef H01R0
 	if (huart->Instance == USART4)
 		return P1;
 	else if (huart->Instance == USART2)
@@ -298,7 +301,20 @@ uint8_t GetPort(UART_HandleTypeDef *huart)
 		return P5;
 	else if (huart->Instance == USART5)
 		return P6;
-
+#endif
+#ifdef P01R0
+	if (huart->Instance == USART4)
+		return P1;
+	else if (huart->Instance == USART2)
+		return P2;
+	else if (huart->Instance == USART3)
+		return P3;
+	else if (huart->Instance == USART1)
+		return P4;
+	else if (huart->Instance == USART5)
+		return P5;	
+#endif	
+	
 	return 0;
 }
 
