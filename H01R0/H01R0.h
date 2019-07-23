@@ -13,6 +13,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
+#include "H01R0_MemoryMap.h"	
 #include "H01R0_uart.h"	
 #include "H01R0_gpio.h"	
 #include "H01R0_dma.h"		
@@ -132,6 +133,11 @@
 
 
 #define NUM_MODULE_PARAMS		1
+
+/* Module EEPROM Variables */
+
+// Module Addressing Space 500 - 599
+#define _EE_MODULE							500		
 	
 /* Module_Status Type Definition */  
 typedef enum 
