@@ -188,7 +188,7 @@ void Module_Init(void)
 	
 	/* Create the RGB LED task */
 	if (RGBledTaskHandle == NULL)
-		xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal, &RGBledTaskHandle);
+		xTaskCreate(RGBledTask, (const char *) "RGBledTask", configMINIMAL_STACK_SIZE, NULL, osPriorityNormal-osPriorityIdle, &RGBledTaskHandle);
 }
 
 /*-----------------------------------------------------------*/
