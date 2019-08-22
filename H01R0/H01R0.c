@@ -861,12 +861,19 @@ Module_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, in
 */
 Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
 {
+	if (mode == 3 || mode == 4)
+	{		
 	Module_Status result = H01R0_OK;
 	
 	rgbPeriod = period; rgbCount = repeat;
 	rgbLedMode = mode;
 
 	return result;
+	}
+	else
+	{
+		return H01R0_ERR_WrongMode;
+	}
 }
 
 /*-----------------------------------------------------------*/
@@ -875,6 +882,8 @@ Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat)
 */
 Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat)
 {
+	if (mode >= 5 && mode <= 12)
+	{	
 	Module_Status result = H01R0_OK;
 	
 	rgbColor = color;
@@ -882,6 +891,11 @@ Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t
 	rgbLedMode = mode;
 	
 	return result;
+	}
+	else
+	{
+		return H01R0_ERR_WrongMode;
+	}
 }
 
 /*-----------------------------------------------------------*/
