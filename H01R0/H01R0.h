@@ -146,6 +146,7 @@ typedef enum
 	H01R0_ERR_UnknownMessage,
   H01R0_ERR_WrongColor,
 	H01R0_ERR_WrongIntensity,
+	H01R0_ERR_WrongMode,
 	H01R0_ERROR = 255
 } Module_Status;
 
