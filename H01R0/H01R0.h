@@ -159,14 +159,6 @@ typedef enum
 	#define _IND_LED_PIN		GPIO_PIN_15
 #endif
 
-/* Color Enumerations */
-enum BasicColors{BLACK=1, WHITE, RED, BLUE, YELLOW, CYAN, MAGENTA, GREEN};
-
-
-/* RGB LED Mode Enumerations */
-enum RGBLedMode{RGB_PULSE_RGB=1, RGB_PULSE_COLOR, RGB_SWEEP_BASIC, RGB_SWEEP_FINE, RGB_DIM_UP, RGB_DIM_UP_WAIT, RGB_DIM_DOWN, RGB_DIM_DOWN_WAIT,\
-	RGB_DIM_UP_DOWN, RGB_DIM_DOWN_UP, RGB_DIM_UP_DOWN_WAIT, RGB_DIM_DOWN_UP_WAIT};
-
 
 /* Export UART variables */
 extern UART_HandleTypeDef huart1;
