@@ -98,6 +98,30 @@ void UserTask(void * argument)
 	}
 }
 
+/* --- User message parser. 
+*/
+BOS_Status User_MessagingParser(uint16_t code, uint8_t port, uint8_t src, uint8_t dst, uint8_t shift)
+
+{
+	BOS_Status result = BOS_ERR_UnknownMessage;
+	
+	switch (code)
+	{
+		case CODE_USER_MESSAGE_01 :
+			IND_blink(100);
+			break;
+
+		case CODE_USER_MESSAGE_02 :
+			IND_blink(200);
+			break;
+		
+		default:
+			break;
+	}
+	
+	return result;
+}
+
 /*-----------------------------------------------------------*/
 
 /************************ (C) COPYRIGHT HEXABITZ *****END OF FILE****/
