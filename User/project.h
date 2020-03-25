@@ -18,9 +18,6 @@
 //#include "topology_1.h"
 
 
-#define	CODE_USER_MESSAGE_01     					70
-#define	CODE_USER_MESSAGE_02     					71
-
 
 /* Emulated EEPROM Virtual addresses for user parameters */
 
