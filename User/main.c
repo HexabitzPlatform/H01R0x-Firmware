@@ -42,6 +42,17 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+static portBASE_TYPE UserCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+
+/* CLI command structure : user-command */
+const CLI_Command_Definition_t UserCommandDefinition =
+{
+	( const int8_t * ) "user-command", /* The command string to type. */
+	( const int8_t * ) "user-command:\r\n Execute a user command\r\n\r\n",
+	UserCommand, /* The function to run. */
+	0 /* No parameters are expected. */
+};
+
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -96,6 +107,23 @@ void UserTask(void * argument)
   {
 
 	}
+}
+
+static portBASE_TYPE UserCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+{
+	IND_blink(100);
+	strcpy( ( char * ) pcWriteBuffer, "This is my command!\n");
+	
+	/* There is no more data to return after this single string, so return
+	pdFALSE. */
+	return pdFALSE;
+}
+
+/* --- Register user CLI Commands 
+*/
+void RegisterUserCLICommands(void)
+{
+	FreeRTOS_CLIRegisterCommand( &UserCommandDefinition );
 }
 
 /*-----------------------------------------------------------*/
