@@ -1,5 +1,5 @@
 /*
-    BitzOS (BOS) V0.2.0 - Copyright (C) 2017-2019 Hexabitz
+    BitzOS (BOS) V0.2.1 - Copyright (C) 2017-2020 Hexabitz
     All rights reserved
 		
     File Name     : project.h
@@ -9,6 +9,7 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef PROJECT_H
 #define PROJECT_H
+
 
 
 /* Includes ------------------------------------------------------------------*/
