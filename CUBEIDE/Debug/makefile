@@ -1,0 +1,91 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+-include ../makefile.init
+
+RM := rm -rf
+
+# All of the sources participating in the build are defined here
+-include sources.mk
+-include User/subdir.mk
+-include STM32F0xx_HAL_Driver/Src/subdir.mk
+-include STM32F0xx/Source/Templates/iar/subdir.mk
+-include STM32F0xx/Source/Templates/gcc/subdir.mk
+-include STM32F0xx/Source/Templates/arm/subdir.mk
+-include STM32F0xx/Source/Templates/subdir.mk
+-include H01R0/subdir.mk
+-include FreeRTOS/Source/portable/RVDS/ARM_CM0/subdir.mk
+-include FreeRTOS/Source/portable/MemMang/subdir.mk
+-include FreeRTOS/Source/portable/GCC/ARM_CM0/subdir.mk
+-include FreeRTOS/Source/CMSIS_RTOS/subdir.mk
+-include FreeRTOS/Source/subdir.mk
+-include BOS/subdir.mk
+-include subdir.mk
+-include objects.mk
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(strip $(C_DEPS)),)
+-include $(C_DEPS)
+endif
+endif
+
+-include ../makefile.defs
+
+# Add inputs and outputs from these tool invocations to the build variables 
+EXECUTABLES += \
+H01r0x.elf \
+
+SIZE_OUTPUT += \
+default.size.stdout \
+
+OBJDUMP_LIST += \
+H01r0x.list \
+
+OBJCOPY_HEX += \
+H01r0x.hex \
+
+OBJCOPY_BIN += \
+H01r0x.bin \
+
+
+# All Target
+all: H01r0x.elf secondary-outputs
+
+# Tool invocations
+H01r0x.elf: $(OBJS) $(USER_OBJS)
+	arm-none-eabi-gcc -o "H01r0x.elf" @"objects.list" $(USER_OBJS) $(LIBS) --specs=nosys.specs -Wl,-Map="H01r0x.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+default.size.stdout: $(EXECUTABLES)
+	arm-none-eabi-size  $(EXECUTABLES)
+	@echo 'Finished building: $@'
+	@echo ' '
+
+H01r0x.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "H01r0x.list"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+H01r0x.hex: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "H01r0x.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+H01r0x.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "H01r0x.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+# Other Targets
+clean:
+	-$(RM) *
+	-@echo ' '
+
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
+
+.PHONY: all clean dependents
+.SECONDARY:
+
+-include ../makefile.targets

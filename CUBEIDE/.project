@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>H01r0x</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>BOS</name>
+			<type>2</type>
+			<location>D:/Hexabitz Modules for testing 2/H01R0x/BOS</location>
+		</link>
+		<link>
+			<name>FreeRTOS</name>
+			<type>2</type>
+			<location>D:/Hexabitz Modules for testing 2/H01R0x/Thirdparty/Middleware/FreeRTOS</location>
+		</link>
+		<link>
+			<name>H01R0</name>
+			<type>2</type>
+			<location>D:/Hexabitz Modules for testing 2/H01R0x/H01R0</location>
+		</link>
+		<link>
+			<name>STM32F0xx</name>
+			<type>2</type>
+			<location>D:/Hexabitz Modules for testing 2/H01R0x/Thirdparty/CMSIS/Device/ST/STM32F0xx</location>
+		</link>
+		<link>
+			<name>STM32F0xx_HAL_Driver</name>
+			<type>2</type>
+			<location>D:/Hexabitz Modules for testing 2/H01R0x/Thirdparty/STM32F0xx_HAL_Driver</location>
+		</link>
+		<link>
+			<name>User</name>
+			<type>2</type>
+			<location>D:/Hexabitz Modules for testing 2/H01R0x/User</location>
+		</link>
+	</linkedResources>
+</projectDescription>
