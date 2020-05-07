@@ -59,11 +59,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS.c</locationURI>
 		</link>
 		<link>
-			<name>BOS/BOS.c.orig</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS.c.orig</locationURI>
-		</link>
-		<link>
 			<name>BOS/BOS.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS.h</locationURI>

@@ -1,7 +1,14 @@
 MDK-ARM/Objects/
 MDK-ARM/Listings/
-STM32IDE/Debug/
-STM32IDE/Release/
+*.o
+*.d
+*.list
+*.map
+*.elf
+*.mk
+*.su
+*.xml
+*.prefs
 *.Admin
 *.dbgconf
 *.asaad
