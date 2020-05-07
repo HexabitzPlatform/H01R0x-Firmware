@@ -38,6 +38,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 H01R0x.list \
 
+OBJCOPY_HEX += \
+H01R0x.hex \
+
 
 # All Target
 all: H01R0x.elf secondary-outputs
@@ -58,12 +61,17 @@ H01R0x.list: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+H01R0x.hex: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "H01R0x.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
 	-$(RM) *
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
 
 .PHONY: all clean dependents
 .SECONDARY:

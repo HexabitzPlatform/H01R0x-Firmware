@@ -5,9 +5,6 @@ MDK-ARM/Listings/
 *.list
 *.map
 *.elf
-*.mk
-*.su
-*.makefile
 *.Admin
 *.dbgconf
 *.asaad
