@@ -7,8 +7,6 @@ MDK-ARM/Listings/
 *.elf
 *.mk
 *.su
-*.xml
-*.prefs
 *.makefile
 *.Admin
 *.dbgconf
