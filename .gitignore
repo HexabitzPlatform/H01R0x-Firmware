@@ -9,6 +9,7 @@ MDK-ARM/Listings/
 *.su
 *.xml
 *.prefs
+*.makefile
 *.Admin
 *.dbgconf
 *.asaad
