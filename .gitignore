@@ -1,5 +1,7 @@
 MDK-ARM/Objects/
 MDK-ARM/Listings/
+STM32IDE/Debug/
+STM32IDE/Release/
 *.Admin
 *.dbgconf
 *.asaad

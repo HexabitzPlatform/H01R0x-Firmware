@@ -1804,34 +1804,9 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_1.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_1.c</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_2.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_2.c</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_3.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_3.c</locationURI>
-		</link>
-		<link>
 			<name>Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_4.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_4.c</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_5.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/MemMang/heap_5.c</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/system_stm32f0xx.c</name>
@@ -1847,86 +1822,6 @@
 			<name>Thirdparty/Middleware/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f030x6.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f030x6.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f030x8.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f030x8.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f030xc.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f030xc.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f031x6.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f031x6.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f038xx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f038xx.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f042x6.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f042x6.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f048xx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f048xx.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f051x8.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f051x8.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f058xx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f058xx.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f070x6.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f070x6.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f070xb.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f070xb.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f071xb.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f071xb.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f072xb.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f072xb.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f078xx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f078xx.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f091xc.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f091xc.s</locationURI>
-		</link>
-		<link>
-			<name>Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f098xx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc/startup_stm32f098xx.s</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

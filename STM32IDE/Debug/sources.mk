@@ -18,7 +18,6 @@ C_DEPS :=
 SUBDIRS := \
 BOS \
 H01R0 \
-Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc \
 Thirdparty/CMSIS/Device/ST/STM32F0xx/Source/Templates \
 Thirdparty/Middleware/FreeRTOS/Source/CMSIS_RTOS \
 Thirdparty/Middleware/FreeRTOS/Source \
