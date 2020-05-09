@@ -41,6 +41,9 @@ H01R0x.list \
 OBJCOPY_HEX += \
 H01R0x.hex \
 
+OBJCOPY_BIN += \
+H01R0x.bin \
+
 
 # All Target
 all: H01R0x.elf secondary-outputs
@@ -66,12 +69,17 @@ H01R0x.hex: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+H01R0x.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "H01R0x.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
 	-$(RM) *
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 .PHONY: all clean dependents
 .SECONDARY:

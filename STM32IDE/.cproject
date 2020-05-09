@@ -87,6 +87,11 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.531530604" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1991708182.186126790" name="startup_stm32f091xc.s" rcbsApplicability="disable" resourcePath="H01R0/startup_stm32f091xc.s" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1840664654.972000027">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1840664654.972000027" name="MCU GCC Assembler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1840664654">
+							<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.507098670" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="BOS"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="H01R0"/>

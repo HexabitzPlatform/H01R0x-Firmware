@@ -171,7 +171,7 @@
 		<link>
 			<name>H01R0/startup_stm32f091xc.s</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/H01R0/startup_stm32f091xc.s</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/H01R0/gcc/startup_stm32f091xc.s</locationURI>
 		</link>
 		<link>
 			<name>H01R0/stm32f0xx_hal_conf.h</name>
