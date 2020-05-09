@@ -36,7 +36,11 @@
   * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
   * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
+  *******************************************************************************
+
+	MODIFIED by Hexabitz for BitzOS (BOS) V0.2.2 - Copyright (C) 2017-2020 Hexabitz
+    All rights reserved
+
   ******************************************************************************
   */
 
@@ -97,12 +101,42 @@ LoopFillZerobss:
   cmp r2, r3
   bcc FillZerobss
 
+//------------------------------------------------------------------------------
+// Modified Reset Handler for bootloader reboot (sourcer32@gmail.com)
+	LDR        R0, =0x20007FF0  	// Address for RAM signature (STM32F09x)
+	LDR        R1, =0xDEADBEEF
+	LDR        R2, [R0, #0] 		// Read current
+	STR        R0, [R0, #0] 		// Invalidate
+	CMP        R2, R1
+	BEQ        Reboot_Loader
+
+// Normal startup path
+
 /* Call the clock system intitialization function.*/
   bl  SystemInit
 /* Call static constructors */
   bl __libc_init_array
 /* Call the application's entry point.*/
   bl main
+
+// Vector into System Loader
+Reboot_Loader:
+	LDR     R0, =0x40021018 	// RCC_APB2ENR (+0x18)
+	LDR     R1, =0x00000001 	// ENABLE SYSCFG CLOCK
+	STR     R1, [R0, #0]
+	LDR     R0, =0x40010000 	// SYSCFG_CFGR1 (+0x00)
+	LDR     R1, =0x00000001 	// MAP ROM AT ZERO
+	STR     R1, [R0, #0]
+	//                LDR     R0, =0x1FFFEC00 ; ROM BASE (STM32F03x)
+	//                LDR     R0, =0x1FFFC400 ; ROM BASE (STM32F04x)
+	//                LDR     R0, =0x1FFFEC00 ; ROM BASE (STM32F05x)
+	//                LDR     R0, =0x1FFFC800 ; ROM BASE (STM32F07x)
+	LDR     R0, =0x1FFFD800 	// ROM BASE (STM32F09x)
+	LDR     R1, [R0, #0]    	// SP @ +0
+	MOV     SP, R1
+	LDR     R0, [R0, #4]    	// PC @ +4
+	BX      R0
+
 
 LoopForever:
     b LoopForever
