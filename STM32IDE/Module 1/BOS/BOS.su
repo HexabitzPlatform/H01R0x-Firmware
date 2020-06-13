@@ -8,9 +8,9 @@ BOS.c:2256:6:StreamTimerCallback	8	static
 BOS.c:6467:22:snipCommand	72	static,ignoring_inline_asm
 BOS.c:6402:22:idcodeCommand	8	static,ignoring_inline_asm
 BOS.c:6375:22:uuidCommand	16	static,ignoring_inline_asm
+BOS.c:6108:22:getCommand	32	static,ignoring_inline_asm
 BOS.c:5330:22:prvRunTimeStatsCommand	8	static,ignoring_inline_asm
 BOS.c:5309:22:prvTaskStatsCommand	8	static,ignoring_inline_asm
-BOS.c:6108:22:getCommand	32	static,ignoring_inline_asm
 BOS.c:1386:6:TIM_USEC_Init	32	static
 BOS.c:1413:6:TIM_MSEC_Init	32	static
 BOS.c:1438:9:minArr	20	static

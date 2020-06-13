@@ -49,8 +49,8 @@ H01R0x.bin \
 all: H01R0x.elf secondary-outputs
 
 # Tool invocations
-H01R0x.elf: $(OBJS) $(USER_OBJS) C:\Hexabitz_Github\Firmware\H01R0x-Firmware\STM32IDE\STM32F091CBUX_FLASH.ld
-	arm-none-eabi-gcc -o "H01R0x.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Hexabitz_Github\Firmware\H01R0x-Firmware\STM32IDE\STM32F091CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="H01R0x.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+H01R0x.elf: $(OBJS) $(USER_OBJS) D:\Hexabitz\Hexabitz\ Modules\ firmware\H01R0xx\STM32IDE\STM32F091CBUX_FLASH.ld
+	arm-none-eabi-gcc -o "H01R0x.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"D:\Hexabitz\Hexabitz Modules firmware\H01R0xx\STM32IDE\STM32F091CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="H01R0x.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
