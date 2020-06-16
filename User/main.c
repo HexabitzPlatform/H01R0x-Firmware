@@ -41,14 +41,13 @@
 
 
 /* Private variables ---------------------------------------------------------*/
-
+uint32_t in;
 /* Private function prototypes -----------------------------------------------*/
 
 /* Main functions ------------------------------------------------------------*/
 
 int main(void)
 {
-
 
   /* MCU Configuration----------------------------------------------------------*/
 
@@ -86,7 +85,8 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
-  
+	HAL_ADCEx_Calibration_Start(&hadc);
+  HAL_ADC_Start_DMA(&hadc,&in,1);
   /* Infinite loop */
   for(;;)
   {
