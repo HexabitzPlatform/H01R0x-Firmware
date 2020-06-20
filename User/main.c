@@ -39,12 +39,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
 
-GPIO_InitTypeDef mypin;
-
 /* Private variables ---------------------------------------------------------*/
-uint8_t in[8];
+uint32_t ADC_data[8];
 /* Private function prototypes -----------------------------------------------*/
-void GPIO_config(void);
 /* Main functions ------------------------------------------------------------*/
 
 int main(void)
@@ -87,23 +84,15 @@ int main(void)
 void UserTask(void * argument)
 {
 
-//	GPIO_config();
-	HAL_ADCEx_Calibration_Start(&hadc);
-  HAL_ADC_Start_DMA(&hadc,(uint32_t *)in,8);
+//	HAL_ADCEx_Calibration_Start(&hadc);
+  HAL_ADC_Start_DMA(&hadc,(uint32_t *)ADC_data,8);
   /* Infinite loop */
   for(;;)
   {
 
 	}
 }
-void GPIO_config(void)
-{
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	mypin.Pin=GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4;
-	mypin.Mode=GPIO_MODE_ANALOG;
-	mypin.Pull= GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOA,&mypin);
-}
+
 /*-----------------------------------------------------------*/
 
 /************************ (C) COPYRIGHT HEXABITZ *****END OF FILE****/
