@@ -87,8 +87,6 @@ int main(void)
 void UserTask(void * argument)
 {
 
-
-	RGB_LED_off();
   /* Infinite loop */
   for(;;)
   {
