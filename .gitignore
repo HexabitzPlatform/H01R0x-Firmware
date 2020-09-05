@@ -4,3 +4,4 @@ MDK-ARM/Listings/
 *.dbgconf
 *.asaad
 *.uvoptx
+STM32CubeIDE/Module 1/Thirdparty/Middleware/FreeRTOS/Source/croutine.o
