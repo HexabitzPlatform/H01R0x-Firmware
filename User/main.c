@@ -86,25 +86,11 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
-	StartMilliDelay(1000);
-	RGB_LED_pulseColor(RED, 5000, 3000, 5);
-
   /* Infinite loop */
   for(;;)
   {
-		#if ( _module == 2 )
 
-		#endif
-		#if ( _module == 1 )
-		messageParams[0]=1;
-		messageParams[1]=180;
-		messageParams[2]=150;
-		messageParams[3]=100;
-		messageParams[4]=50;
-		//SendMessageToModule(2, CODE_H01R0_COLOR, 5);
-		Delay_us(1000);
-		//SendMessageToModule(2, CODE_H01R0_OFF, 5);
-		#endif
+		
 	}
 }
 
