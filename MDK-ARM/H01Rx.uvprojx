@@ -7,10 +7,10 @@
 
   <Targets>
     <Target>
-      <TargetName>H01R0-Module 1</TargetName>
+      <TargetName>Module 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>H01R0-Module 1</OutputName>
+          <OutputName>Module 1</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -185,6 +185,7 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -351,7 +352,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -522,6 +523,26 @@
               <FileType>1</FileType>
               <FilePath>..\BOS\BOS_freertos.c</FilePath>
             </File>
+            <File>
+              <FileName>BOS_CLIcommands.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_CLIcommands.c</FilePath>
+            </File>
+            <File>
+              <FileName>BOS_inputs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_inputs.c</FilePath>
+            </File>
+            <File>
+              <FileName>BOS_messaging.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_messaging.c</FilePath>
+            </File>
+            <File>
+              <FileName>BOS_msgparser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_msgparser.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -556,6 +577,16 @@
               <FileName>startup_stm32f091xc.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\H01R0\arm\startup_stm32f091xc.s</FilePath>
+            </File>
+            <File>
+              <FileName>H01R0_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\H01R0\H01R0_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>H01R0_timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\H01R0\H01R0_timers.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -617,10 +648,10 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>P01R0-Module 1</TargetName>
+      <TargetName>Module 2</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -659,7 +690,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>P01R0-Module 1</OutputName>
+          <OutputName>Module 2</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -795,6 +826,7 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -946,7 +978,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F091xB,P01R0,_module=1</Define>
+              <Define>USE_HAL_DRIVER,STM32F091xB,H01R0,_module=2</Define>
               <Undefine></Undefine>
               <IncludePath>..\User;..\H01R0;..\BOS;..\Thirdparty\Middleware\FreeRTOS\Source\CMSIS_RTOS;..\Thirdparty\Middleware\FreeRTOS\Source\include;..\Thirdparty\Middleware\FreeRTOS\Source\portable\RVDS\ARM_CM0;..\Thirdparty\STM32F0xx_HAL_Driver\Inc\Legacy;..\Thirdparty\STM32F0xx_HAL_Driver\Inc;..\Thirdparty\CMSIS\Device\ST\STM32F0xx\Include;..\Thirdparty\CMSIS\Include</IncludePath>
             </VariousControls>
@@ -961,7 +993,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -1132,6 +1164,26 @@
               <FileType>1</FileType>
               <FilePath>..\BOS\BOS_freertos.c</FilePath>
             </File>
+            <File>
+              <FileName>BOS_CLIcommands.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_CLIcommands.c</FilePath>
+            </File>
+            <File>
+              <FileName>BOS_inputs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_inputs.c</FilePath>
+            </File>
+            <File>
+              <FileName>BOS_messaging.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_messaging.c</FilePath>
+            </File>
+            <File>
+              <FileName>BOS_msgparser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BOS\BOS_msgparser.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1166,6 +1218,16 @@
               <FileName>startup_stm32f091xc.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\H01R0\arm\startup_stm32f091xc.s</FilePath>
+            </File>
+            <File>
+              <FileName>H01R0_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\H01R0\H01R0_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>H01R0_timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\H01R0\H01R0_timers.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1233,5 +1295,20 @@
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>&lt;Project Info&gt;</LayName>
+        <LayDesc></LayDesc>
+        <LayUrl></LayUrl>
+        <LayKeys></LayKeys>
+        <LayCat></LayCat>
+        <LayLic></LayLic>
+        <LayTarg>0</LayTarg>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
