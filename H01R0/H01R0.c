@@ -1,5 +1,5 @@
 /*
-    BitzOS (BOS) V0.2.2 - Copyright (C) 2017-2020 Hexabitz
+    BitzOS (BOS) V0.2.4 - Copyright (C) 2017-2021 Hexabitz
     All rights reserved
 
     File Name     : H01R0.c
@@ -356,6 +356,16 @@ uint8_t SaveToRO(void)
 	return result;
 }
 
+/* --- Clear array topology in SRAM and Flash RO --- 
+*/
+uint8_t ClearROtopology(void)
+{
+	// Clear the array 
+	memset(array, 0, sizeof(array));
+	N = 1; myID = 0;
+	
+	return SaveToRO();
+}
 /*-----------------------------------------------------------*/
 
 /* --- H01R0 message processing task. 

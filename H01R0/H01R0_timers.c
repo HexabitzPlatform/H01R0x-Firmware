@@ -1,9 +1,14 @@
 /*
-    BitzOS (BOS) V0.2.2 - Copyright (C) 2017-2020 Hexabitz
+    BitzOS (BOS) V0.2.4 - Copyright (C) 2017-2021 Hexabitz
     All rights reserved
 		
     File Name     : H01R0_timers.c
     Description   : Peripheral timers setup source file.
+		
+			Required MCU resources : 
+		
+			>> Timer 14 for micro-sec delay.
+			>> Timer 15 for milli-sec delay.
 */
 
 /* Includes ------------------------------------------------------------------*/
