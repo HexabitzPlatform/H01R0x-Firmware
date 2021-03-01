@@ -1,5 +1,5 @@
 /*
-    BitzOS (BOS) V0.2.4 - Copyright (C) 2016 Hexabitz
+    BitzOS (BOS) V0.2.4 - Copyright (C) 2017-2021  Hexabitz
     All rights reserved
 
     File Name     : topology_1.h
