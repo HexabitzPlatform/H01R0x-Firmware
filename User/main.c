@@ -59,8 +59,8 @@ int main(void)
 
   /* Initialize all user peripherals */
 
-	/* Initialize BitzOS */
-	BOS_Init();
+  /* Initialize BitzOS */
+  BOS_Init();
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
