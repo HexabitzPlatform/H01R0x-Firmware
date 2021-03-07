@@ -33,7 +33,7 @@
   */
 	
 /*
-		MODIFIED by Hexabitz for BitzOS (BOS) V0.2.3 - Copyright (C) 2017-2020 Hexabitz
+		MODIFIED by Hexabitz for BitzOS (BOS) V0.2.4 - Copyright (C) 2017-2021 Hexabitz
     All rights reserved
 */
 
@@ -46,10 +46,14 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
-
+#include "BOS.h"
 	 
 /* External variables -----------------------------------------------*/
-	 
+#ifndef __N
+extern	 uint16_t arrayPortsDir[MaxNumOfModules];									/* Array ports directions */
+#else
+extern	 uint16_t arrayPortsDir[__N];
+#endif 
 	 
 // Blocking (polling-based) read
 #define readPx(port, buffer, n, timeout) while(HAL_UART_Receive(GetUart(port), (uint8_t *)buffer, n, timeout) != HAL_OK) {}
