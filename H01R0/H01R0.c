@@ -4,7 +4,7 @@
 
     File Name     : H01R0.c
     Description   : Source code for module H01R0.
-										RGB LED (Cree CLVBA-FKA-CC1F1L1BB7R3R3)
+					RGB LED (Cree CLVBA-FKA-CC1F1L1BB7R3R3)
 		
 		Required MCU resources : 
 		
