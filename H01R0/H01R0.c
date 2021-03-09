@@ -244,7 +244,7 @@ void Module_Init(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
-  MX_USART4_UART_Init();
+ MX_USART4_UART_Init();
   MX_USART5_UART_Init();
 #ifdef H01R0	
   MX_USART6_UART_Init();

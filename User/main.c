@@ -38,12 +38,17 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
-
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-
+extern void MX_ADC_Init(void);
+extern void ADC_Select_0(void);
+extern void ADC_Select_1(void);
+extern void ADC_Select_temp(void);
 /* Main functions ------------------------------------------------------------*/
+extern ADC_HandleTypeDef hadc;
+
+
 
 int main(void)
 {
@@ -61,7 +66,6 @@ int main(void)
 
   /* Initialize BitzOS */
   BOS_Init();
-
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
 
@@ -85,11 +89,12 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
+	Select_ADC_Channel(1,"up");
   /* Infinite loop */
   for(;;)
   {
 
-		
+
   }
 }
 
