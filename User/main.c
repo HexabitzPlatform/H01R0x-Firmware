@@ -89,7 +89,7 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
-	Select_ADC_Channel(1,"up");
+	Select_ADC_Channel(1,"down");
   /* Infinite loop */
   for(;;)
   {
