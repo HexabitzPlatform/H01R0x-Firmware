@@ -48,7 +48,7 @@ extern void ADC_Select_temp(void);
 /* Main functions ------------------------------------------------------------*/
 extern ADC_HandleTypeDef hadc;
 
-
+float tempture,Vref_i;
 
 int main(void)
 {
@@ -89,10 +89,13 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
-	Select_ADC_Channel(1,"down");
+//	Read_ADC_Channel(2,"top");
+	//Read_ADC_Channel(2,"bottom");
+	//Deinit_ADC_Channel(2);
   /* Infinite loop */
   for(;;)
   {
+		read_temp_and_Vref(&tempture,&Vref_i);
 
 
   }
