@@ -109,9 +109,19 @@
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_inputs.c</locationURI>
 		</link>
 		<link>
+			<name>BOS/BOS_inputs.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_inputs.h</locationURI>
+		</link>
+		<link>
 			<name>BOS/BOS_messaging.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_messaging.c</locationURI>
+		</link>
+		<link>
+			<name>BOS/BOS_messaging.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_messaging.h</locationURI>
 		</link>
 		<link>
 			<name>BOS/BOS_msgparser.c</name>

@@ -89,26 +89,27 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
-	ADC_select_channel(2,"top");
-	//ADC_select_channel(3,"bottom");
-	ADC_select_channel(3,"top");
-	//ADC_select_channel(2,"bottom");
-	//Deinit_ADC_Channel(2);
+	ADCSelectChannel(2,"top");
+	ADCSelectChannel(3,"bottom");
+	ADCSelectChannel(3,"top");
+	ADCSelectChannel(2,"bottom");
   /* Infinite loop */
   for(;;)
   {
-	 // 	Read_ADC_Channel(3,"bottom",&ADC22);
-	//	HAL_Delay(100);
-
-		Read_ADC_Channel(2,"top",&ADC11);
+	    ReadADCChannel(3,"bottom",&ADC22);
 		HAL_Delay(100);
 
-		//Read_ADC_Channel(2,"bottom",&ADC44);
-		//HAL_Delay(100);
+		ReadADCChannel(2,"top",&ADC11);
+		HAL_Delay(100);
 
-		Read_ADC_Channel(3,"top",&ADC33);
-		//read_temp_and_Vref(&tempture,&Vref_i);
-			HAL_Delay(100);
+		ReadADCChannel(2,"bottom",&ADC44);
+		HAL_Delay(100);
+
+		ReadADCChannel(3,"top",&ADC33);
+		HAL_Delay(100);
+
+		ReadTempAndVref(&tempture,&Vref_i);
+		HAL_Delay(100);
 
   }
 }
