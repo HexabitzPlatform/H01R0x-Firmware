@@ -48,7 +48,7 @@ extern void ADC_Select_temp(void);
 /* Main functions ------------------------------------------------------------*/
 extern ADC_HandleTypeDef hadc;
 
-float tempture,Vref_i,ADC11,ADC22,ADC44,ADC33;
+float tempture,Vref_i,ADC11,ADC22,ADC44,ADC33,x=0;
 
 int main(void)
 {
@@ -89,28 +89,29 @@ int main(void)
 /* User Task */
 void UserTask(void * argument)
 {
-	ADCSelectChannel(2,"top");
-	ADCSelectChannel(3,"bottom");
-	ADCSelectChannel(3,"top");
-	ADCSelectChannel(2,"bottom");
+//	ADCSelectChannel(2,"top");
+//	ADCSelectChannel(3,"bottom");
+//	ADCSelectChannel(3,"top");
+//	ADCSelectChannel(2,"bottom");
   /* Infinite loop */
   for(;;)
   {
-	    ReadADCChannel(3,"bottom",&ADC22);
-		HAL_Delay(100);
-
-		ReadADCChannel(2,"top",&ADC11);
-		HAL_Delay(100);
-
-		ReadADCChannel(2,"bottom",&ADC44);
-		HAL_Delay(100);
-
-		ReadADCChannel(3,"top",&ADC33);
-		HAL_Delay(100);
-
-		ReadTempAndVref(&tempture,&Vref_i);
-		HAL_Delay(100);
-
+//	    ReadADCChannel(3,"bottom",&ADC22);
+//		HAL_Delay(100);
+//
+//		ReadADCChannel(2,"top",&ADC11);
+//		HAL_Delay(100);
+//
+//		ReadADCChannel(2,"bottom",&ADC44);
+//		HAL_Delay(100);
+//
+//		ReadADCChannel(3,"top",&ADC33);
+//		HAL_Delay(100);
+//
+//		ReadTempAndVref(&tempture,&Vref_i);
+//		HAL_Delay(100);
+	  GetReadPrecentage(3,&x);
+	  HAL_Delay(1000);
   }
 }
 
