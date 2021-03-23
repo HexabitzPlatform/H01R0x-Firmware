@@ -110,8 +110,8 @@ void UserTask(void * argument)
 //
 //		ReadTempAndVref(&tempture,&Vref_i);
 //		HAL_Delay(100);
-	  GetReadPrecentage(3,&x);
-	  HAL_Delay(1000);
+	 // GetReadPrecentage(3,&x);
+	//  HAL_Delay(1000);
   }
 }
 
