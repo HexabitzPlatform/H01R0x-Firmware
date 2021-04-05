@@ -177,6 +177,7 @@ extern void MX_USART4_UART_Init(void);
 extern void MX_USART5_UART_Init(void);
 extern void MX_USART6_UART_Init(void);
 extern void SystemClock_Config(void);
+extern void ExecuteMonitor(void);
 
 extern TIM_HandleTypeDef htim3;
 	
