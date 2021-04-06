@@ -28,8 +28,7 @@ UART_HandleTypeDef huart6;
 /* Exported variables */
 extern FLASH_ProcessTypeDef pFlash;
 extern uint8_t numOfRecordedSnippets;
-uint8_t color=0,intensity_LED=0,intensity_RGB=0,mode=0;
-
+uint8_t color = 0, intensity_LED = 0, intensity_RGB = 0, mode = 0;
 
 /* Module exported parameters ------------------------------------------------*/
 module_param_t modParam[NUM_MODULE_PARAMS] = { { .paramPtr = NULL,
@@ -887,9 +886,15 @@ void RGBdim(uint8_t mode) {
 /*-----------------------------------------------------------*/
 
 void ExecuteMonitor(void) {
-	if(mode==1) RGB_LED_on(intensity_LED);
-	else if(mode==2)RGB_LED_setColor(color, intensity_RGB);
-	else RGB_LED_off();
+	if (mode != 0) {
+		if (mode == 1)
+			RGB_LED_on(intensity_LED);
+		else if (mode == 2)
+			RGB_LED_setColor(color, intensity_RGB);
+		else if (mode == 3)
+			RGB_LED_off();
+	}
+
 	Delay_ms(100);
 }
 

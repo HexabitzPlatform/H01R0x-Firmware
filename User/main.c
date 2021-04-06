@@ -55,6 +55,7 @@ int main(void) {
 	/* MCU Configuration----------------------------------------------------------*/
 
 	/* Reset all peripherals, Initializes the Flash interface and the Systick. */
+
 	HAL_Init();
 
 	/* Configure the system clock */
