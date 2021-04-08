@@ -139,16 +139,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/FreeRTOSConfig.h</locationURI>
 		</link>
 		<link>
-			<name>BOS/LICENSE</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/BOS/LICENSE</locationURI>
-		</link>
-		<link>
-			<name>BOS/README.md</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/BOS/README.md</locationURI>
-		</link>
-		<link>
 			<name>H01R0/H01R0.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/H01R0/H01R0.c</locationURI>
@@ -1101,12 +1091,48 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1615109386807</id>
+			<id>1617886511965</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-H01R0x</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1617886511973</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.md</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1617886511981</id>
+			<name></name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-LICENSE</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1617886511990</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.cfg</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1617886512030</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.launch</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

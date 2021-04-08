@@ -41,14 +41,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-//extern void MX_ADC_Init(void);
-//extern void ADC_Select_0(void);
-//extern void ADC_Select_1(void);
-//extern void ADC_Select_temp(void);
-/* Main functions ------------------------------------------------------------*/
-//extern ADC_HandleTypeDef hadc;
 
-//float tempture=0, Vref_i=0, ADC11=0, ADC22=0, ADC44=0, ADC33=0, x = 0;
+/* Main functions ------------------------------------------------------------*/
 
 int main(void) {
 
@@ -84,30 +78,10 @@ int main(void) {
 
 /* User Task */
 void UserTask(void *argument) {
-//	ADCSelectChannel(2,"top");
-//	ADCSelectChannel(3,"bottom");
-//	ADCSelectChannel(3,"top");
-//	ADCSelectChannel(2,"bottom");
+
 	/* Infinite loop */
 	for (;;) {
 
-//	    ReadADCChannel(3,"bottom",&ADC22);
-//		HAL_Delay(100);
-//
-
-//		ReadADCChannel(2,"top",&ADC11);
-//		HAL_Delay(100);
-//
-//		ReadADCChannel(2,"bottom",&ADC44);
-//		HAL_Delay(100);
-//
-//		ReadADCChannel(3,"top",&ADC33);
-//		HAL_Delay(100);
-//
-//		ReadTempAndVref(&tempture,&Vref_i);
-//		HAL_Delay(100);
-//		GetReadPrecentage(3,&x);
-// 		HAL_Delay(1000);
 	}
 }
 
