@@ -244,9 +244,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/User/project.h</locationURI>
 		</link>
 		<link>
-			<name>User/topology_1.h</name>
+			<name>User/topology.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/User/topology_1.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/User/topology.h</locationURI>
 		</link>
 		<link>
 			<name>Thirdparty/CMSIS/Device</name>
@@ -1089,51 +1089,4 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h</locationURI>
 		</link>
 	</linkedResources>
-	<filteredResources>
-		<filter>
-			<id>1617886511965</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-H01R0x</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1617886511973</id>
-			<name></name>
-			<type>6</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*.md</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1617886511981</id>
-			<name></name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-LICENSE</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1617886511990</id>
-			<name></name>
-			<type>6</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*.cfg</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1617886512030</id>
-			<name></name>
-			<type>6</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*.launch</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>
