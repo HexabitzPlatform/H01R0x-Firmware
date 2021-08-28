@@ -48,6 +48,7 @@ void RGBsweepBasic(void);
 void RGBsweepFine(void);
 void RGBdim(uint8_t mode);
 void TIM3_Init(void);
+void ExecuteMonitor(void);
 
 /* Create CLI commands --------------------------------------------------------*/
 
@@ -809,9 +810,30 @@ void RGBdim(uint8_t mode){
 		
 		if(rgbCount > 0)
 			rgbCount--;
+<<<<<<< Updated upstream
 	}
 	else{
 		rgbLedMode =0;
+=======
+	}
+	else{
+		rgbLedMode =0;
+	}
+}
+
+/*-----------------------------------------------------------*/
+/* --- H01R0 Monitor task. */
+/*-----------------------------------------------------------*/
+
+void ExecuteMonitor(void){
+	if(mode != 0){
+		if(mode == 1)
+			RGB_LED_on(intensity_LED);
+		else if(mode == 2)
+			RGB_LED_setColor(color,intensity_RGB);
+		else if(mode == 3)
+			RGB_LED_off();
+>>>>>>> Stashed changes
 	}
 }
 
