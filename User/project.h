@@ -14,11 +14,7 @@
 /* Includes ------------------------------------------------------------------*/
 
 /* Include a predefined topology here */
-<<<<<<< Updated upstream
 //#include "topology.h"
-=======
-#include "topology.h"
->>>>>>> Stashed changes
 
 /* Emulated EEPROM Virtual addresses for user parameters */
 

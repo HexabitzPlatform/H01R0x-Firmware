@@ -810,11 +810,6 @@ void RGBdim(uint8_t mode){
 		
 		if(rgbCount > 0)
 			rgbCount--;
-<<<<<<< Updated upstream
-	}
-	else{
-		rgbLedMode =0;
-=======
 	}
 	else{
 		rgbLedMode =0;
@@ -833,8 +828,9 @@ void ExecuteMonitor(void){
 			RGB_LED_setColor(color,intensity_RGB);
 		else if(mode == 3)
 			RGB_LED_off();
->>>>>>> Stashed changes
 	}
+
+	Delay_ms(100);
 }
 
 /*-----------------------------------------------------------*/

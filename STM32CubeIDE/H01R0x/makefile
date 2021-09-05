@@ -55,8 +55,8 @@ all:
 main-build: H01R0x.elf secondary-outputs
 
 # Tool invocations
-H01R0x.elf: $(OBJS) $(USER_OBJS) D:\Hexabitz\for\ Release\Modules\ firmware\H01R0x\STM32CubeIDE\STM32F091CBUX_FLASH.ld
-	arm-none-eabi-gcc -o "H01R0x.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"D:\Hexabitz\for Release\Modules firmware\H01R0x\STM32CubeIDE\STM32F091CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="H01R0x.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+H01R0x.elf: $(OBJS) $(USER_OBJS) D:\Hexabitz\for\ Release\H01R0x\STM32CubeIDE\STM32F091CBUX_FLASH.ld
+	arm-none-eabi-gcc -o "H01R0x.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"D:\Hexabitz\for Release\H01R0x\STM32CubeIDE\STM32F091CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="H01R0x.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
