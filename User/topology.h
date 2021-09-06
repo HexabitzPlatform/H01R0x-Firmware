@@ -22,9 +22,7 @@
 // Array modules
 #define _mod1	1<<3
 #define _mod2	2<<3
-#define _mod3	3<<3
-#define _mod4	4<<3
-#define _mod5	5<<3
+
 // Topology
 static uint16_t array[__N ][7] ={
 	{_H01R0, 0, 0, 0, 0, 0, _mod2 | P1}, 								 // Module 1
