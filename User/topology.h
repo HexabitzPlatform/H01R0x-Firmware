@@ -29,9 +29,6 @@
 static uint16_t array[__N ][7] ={
 	{_H01R0, 0, 0, 0, 0, 0, _mod2 | P1}, 								 // Module 1
 	{_H26R0, _mod1 | P6, 0,0, _mod3 | P2, 0, 0},					     // Module 2
-	{_H0BR4, _mod4 | P3,  0, 0,_mod2 | P4, 0, 0},					     // Module 3
-	{_H07R3,  _mod5 | P3, 0, _mod3 | P5,0, 0, 0},					     // Module 4
-	{_P01R0, 0, 0, _mod4 | P1,0, 0, 0},					  			     // Module 5
 };
 
 // Configurations for duplex serial ports
@@ -46,7 +43,7 @@ static uint16_t array[__N ][7] ={
 #endif
 
 #if ( _module == 2 )
-	#define	H26R0	1
+	#define	H26R0			1
 	#define	_P1pol_reversed	1
 	#define	_P2pol_normal	1
 	#define	_P3pol_normal	1
