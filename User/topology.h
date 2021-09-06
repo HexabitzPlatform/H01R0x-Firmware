@@ -28,7 +28,7 @@
 // Topology
 static uint16_t array[__N ][7] ={
 	{_H01R0, 0, 0, 0, 0, 0, _mod2 | P1}, 								 // Module 1
-	{_H26R0, _mod1 | P6, 0,0, _mod3 | P2, 0, 0},					     // Module 2
+	{_H26R0, _mod1 | P6, 0,0, 0, 0, 0},					    			 // Module 2
 };
 
 // Configurations for duplex serial ports
