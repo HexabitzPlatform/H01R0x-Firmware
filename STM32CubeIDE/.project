@@ -109,9 +109,19 @@
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_inputs.c</locationURI>
 		</link>
 		<link>
+			<name>BOS/BOS_inputs.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_inputs.h</locationURI>
+		</link>
+		<link>
 			<name>BOS/BOS_messaging.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_messaging.c</locationURI>
+		</link>
+		<link>
+			<name>BOS/BOS_messaging.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/BOS/BOS_messaging.h</locationURI>
 		</link>
 		<link>
 			<name>BOS/BOS_msgparser.c</name>
@@ -127,16 +137,6 @@
 			<name>BOS/FreeRTOSConfig.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/BOS/FreeRTOSConfig.h</locationURI>
-		</link>
-		<link>
-			<name>BOS/LICENSE</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/BOS/LICENSE</locationURI>
-		</link>
-		<link>
-			<name>BOS/README.md</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/BOS/README.md</locationURI>
 		</link>
 		<link>
 			<name>H01R0/H01R0.c</name>
@@ -244,9 +244,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/User/project.h</locationURI>
 		</link>
 		<link>
-			<name>User/topology_1.h</name>
+			<name>User/topology.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/User/topology_1.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/User/topology.h</locationURI>
 		</link>
 		<link>
 			<name>Thirdparty/CMSIS/Device</name>
@@ -1089,15 +1089,4 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Thirdparty/Middleware/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h</locationURI>
 		</link>
 	</linkedResources>
-	<filteredResources>
-		<filter>
-			<id>1615109386807</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-H01R0x</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>

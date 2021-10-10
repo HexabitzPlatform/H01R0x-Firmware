@@ -1,12 +1,8 @@
-MDK-ARM/Objects/
-MDK-ARM/Listings/
 *.o
 *.d
-*.list
-*.map
-*.elf
+*.su
 *.Admin
 *.dbgconf
 *.asaad
 *.uvoptx
-STM32CubeIDE/Module 1/Thirdparty/Middleware/FreeRTOS/Source/croutine.o
+

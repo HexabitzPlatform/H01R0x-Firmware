@@ -144,6 +144,19 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
   } >FLASH
+  
+  
+/* my sectin  */
+      .mySection 0x20000000 :
+  {
+  . = ALIGN(4);
+  _ssection = .;  
+ KEEP(*(.mySection))
+  . = ALIGN(4);
+   _esection = .;  
+  }>RAM AT> FLASH
+/* end my section*/
+
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
