@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.2.5 - Copyright (C) 2017-2021 Hexabitz
+ BitzOS (BOS) V0.2.6 - Copyright (C) 2017-2022 Hexabitz
  All rights reserved
  
  File Name     : H01R0.h
@@ -17,7 +17,8 @@
 #include "H01R0_uart.h"	
 #include "H01R0_gpio.h"	
 #include "H01R0_dma.h"		
-
+#include "H01R0_inputs.h"
+#include "H01R0_eeprom.h"
 /* Exported definitions -------------------------------------------------------*/
 
 #ifdef H01R0
@@ -191,6 +192,8 @@ extern Module_Status RGB_LED_pulseRGB(uint8_t red,uint8_t green,uint8_t blue,uin
 extern Module_Status RGB_LED_pulseColor(uint8_t color,uint32_t period,uint32_t dc,int32_t repeat);
 extern Module_Status RGB_LED_sweep(uint8_t mode,uint32_t period,int32_t repeat);
 extern Module_Status RGB_LED_dim(uint8_t color,uint8_t mode,uint32_t period,uint32_t wait,int32_t repeat);
+void SetupPortForRemoteBootloaderUpdate(uint8_t port);
+void remoteBootloaderUpdate(uint8_t src,uint8_t dst,uint8_t inport,uint8_t outport);
 
 /* -----------------------------------------------------------------------
  |															Commands																 	|
