@@ -10,6 +10,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
 
+uint8_t* error_restart_message = "Restarting...\r\n";
+
 /* External variables --------------------------------------------------------*/
 extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
 extern uint8_t UARTRxBufIndex[NumOfPorts];
@@ -35,6 +37,10 @@ void SysTick_Handler(void){
  */
 void HardFault_Handler(void){
 	/* Loop here */
+	uint8_t* error_message = "HardFault Error\r\n";
+	writePxMutex(PcPort, (char*) error_message, 17, 0xff, 0xff);
+	writePxMutex(PcPort, (char*) error_restart_message, 15, 0xff, 0xff);
+	NVIC_SystemReset();
 	for(;;){
 	};
 }
@@ -228,8 +234,11 @@ void TIM3_IRQHandler(void){
 void vApplicationStackOverflowHook( xTaskHandle pxTask,signed char *pcTaskName){
 	(void )pcTaskName;
 	(void )pxTask;
-	
-	taskDISABLE_INTERRUPTS();
+	uint8_t* error_message = "Stack Overflow\r\n";
+	writePxMutex(PcPort, (char*) error_message, 16, 0xff, 0xff);
+	writePxMutex(PcPort, (char*) error_restart_message, 15, 0xff, 0xff);
+	NVIC_SystemReset();
+//	taskDISABLE_INTERRUPTS();
 	for(;;);
 }
 /*-----------------------------------------------------------*/
@@ -245,8 +254,11 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask,signed char *pcTaskName){
  to query the size of free heap space that remains (although it does not
  provide information on how the remaining heap might be fragmented). */
 void vApplicationMallocFailedHook(void){
-
-	taskDISABLE_INTERRUPTS();
+	uint8_t* error_message = "Heap size exceeded\r\n";
+	writePxMutex(PcPort, (char*) error_message, 20, 0xff, 0xff);
+	writePxMutex(PcPort, (char*) error_restart_message, 15, 0xff, 0xff);
+	NVIC_SystemReset();
+//	taskDISABLE_INTERRUPTS();
 	for(;;);
 }
 /*-----------------------------------------------------------*/
