@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.2.6 - Copyright (C) 2017-2022 Hexabitz
+ BitzOS (BOS) V0.2.7 - Copyright (C) 2017-2022 Hexabitz
  All rights reserved
 
  File Name     : H01R0.c
@@ -415,6 +415,7 @@ Module_Status Module_MessagingTask(uint16_t code,uint8_t port,uint8_t src,uint8_
 	uint32_t dc =0;
 	int32_t repeat =0;
 	
+
 	switch(code){
 		case CODE_H01R0_ON:
 			RGB_LED_on(cMessage[port - 1][shift]);
@@ -445,31 +446,34 @@ Module_Status Module_MessagingTask(uint16_t code,uint8_t port,uint8_t src,uint8_
 		case CODE_H01R0_PULSE:
 			if(cMessage[port - 1][shift] == 0){
 				/* Color definition from color list */
-				period =((uint32_t )cMessage[port - 1][2 + shift] << 24) + ((uint32_t )cMessage[port - 1][3 + shift] << 16) + ((uint32_t )cMessage[port - 1][4 + shift] << 8) + cMessage[port - 1][5 + shift];
-				dc =((uint32_t )cMessage[port - 1][6 + shift] << 24) + ((uint32_t )cMessage[port - 1][7 + shift] << 16) + ((uint32_t )cMessage[port - 1][8 + shift] << 8) + cMessage[port - 1][9 + shift];
-				repeat =((uint32_t )cMessage[port - 1][10 + shift] << 24) + ((uint32_t )cMessage[port - 1][11 + shift] << 16) + ((uint32_t )cMessage[port - 1][12 + shift] << 8) + cMessage[port - 1][13 + shift];
+				period =((uint32_t )cMessage[port - 1][2 + shift] ) + ((uint32_t )cMessage[port - 1][3 + shift] << 8) + ((uint32_t )cMessage[port - 1][4 + shift] << 16) + ((uint32_t )cMessage[port - 1][5 + shift] << 24);
+				dc =((uint32_t )cMessage[port - 1][6 + shift] ) + ((uint32_t )cMessage[port - 1][7 + shift] << 8) + ((uint32_t )cMessage[port - 1][8 + shift] << 16) + ((uint32_t )cMessage[port - 1][9 + shift] << 24);
+				repeat =((uint32_t )cMessage[port - 1][10 + shift] ) + ((uint32_t )cMessage[port - 1][11 + shift] << 8) + ((uint32_t )cMessage[port - 1][12 + shift] << 16) + ((uint32_t )cMessage[port - 1][13 + shift] << 24);
 				RGB_LED_pulseColor(cMessage[port - 1][1 + shift],period,dc,repeat);
 			}
 			else if(cMessage[port - 1][shift] == 1){
 				/* RGB color */
-				period =((uint32_t )cMessage[port - 1][4 + shift] << 24) + ((uint32_t )cMessage[port - 1][5 + shift] << 16) + ((uint32_t )cMessage[port - 1][6 + shift] << 8) + cMessage[port - 1][7 + shift];
-				dc =((uint32_t )cMessage[port - 1][8 + shift] << 24) + ((uint32_t )cMessage[port - 1][9 + shift] << 16) + ((uint32_t )cMessage[port - 1][10 + shift] << 8) + cMessage[port - 1][11 + shift];
-				repeat =((uint32_t )cMessage[port - 1][12 + shift] << 24) + ((uint32_t )cMessage[port - 1][13 + shift] << 16) + ((uint32_t )cMessage[port - 1][14 + shift] << 8) + cMessage[port - 1][15 + shift];
+				period =((uint32_t )cMessage[port - 1][4 + shift] ) + ((uint32_t )cMessage[port - 1][5 + shift] << 8) + ((uint32_t )cMessage[port - 1][6 + shift] << 16) + ((uint32_t )cMessage[port - 1][7 + shift] <<24);
+				dc =((uint32_t )cMessage[port - 1][8 + shift] ) + ((uint32_t )cMessage[port - 1][9 + shift] << 8) + ((uint32_t )cMessage[port - 1][10 + shift] << 16) + ((uint32_t )cMessage[port - 1][11 + shift]<<24);
+				repeat =((uint32_t )cMessage[port - 1][12 + shift] ) + ((uint32_t )cMessage[port - 1][13 + shift] << 8) + ((uint32_t )cMessage[port - 1][14 + shift] <<16) + ((uint32_t )cMessage[port - 1][15 + shift]<<24);
 				RGB_LED_pulseRGB(cMessage[port - 1][1 + shift],cMessage[port - 1][2 + shift],cMessage[port - 1][3 + shift],period,dc,repeat);
 			}
 			break;
 			
 		case CODE_H01R0_SWEEP:
-			period =((uint32_t )cMessage[port - 1][1 + shift] << 24) + ((uint32_t )cMessage[port - 1][2 + shift] << 16) + ((uint32_t )cMessage[port - 1][3 + shift] << 8) + cMessage[port - 1][4 + shift];
-			repeat =((uint32_t )cMessage[port - 1][5 + shift] << 24) + ((uint32_t )cMessage[port - 1][6 + shift] << 16) + ((uint32_t )cMessage[port - 1][7 + shift] << 8) + cMessage[port - 1][8 + shift];
+
+			period =((uint32_t )cMessage[port - 1][1 + shift] ) + ((uint32_t )cMessage[port - 1][2 + shift] << 8) + ((uint32_t )cMessage[port - 1][3 + shift] << 16) + ((uint32_t )cMessage[port - 1][4 + shift]<<24);
+			repeat =((uint32_t )cMessage[port - 1][5 + shift] ) + ((uint32_t )cMessage[port - 1][6 + shift] << 8) + ((uint32_t )cMessage[port - 1][7 + shift] << 16) + ((uint32_t )cMessage[port - 1][8 + shift]<<24);
 			RGB_LED_sweep(cMessage[port - 1][shift],period,repeat);
+
 			break;
 			
 		case CODE_H01R0_DIM:
-			period =((uint32_t )cMessage[port - 1][2 + shift] << 24) + ((uint32_t )cMessage[port - 1][3 + shift] << 16) + ((uint32_t )cMessage[port - 1][4 + shift] << 8) + cMessage[port - 1][5 + shift];
-			dc =((uint32_t )cMessage[port - 1][6 + shift] << 24) + ((uint32_t )cMessage[port - 1][7 + shift] << 16) + ((uint32_t )cMessage[port - 1][8 + shift] << 8) + cMessage[port - 1][9 + shift];
-			repeat =((uint32_t )cMessage[port - 1][10 + shift] << 24) + ((uint32_t )cMessage[port - 1][11 + shift] << 16) + ((uint32_t )cMessage[port - 1][12 + shift] << 8) + cMessage[port - 1][13 + shift];
+			period =((uint32_t )cMessage[port - 1][2 + shift] ) + ((uint32_t )cMessage[port - 1][3 + shift] << 8) + ((uint32_t )cMessage[port - 1][4 + shift] << 16) + ((uint32_t )cMessage[port - 1][5 + shift] <<24);
+			dc =((uint32_t )cMessage[port - 1][6 + shift] ) + ((uint32_t )cMessage[port - 1][7 + shift] << 8) + ((uint32_t )cMessage[port - 1][8 + shift] << 16) + ((uint32_t )cMessage[port - 1][9 + shift]<<24);
+			repeat =((uint32_t )cMessage[port - 1][10 + shift] ) + ((uint32_t )cMessage[port - 1][11 + shift] << 8) + ((uint32_t )cMessage[port - 1][12 + shift] << 16) + ((uint32_t )cMessage[port - 1][13 + shift]<<24);
 			RGB_LED_dim(cMessage[port - 1][shift],cMessage[port - 1][1 + shift],period,dc,repeat);
+
 			break;
 			
 		default:
