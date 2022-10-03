@@ -6,14 +6,5 @@
 *.asaad
 *.uvoptx
 
-STM32CubeIDE/.cproject
-STM32CubeIDE/.settings/language.settings.xml
-STM32CubeIDE/H01R0x/H01R0x.elf
-STM32CubeIDE/H01R0x/H01R0x.hex
-STM32CubeIDE/H01R0x/H01R0x.map
-STM32CubeIDE/H01R0x/makefile
-STM32CubeIDE/H01R0x/objects.list
-STM32CubeIDE/H01R0x/sources.mk
-STM32CubeIDE/H01R0x/BOS/subdir.mk
-STM32CubeIDE/H01R0x/H01R0/subdir.mk
+
 *.mk
