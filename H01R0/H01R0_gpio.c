@@ -37,7 +37,7 @@ void IND_LED_Init(void){
 	GPIO_InitStruct.Pin = _IND_LED_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(_IND_LED_PORT,&GPIO_InitStruct);
 }
 
@@ -127,7 +127,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART3_RX_PIN;
 	}
 #endif
-#ifdef _Usart4	
+#ifdef _Usart4
 	else if(huart == &huart4){
 		*TX_Port =(uint32_t ) USART4_TX_PORT;
 		*TX_Pin = USART4_TX_PIN;

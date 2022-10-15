@@ -16,7 +16,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f0xx_hal.h"
+#include "stm32g0xx_hal.h"
 
 /* Check which DMA interrupt occured */
 #define HAL_DMA_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)  ((((__HANDLE__)->ISR & (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)

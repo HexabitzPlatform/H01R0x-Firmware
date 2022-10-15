@@ -53,7 +53,8 @@ uint16_t EE_Init(void){
 			if(PageStatusB == VALID_PAGE) /* PageA erased, PageB valid */
 			{
 				/* Erase PageA */
-				FLASH_PageErase(PAGEA1_BASE_ADDRESS);
+				FLASH_PageErase(FLASH_BANK_1,PAGEA1_BASE_ADDRESS);
+				//TOBECHECKED
 				/* If erase operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -62,7 +63,8 @@ uint16_t EE_Init(void){
 				}
 				else{
 					/* Erase PageA */
-					FLASH_PageErase(PAGEA2_BASE_ADDRESS);
+					FLASH_PageErase(FLASH_BANK_1,PAGEA2_BASE_ADDRESS);
+					//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -76,7 +78,8 @@ uint16_t EE_Init(void){
 			else if(PageStatusB == RECEIVE_DATA) /* PageA erased, PageB receive */
 			{
 				/* Erase PageA */
-				FLASH_PageErase(PAGEA1_BASE_ADDRESS);
+				FLASH_PageErase(FLASH_BANK_1,PAGEA1_BASE_ADDRESS);
+				//TOBECHECKED
 				/* If erase operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -85,7 +88,8 @@ uint16_t EE_Init(void){
 				}
 				else{
 					/* Erase PageA */
-					FLASH_PageErase(PAGEA2_BASE_ADDRESS);
+					FLASH_PageErase(FLASH_BANK_1,PAGEA2_BASE_ADDRESS);
+					//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -96,7 +100,8 @@ uint16_t EE_Init(void){
 					}
 				}
 				/* Mark PageB as valid */
-				HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEB1_BASE_ADDRESS,VALID_PAGE);
+				//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEB1_BASE_ADDRESS,VALID_PAGE);
+				//TOBECHECKED
 				/* If program operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -146,7 +151,8 @@ uint16_t EE_Init(void){
 					}
 				}
 				/* Mark PageA as valid */
-				HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEA1_BASE_ADDRESS,VALID_PAGE);
+				//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEA1_BASE_ADDRESS,VALID_PAGE);
+				//TOBECHECKED
 				/* If program operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -158,7 +164,8 @@ uint16_t EE_Init(void){
 					CLEAR_BIT(FLASH->CR,FLASH_CR_PG);
 				}
 				/* Erase PageB */
-				FLASH_PageErase(PAGEB1_BASE_ADDRESS);
+				FLASH_PageErase(FLASH_BANK_1,PAGEB1_BASE_ADDRESS);
+				//TOBECHECKED
 				/* If erase operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -167,7 +174,8 @@ uint16_t EE_Init(void){
 				}
 				else{
 					/* Erase PageB */
-					FLASH_PageErase(PAGEB2_BASE_ADDRESS);
+					FLASH_PageErase(FLASH_BANK_1,PAGEB2_BASE_ADDRESS);
+					//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -181,7 +189,8 @@ uint16_t EE_Init(void){
 			else if(PageStatusB == ERASED) /* PageA receive, PageB erased */
 			{
 				/* Erase PageB */
-				FLASH_PageErase(PAGEB1_BASE_ADDRESS);
+				FLASH_PageErase(FLASH_BANK_1,PAGEB1_BASE_ADDRESS);
+				//TOBECHECKED
 				/* If erase operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -190,7 +199,8 @@ uint16_t EE_Init(void){
 				}
 				else{
 					/* Erase PageB */
-					FLASH_PageErase(PAGEB2_BASE_ADDRESS);
+					FLASH_PageErase(FLASH_BANK_1,PAGEB2_BASE_ADDRESS);
+					//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -201,7 +211,8 @@ uint16_t EE_Init(void){
 					}
 				}
 				/* Mark PageA as valid */
-				HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEA1_BASE_ADDRESS,VALID_PAGE);
+				HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,PAGEA1_BASE_ADDRESS,VALID_PAGE);
+				//TOBECHECKED
 				/* If program operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -241,7 +252,8 @@ uint16_t EE_Init(void){
 			else if(PageStatusB == ERASED) /* PageA valid, PageB erased */
 			{
 				/* Erase PageB */
-				FLASH_PageErase(PAGEB1_BASE_ADDRESS);
+				FLASH_PageErase(FLASH_BANK_1,PAGEB1_BASE_ADDRESS);
+				//TOBECHECKED
 				/* If erase operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -250,7 +262,8 @@ uint16_t EE_Init(void){
 				}
 				else{
 					/* Erase PageB */
-					FLASH_PageErase(PAGEB2_BASE_ADDRESS);
+					FLASH_PageErase(FLASH_BANK_1,PAGEB2_BASE_ADDRESS);
+					//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -285,7 +298,8 @@ uint16_t EE_Init(void){
 					}
 				}
 				/* Mark PageB as valid */
-				HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEB1_BASE_ADDRESS,VALID_PAGE);
+				HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,PAGEB1_BASE_ADDRESS,VALID_PAGE);
+				//TOBECHECKED
 				/* If program operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -297,7 +311,8 @@ uint16_t EE_Init(void){
 					CLEAR_BIT(FLASH->CR,FLASH_CR_PG);
 				}
 				/* Erase PageA */
-				FLASH_PageErase(PAGEA1_BASE_ADDRESS);
+				FLASH_PageErase(FLASH_BANK_1,PAGEA1_BASE_ADDRESS);
+				//TOBECHECKED
 				/* If erase operation was failed, a Flash error code is returned */
 				/* Wait for last operation to be completed */
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
@@ -306,7 +321,8 @@ uint16_t EE_Init(void){
 				}
 				else{
 					/* Erase PageA */
-					FLASH_PageErase(PAGEA2_BASE_ADDRESS);
+					FLASH_PageErase(FLASH_BANK_1,PAGEA2_BASE_ADDRESS);
+					//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -432,7 +448,8 @@ uint16_t EE_Format(void){
 	HAL_FLASH_Unlock();
 	
 	/* Erase PageA */
-	FLASH_PageErase(PAGEA1_BASE_ADDRESS);
+	FLASH_PageErase(FLASH_BANK_1,PAGEA1_BASE_ADDRESS);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If erase operation was failed, a Flash error code is returned */
@@ -441,7 +458,8 @@ uint16_t EE_Format(void){
 	}
 	else{
 		/* Erase PageA */
-		FLASH_PageErase(PAGEA2_BASE_ADDRESS);
+		FLASH_PageErase(FLASH_BANK_1,PAGEA2_BASE_ADDRESS);
+		//TOBECHECKED
 		FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 		if(FlashStatus != HAL_OK){
 			return pFlash.ErrorCode;
@@ -453,8 +471,8 @@ uint16_t EE_Format(void){
 	}
 	
 	/* Set PageA as valid page: Write VALID_PAGE at Page0 base address */
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEA1_BASE_ADDRESS,VALID_PAGE);
-	
+	//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,PAGEA1_BASE_ADDRESS,VALID_PAGE);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If program operation was failed, a Flash error code is returned */
@@ -467,7 +485,8 @@ uint16_t EE_Format(void){
 	}
 	
 	/* Erase PageB */
-	FLASH_PageErase(PAGEB1_BASE_ADDRESS);
+	FLASH_PageErase(FLASH_BANK_1,PAGEB1_BASE_ADDRESS);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If program operation was failed, a Flash error code is returned */
@@ -476,7 +495,8 @@ uint16_t EE_Format(void){
 	}
 	else{
 		/* Erase PageB */
-		FLASH_PageErase(PAGEB2_BASE_ADDRESS);
+		FLASH_PageErase(FLASH_BANK_1,PAGEB2_BASE_ADDRESS);
+		//TOBECHECKED
 		FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 		if(FlashStatus != HAL_OK){
 			return pFlash.ErrorCode;
@@ -588,7 +608,8 @@ static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress,uint16_t Dat
 		/* Verify if Address and Address+2 contents are 0xFFFFFFFF */
 		if((*(__IO uint32_t* )Address) == 0xFFFFFFFF){
 			/* Set variable data */
-			HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address,Data);
+			//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address,Data);
+			//TOBECHECKED
 			/* Wait for last operation to be completed */
 			FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 			/* If program operation was failed, a Flash error code is returned */
@@ -601,8 +622,8 @@ static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress,uint16_t Dat
 			}
 			
 			/* Set variable virtual address */
-			HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address + 2,VirtAddress);
-			
+			//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address + 2,VirtAddress);
+			//TOBECHECKED
 			/* Wait for last operation to be completed */
 			FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 			/* If program operation was failed, a Flash error code is returned */
@@ -672,7 +693,8 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress,uint16_t Data){
 	}
 	
 	/* Set the new Page status to RECEIVE_DATA status */
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,NewPageAddress,RECEIVE_DATA);
+	//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,NewPageAddress,RECEIVE_DATA);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If program operation was failed, a Flash error code is returned */
@@ -710,7 +732,8 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress,uint16_t Data){
 	}
 	
 	/* Erase the old Page: Set old Page status to ERASED status */
-	FLASH_PageErase(OldPageAddress);
+	FLASH_PageErase(FLASH_BANK_1,OldPageAddress);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If erase operation was failed, a Flash error code is returned */
@@ -719,7 +742,8 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress,uint16_t Data){
 	}
 	else{
 		/* Erase the other half of the old Page: Set old Page status to ERASED status */
-		FLASH_PageErase(OldPageAddress + PAGE_SIZE);
+		FLASH_PageErase(FLASH_BANK_1,OldPageAddress + PAGE_SIZE);
+		//TOBECHECKED
 		FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 		if(FlashStatus != HAL_OK){
 			return pFlash.ErrorCode;
@@ -731,7 +755,8 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress,uint16_t Data){
 	}
 	
 	/* Set new Page status to VALID_PAGE status */
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,NewPageAddress,VALID_PAGE);
+	//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,NewPageAddress,VALID_PAGE);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If program operation was failed, a Flash error code is returned */
@@ -765,7 +790,8 @@ uint16_t Flash_WriteVariable(uint32_t Address,uint16_t Data){
 	HAL_FLASH_Unlock();
 	
 	/* Set variable data */
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address,Data);
+	//HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address,Data);
+	//TOBECHECKED
 	/* Wait for last operation to be completed */
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t )HAL_FLASH_TIMEOUT_VALUE);
 	/* If program operation was failed, a Flash error code is returned */
@@ -791,7 +817,9 @@ BOS_Status EraseSector(uint32_t sector ) {
 		FLASH_EraseInitTypeDef erase;
 		uint32_t eraseError;
 		erase.TypeErase = FLASH_TYPEERASE_PAGES;
-		erase.PageAddress =sector;
+		//erase.PageAddress =sector;
+		erase.Page =sector;
+		//TOBECHECKED
 		erase.NbPages =1;
 		status =HAL_FLASHEx_Erase(&erase,&eraseError);
 		if(status != HAL_OK || eraseError != 0xFFFFFFFF)

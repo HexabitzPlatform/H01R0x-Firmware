@@ -24,7 +24,7 @@
 #define RO_START_ADDRESS  		((uint32_t)0x0801D800) 
 #define RO_MID_ADDRESS  		((uint32_t)0x0801DC00) 		// Snippets are stored here
 #define EEPROM_START_ADDRESS  	((uint32_t)0x0801E000)
-#define FLASH_SIZE				((uint32_t)0x20000)			// All sizes in bytes
+//#define FLASH_SIZE				((uint32_t)0x20000)			// All sizes in bytes
 #define SRAM_SIZE				((uint32_t)0x8000)
 #define PAGE_SIZE               ((uint32_t)0x0800)  		/* Page size = 2KByte for STM32F07x and STM32F09x devices */
 #define NumOfPages				(FLASH_SIZE/PAGE_SIZE)
