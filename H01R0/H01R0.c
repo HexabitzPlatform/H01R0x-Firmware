@@ -32,11 +32,25 @@ extern uint8_t numOfRecordedSnippets;
 module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr = NULL, .paramFormat =FMT_FLOAT, .paramName =""}};
 
 /* Private variables ---------------------------------------------------------*/
-
-
+TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim2;
+void MX_TIM1_Init(void);
+void MX_TIM2_Init(void);
+//TIM_HandleTypeDef htim16;
+uint8_t globalRed =0, globalGreen =0, globalBlue =0;
+uint8_t RGB_LED_State =0, rgbLedMode =0, rgbColor =0, rgbRed =0, rgbGreen =0, rgbBlue =0;
+uint32_t rgbPeriod =0, rgbDC =0;
+int16_t rgbCount =0;
+uint8_t color =0, intensity_LED =0, intensity_RGB =0, mode =0;
+TaskHandle_t RGBledTaskHandle = NULL;
 /* Private function prototypes -----------------------------------------------*/
 void ExecuteMonitor(void);
 
+void RGBledTask(void *argument);
+void RGBpulse(uint8_t mode);
+void RGBsweepBasic(void);
+void RGBsweepFine(void);
+void RGBdim(uint8_t mode);
 /* Create CLI commands --------------------------------------------------------*/
 
 /*-----------------------------------------------------------*/
@@ -99,9 +113,20 @@ void SystemClock_Config(void){
 	  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_USART2;
 	  PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
 	  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+	  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_TIM1;
+	    PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLKSOURCE_PCLK1;
 	  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
+		__HAL_RCC_PWR_CLK_ENABLE();
+		HAL_PWR_EnableBkUpAccess();
+		__HAL_RCC_TIM1_CLK_ENABLE();
+		  __HAL_RCC_TIM2_CLK_ENABLE();
 
+		HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
+		HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+
+		__SYSCFG_CLK_ENABLE()
+		;
 	  HAL_NVIC_SetPriority(SysTick_IRQn,0,0);
 	
 }
@@ -292,7 +317,8 @@ void SetupPortForRemoteBootloaderUpdate(uint8_t port){
 /* --- H01R0 module initialization.
  */
 void Module_Peripheral_Init(void){
-
+	 __HAL_RCC_GPIOB_CLK_ENABLE();
+	 __HAL_RCC_GPIOA_CLK_ENABLE();
 	/* Array ports */
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
@@ -300,9 +326,12 @@ void Module_Peripheral_Init(void){
 	MX_USART4_UART_Init();
 	MX_USART5_UART_Init();
 	MX_USART6_UART_Init();
-
+	MX_TIM1_Init();
+	MX_TIM2_Init();
 
 	/* Create module special task (if needed) */
+	if(RGBledTaskHandle == NULL)
+			xTaskCreate(RGBledTask,(const char* ) "RGBledTask",configMINIMAL_STACK_SIZE,NULL,osPriorityNormal - osPriorityIdle,&RGBledTaskHandle);
 }
 
 /*-----------------------------------------------------------*/
@@ -342,7 +371,69 @@ uint8_t GetPort(UART_HandleTypeDef *huart){
 }
 
 /*-----------------------------------------------------------*/
+/* RGBledTask function */
+void RGBledTask(void *argument){
 
+	/* Infinite loop */
+	for(;;){
+		/* Switch RGB LED according to its mode */
+		switch(rgbLedMode){
+			case RGB_PULSE_RGB:
+				RGBpulse(rgbLedMode);
+				break;
+
+			case RGB_PULSE_COLOR:
+				RGBpulse(rgbLedMode);
+				break;
+
+			case RGB_SWEEP_BASIC:
+				RGBsweepBasic();
+				break;
+
+			case RGB_SWEEP_FINE:
+				RGBsweepFine();
+				break;
+
+			case RGB_DIM_UP:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_UP_WAIT:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_DOWN:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_DOWN_WAIT:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_UP_DOWN:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_DOWN_UP:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_UP_DOWN_WAIT:
+				RGBdim(rgbLedMode);
+				break;
+
+			case RGB_DIM_DOWN_UP_WAIT:
+				RGBdim(rgbLedMode);
+				break;
+
+			default:
+				osDelay(10);
+				break;
+		}
+
+		taskYIELD();
+	}
+}
 /* --- Register this module CLI Commands
  */
 void RegisterModuleCLICommands(void){
@@ -383,11 +474,326 @@ void RegisterModuleCLICommands(void){
  |								  APIs							          | 																 	|
 /* -----------------------------------------------------------------------
  */
+Module_Status RGB_LED_on(uint8_t intensity){
+	Module_Status result =H01R0_OK;
 
+	if(intensity == 0){
+		htim1.Instance->CCR2 =0;
+		htim2.Instance->CCR3 =0;
+		htim1.Instance->CCR4 =0;
+
+		RGB_LED_State =0;
+
+		return H01R0_OK;
+	}
+	else if(intensity <= 100){
+		result =startPWM(0,255,0,intensity);
+
+		if(result == H01R0_OK)
+			RGB_LED_State =1;
+
+		return result;
+	}
+	else
+		return H01R0_ERR_WrongIntensity;
+
+}
+Module_Status RGB_LED_off(void){
+	if(HAL_TIM_Base_Stop(&htim1) != HAL_OK)
+		return H01R0_ERROR;
+	if(HAL_TIM_Base_Stop(&htim2) != HAL_OK)
+			return H01R0_ERROR;
+
+	htim1.Instance->CCR2 =0;
+	htim2.Instance->CCR3 =0;
+	htim1.Instance->CCR4 =0;
+
+	RGB_LED_State =0;
+	rgbLedMode =0;
+
+	return H01R0_OK;
+}
+/* --- Set LED color from a predefined color list (continuously)
+ using PWM intensity modulation.
+ */
+Module_Status RGB_LED_setColor(uint8_t color,uint8_t intensity){
+	Module_Status result =H01R0_OK;
+
+	if(!intensity)
+		return RGB_LED_on(0);
+	else if(intensity > 100)
+		return H01R0_ERR_WrongIntensity;
+	else{
+		switch(color){
+			case BLACK:
+				result =RGB_LED_off();
+				break;
+			case WHITE:
+				result =RGB_LED_on(intensity);
+				break;
+			case RED:
+				result =RGB_LED_setRGB(0,0,255,intensity);
+				break;
+			case BLUE:
+				result =RGB_LED_setRGB(255,0,0,intensity);
+				break;
+			case YELLOW:
+				result =RGB_LED_setRGB(0,255,255,intensity);
+				break;
+			case CYAN:
+				result =RGB_LED_setRGB(255,255,0,intensity);
+				break;
+			case MAGENTA:
+				result =RGB_LED_setRGB(0,0,0,intensity);
+				break;
+			case GREEN:
+				result =RGB_LED_setRGB(255,255,255,intensity);
+				break;
+			default:
+				result =H01R0_ERR_WrongColor;
+				break;
+		}
+	}
+
+	return result;
+}
+/*-----------------------------------------------------------*/
+/* --- Set RGB colors on LED (continuously) using PWM intensity modulation.
+ */
+Module_Status RGB_LED_setRGB(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity){
+	if(intensity == 0)
+		return RGB_LED_on(0);
+	else if(intensity > 100)
+		return H01R0_ERR_WrongIntensity;
+	else
+		return startPWM(red,green,blue,intensity);
+}
+/*-----------------------------------------------------------*/
+/* --- Load and start red LED PWM ---
+ Inputs:
+ red Duty cycle of red LED (0-255).
+ green Duty cycle of green LED (0-255).
+ blue Duty cycle of blue LED (0-255).
+ intensity RGB LED intensity (0-100).
+ */
+Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity){
+	uint32_t period = PWM_TIMER_CLOCK / RGB_PWM_FREQ;
+
+	/* PWM period */
+	htim1.Instance->ARR =period - 1;
+	htim2.Instance->ARR =period - 1;
+	 htim1.Instance->BDTR = 0;
+	/* PWM duty cycle */
+	htim1.Instance->CCR2 =((float )intensity / 100.0f) * ((float )red / 255.0f) * period;
+	htim2.Instance->CCR3 =((float )intensity / 100.0f) * ((float )green / 255.0f) * period;
+	htim1.Instance->CCR4 =((float )intensity / 100.0f) * ((float )blue / 255.0f) * period;
+if(red!=255){
+	if(HAL_TIMEx_PWMN_Start(&htim1,_RGB_RED_TIM_CH) != HAL_OK)
+		return H01R0_ERROR;
+	if(HAL_TIM_PWM_Start(&htim1,_RGB_RED_TIM_CH) != HAL_OK)
+			return H01R0_ERROR;}
+if(green!=0){
+	if(HAL_TIM_PWM_Start(&htim2,_RGB_GREEN_TIM_CH) != HAL_OK)
+		return H01R0_ERROR;}
+	if(blue!=255){
+	if(HAL_TIMEx_PWMN_Start(&htim1,_RGB_BLUE_TIM_CH) != HAL_OK)
+		return H01R0_ERROR;
+	if(HAL_TIM_PWM_Start(&htim1,_RGB_BLUE_TIM_CH) != HAL_OK)
+				return H01R0_ERROR;}
+
+	return H01R0_OK;
+}
+/*-----------------------------------------------------------*/
+
+/* --- Pulse the RGB LED ---
+ */
+void RGBpulse(uint8_t mode){
+	uint8_t temp =0;
+
+	if(rgbCount > 0 || rgbCount == -1){
+		if(mode == RGB_PULSE_RGB)
+			RGB_LED_setRGB(rgbRed,rgbGreen,rgbBlue,100);
+		else if(mode == RGB_PULSE_COLOR)
+			RGB_LED_setColor(rgbColor,100);
+		osDelay(rgbDC);
+		temp =rgbLedMode; /* Backup rgbLedMode so that it's not reset */
+		RGB_LED_off();
+		rgbLedMode =temp;
+		osDelay(rgbPeriod - rgbDC);
+
+		if(rgbCount > 0)
+			rgbCount--;
+	}
+	else{
+		rgbLedMode =0;
+	}
+}
 
 /*-----------------------------------------------------------*/
 
+/* --- RGB LED basic color sweep ---
+ */
+void RGBsweepBasic(void){
+	static uint32_t temp;
 
+	temp =rgbPeriod / 6;
+
+	if(rgbCount > 0 || rgbCount == -1){
+		RGB_LED_setColor(RED,100);
+		osDelay(temp);
+		RGB_LED_setColor(YELLOW,100);
+		osDelay(temp);
+		RGB_LED_setColor(GREEN,100);
+		osDelay(temp);
+		RGB_LED_setColor(CYAN,100);
+		osDelay(temp);
+		RGB_LED_setColor(BLUE,100);
+		osDelay(temp);
+		RGB_LED_setColor(MAGENTA,100);
+		osDelay(temp);
+
+		if(rgbCount > 0)
+			rgbCount--;
+	}
+	else{
+		RGB_LED_off();
+	}
+}
+
+/*-----------------------------------------------------------*/
+
+/* --- RGB LED fine color sweep ---
+ */
+void RGBsweepFine(void){
+	static uint32_t temp;
+
+	temp =rgbPeriod / 6;
+
+	if(rgbCount > 0 || rgbCount == -1){
+		/* Red */
+		for(uint8_t i =0; i < 255; i++){
+			RGB_LED_setRGB(255,i,0,100);
+			osDelay(ceil(temp / 255));
+		}
+		/* Yellow */
+		for(uint8_t i =255; i > 0; i--){
+			RGB_LED_setRGB(i,255,0,100);
+			osDelay(ceil(temp / 255));
+		}
+		/* Green */
+		for(uint8_t i =0; i < 255; i++){
+			RGB_LED_setRGB(0,255,i,100);
+			osDelay(ceil(temp / 255));
+		}
+		/* Cyan */
+		for(uint8_t i =255; i > 0; i--){
+			RGB_LED_setRGB(0,i,255,100);
+			osDelay(ceil(temp / 255));
+		}
+		/* Blue */
+		for(uint8_t i =0; i < 255; i++){
+			RGB_LED_setRGB(i,0,255,100);
+			osDelay(ceil(temp / 255));
+		}
+		/* Magenta */
+		for(uint8_t i =255; i > 0; i--){
+			RGB_LED_setRGB(255,0,i,100);
+			osDelay(ceil(temp / 255));
+		}
+
+		if(rgbCount > 0)
+			rgbCount--;
+	}
+	else{
+		RGB_LED_off();
+	}
+}
+
+/*-----------------------------------------------------------*/
+/* --- Dim the RGB LED ---
+ */
+void RGBdim(uint8_t mode){
+	uint8_t temp =0;
+
+	if(rgbCount > 0 || rgbCount == -1){
+		temp =rgbLedMode; /* Store mode so that it's not reset */
+		if(mode == RGB_DIM_UP){
+			for(uint8_t i =0; i <= 100; i++){
+				RGB_LED_setColor(rgbColor,i);
+				osDelay(rgbPeriod / 100);
+			}
+		}
+		else if(mode == RGB_DIM_UP_WAIT){
+			for(uint8_t i =0; i <= 100; i++){
+				RGB_LED_setColor(rgbColor,i);
+				osDelay((rgbPeriod - rgbDC) / 100);
+			}
+			osDelay(rgbDC);
+		}
+		else if(mode == RGB_DIM_DOWN){
+			for(uint8_t i =101; i > 0; i--){
+				RGB_LED_setColor(rgbColor,i - 1);
+				osDelay(rgbPeriod / 100);
+			}
+		}
+		else if(mode == RGB_DIM_DOWN_WAIT){
+			for(uint8_t i =101; i > 0; i--){
+				RGB_LED_setColor(rgbColor,i - 1);
+				osDelay((rgbPeriod - rgbDC) / 100);
+			}
+			osDelay(rgbDC);
+		}
+		else if(mode == RGB_DIM_UP_DOWN){
+			for(uint8_t i =0; i <= 100; i++){
+				RGB_LED_setColor(rgbColor,i);
+				osDelay(rgbPeriod / 200);
+			}
+			for(uint8_t i =101; i > 0; i--){
+				RGB_LED_setColor(rgbColor,i - 1);
+				osDelay(rgbPeriod / 200);
+			}
+		}
+		else if(mode == RGB_DIM_DOWN_UP){
+			for(uint8_t i =101; i > 0; i--){
+				RGB_LED_setColor(rgbColor,i - 1);
+				osDelay(rgbPeriod / 200);
+			}
+			for(uint8_t i =0; i <= 100; i++){
+				RGB_LED_setColor(rgbColor,i);
+				osDelay(rgbPeriod / 200);
+			}
+		}
+		else if(mode == RGB_DIM_UP_DOWN_WAIT){
+			for(uint8_t i =0; i <= 100; i++){
+				RGB_LED_setColor(rgbColor,i);
+				osDelay((rgbPeriod - rgbDC) / 200);
+			}
+			for(uint8_t i =101; i > 0; i--){
+				RGB_LED_setColor(rgbColor,i - 1);
+				osDelay((rgbPeriod - rgbDC) / 200);
+			}
+			osDelay(rgbDC);
+		}
+		else if(mode == RGB_DIM_DOWN_UP_WAIT){
+			for(uint8_t i =101; i > 0; i--){
+				RGB_LED_setColor(rgbColor,i - 1);
+				osDelay((rgbPeriod - rgbDC) / 200);
+			}
+			for(uint8_t i =0; i <= 100; i++){
+				RGB_LED_setColor(rgbColor,i);
+				osDelay((rgbPeriod - rgbDC) / 200);
+			}
+			osDelay(rgbDC);
+			rgbLedMode =temp;
+		}
+
+		if(rgbCount > 0)
+			rgbCount--;
+	}
+	else{
+		rgbLedMode =0;
+	}
+}
 /* -----------------------------------------------------------------------
  |								Commands							      |
    -----------------------------------------------------------------------

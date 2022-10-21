@@ -102,6 +102,22 @@
 /* Module-specific Definitions */
 
 #define NUM_MODULE_PARAMS						1
+#define _RGB_RED_PORT							GPIOB
+#define _RGB_RED_PIN							GPIO_PIN_13
+#define _RGB_RED_TIM_CH							TIM_CHANNEL_1
+#define _RGB_RED_GPIO_CLK()						__GPIOA_CLK_ENABLE();
+#define _RGB_GREEN_PORT							GPIOA
+#define _RGB_GREEN_PIN							GPIO_PIN_5
+#define _RGB_GREEN_TIM_CH						TIM_CHANNEL_1
+#define _RGB_GREEN_GPIO_CLK()					__GPIOB_CLK_ENABLE();
+#define _RGB_BLUE_PORT							GPIOB
+#define _RGB_BLUE_PIN							GPIO_PIN_1
+#define _RGB_BLUE_TIM_CH						TIM_CHANNEL_3
+#define _RGB_BLUE_GPIO_CLK()					__GPIOB_CLK_ENABLE();
+
+#define PWM_TIMER_CLOCK							16000000
+#define RGB_PWM_FREQ							24000
+#define RGB_PWM_PERIOD							((float) (1/RGB_PWM_FREQ) )
 
 /* Module EEPROM Variables */
 
@@ -110,15 +126,12 @@
 
 /* Module_Status Type Definition */
 typedef enum {
-	H01R0_OK =0,
-	H01R0_ERR_UnknownMessage,
-	H01R0_ERR_WrongParams,
-	H01R0_ERROR =255
+	H01R0_OK =0, H01R0_ERR_UnknownMessage, H01R0_ERR_WrongColor, H01R0_ERR_WrongIntensity, H01R0_ERR_WrongMode, H01R0_ERROR =255
 } Module_Status;
 
 /* Indicator LED */
 #define _IND_LED_PORT			GPIOB
-#define _IND_LED_PIN			GPIO_PIN_14
+#define _IND_LED_PIN			GPIO_PIN_7
 
 /* Export UART variables */
 extern UART_HandleTypeDef huart1;
@@ -138,11 +151,23 @@ extern void MX_USART6_UART_Init(void);
 extern void SystemClock_Config(void);
 extern void ExecuteMonitor(void);
 
+
+
+
+extern uint8_t RGB_LED_State, RGB_LED_Intensity_Old;
+extern uint8_t rgbLedMode, rgbRed, rgbGreen, rgbBlue, rgbColor;
+extern uint32_t rgbPeriod, rgbDC;
+extern int16_t rgbCount;
+
 /* -----------------------------------------------------------------------
  |								  APIs							          |  																 	|
 /* -----------------------------------------------------------------------
  */
-
+extern Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity);
+extern Module_Status RGB_LED_on(uint8_t intensity);
+extern Module_Status RGB_LED_off(void);
+extern Module_Status RGB_LED_setColor(uint8_t color,uint8_t intensity);
+extern Module_Status RGB_LED_setRGB(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity);
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);
 void remoteBootloaderUpdate(uint8_t src,uint8_t dst,uint8_t inport,uint8_t outport);
 
