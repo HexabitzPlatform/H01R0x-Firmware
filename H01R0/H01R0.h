@@ -115,8 +115,8 @@
 #define _RGB_BLUE_TIM_CH						TIM_CHANNEL_3
 #define _RGB_BLUE_GPIO_CLK()					__GPIOB_CLK_ENABLE();
 
-#define PWM_TIMER_CLOCK							16000000
-#define RGB_PWM_FREQ							24000
+#define PWM_TIMER_CLOCK							122880			//freq 120 HZ at ARR 1023
+#define RGB_PWM_FREQ							120
 #define RGB_PWM_PERIOD							((float) (1/RGB_PWM_FREQ) )
 
 /* Module EEPROM Variables */
@@ -166,6 +166,7 @@ extern int16_t rgbCount;
 extern Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity);
 extern Module_Status RGB_LED_on(uint8_t intensity);
 extern Module_Status RGB_LED_off(void);
+extern Module_Status RGB_LED_toggle(uint8_t intensity);
 extern Module_Status RGB_LED_setColor(uint8_t color,uint8_t intensity);
 extern Module_Status RGB_LED_setRGB(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity);
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);

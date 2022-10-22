@@ -474,6 +474,9 @@ void RegisterModuleCLICommands(void){
  |								  APIs							          | 																 	|
 /* -----------------------------------------------------------------------
  */
+
+/* --- Turn on RGB LED (white color) ---
+*/
 Module_Status RGB_LED_on(uint8_t intensity){
 	Module_Status result =H01R0_OK;
 
@@ -487,7 +490,7 @@ Module_Status RGB_LED_on(uint8_t intensity){
 		return H01R0_OK;
 	}
 	else if(intensity <= 100){
-		result =startPWM(0,255,0,intensity);
+		result =startPWM(255,255,255,intensity);
 
 		if(result == H01R0_OK)
 			RGB_LED_State =1;
@@ -498,11 +501,20 @@ Module_Status RGB_LED_on(uint8_t intensity){
 		return H01R0_ERR_WrongIntensity;
 
 }
+/*-----------------------------------------------------------*/
+
+/* --- Turn off RGB LED ---
+ */
 Module_Status RGB_LED_off(void){
-	if(HAL_TIM_Base_Stop(&htim1) != HAL_OK)
-		return H01R0_ERROR;
-	if(HAL_TIM_Base_Stop(&htim2) != HAL_OK)
-			return H01R0_ERROR;
+//	if(HAL_TIM_Base_Stop(&htim1) != HAL_OK)
+//		return H01R0_ERROR;
+//	if(HAL_TIM_Base_Stop(&htim2) != HAL_OK)
+//			return H01R0_ERROR;
+	HAL_TIM_PWM_Stop(&htim2,_RGB_GREEN_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim1,_RGB_BLUE_TIM_CH);
+	HAL_TIMEx_PWMN_Stop(&htim1,_RGB_BLUE_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim1,_RGB_RED_TIM_CH);
+	HAL_TIMEx_PWMN_Stop(&htim1,_RGB_RED_TIM_CH);
 
 	htim1.Instance->CCR2 =0;
 	htim2.Instance->CCR3 =0;
@@ -513,6 +525,22 @@ Module_Status RGB_LED_off(void){
 
 	return H01R0_OK;
 }
+/*-----------------------------------------------------------*/
+
+/* --- Toggle RGB LED ---
+ */
+Module_Status RGB_LED_toggle(uint8_t intensity){
+	Module_Status result =H01R0_OK;
+
+	if(RGB_LED_State)
+		result =RGB_LED_off();
+	else
+		result =RGB_LED_on(intensity);
+
+	return result;
+}
+/*-----------------------------------------------------------*/
+
 /* --- Set LED color from a predefined color list (continuously)
  using PWM intensity modulation.
  */
@@ -577,29 +605,29 @@ Module_Status RGB_LED_setRGB(uint8_t red,uint8_t green,uint8_t blue,uint8_t inte
  intensity RGB LED intensity (0-100).
  */
 Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity){
-	uint32_t period = PWM_TIMER_CLOCK / RGB_PWM_FREQ;
+	uint32_t period = (PWM_TIMER_CLOCK / RGB_PWM_FREQ)-1;
 
 	/* PWM period */
-	htim1.Instance->ARR =period - 1;
-	htim2.Instance->ARR =period - 1;
-	 htim1.Instance->BDTR = 0;
+	htim1.Instance->ARR =period;
+	htim2.Instance->ARR =period;
+	// htim1.Instance->BDTR = 0;
 	/* PWM duty cycle */
-	htim1.Instance->CCR2 =((float )intensity / 100.0f) * ((float )red / 255.0f) * period;
-	htim2.Instance->CCR3 =((float )intensity / 100.0f) * ((float )green / 255.0f) * period;
-	htim1.Instance->CCR4 =((float )intensity / 100.0f) * ((float )blue / 255.0f) * period;
-if(red!=255){
+	htim1.Instance->CCR1 =period - ((intensity / 100.0f) *  ((uint8_t)red / 255.0f) * period);
+	htim2.Instance->CCR1 =	 	   ((intensity / 100.0f) *  ((uint8_t )green / 255.0f) * period);
+	htim1.Instance->CCR3 =period - ((intensity / 100.0f) *  ((uint8_t )blue / 255.0f) * period);
+//if(red!=255){
 	if(HAL_TIMEx_PWMN_Start(&htim1,_RGB_RED_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
 	if(HAL_TIM_PWM_Start(&htim1,_RGB_RED_TIM_CH) != HAL_OK)
-			return H01R0_ERROR;}
-if(green!=0){
+			return H01R0_ERROR;
+//if(green!=0){
 	if(HAL_TIM_PWM_Start(&htim2,_RGB_GREEN_TIM_CH) != HAL_OK)
-		return H01R0_ERROR;}
-	if(blue!=255){
+		return H01R0_ERROR;
+//	if(blue!=255){
 	if(HAL_TIMEx_PWMN_Start(&htim1,_RGB_BLUE_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
 	if(HAL_TIM_PWM_Start(&htim1,_RGB_BLUE_TIM_CH) != HAL_OK)
-				return H01R0_ERROR;}
+				return H01R0_ERROR;
 
 	return H01R0_OK;
 }
