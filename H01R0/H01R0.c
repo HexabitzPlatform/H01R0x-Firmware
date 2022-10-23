@@ -516,9 +516,9 @@ Module_Status RGB_LED_off(void){
 	HAL_TIM_PWM_Stop(&htim1,_RGB_RED_TIM_CH);
 	HAL_TIMEx_PWMN_Stop(&htim1,_RGB_RED_TIM_CH);
 
-	htim1.Instance->CCR2 =0;
-	htim2.Instance->CCR3 =0;
-	htim1.Instance->CCR4 =0;
+	htim1.Instance->CCR1 =0;
+	htim2.Instance->CCR1 =0;
+	htim1.Instance->CCR3 =0;
 
 	RGB_LED_State =0;
 	rgbLedMode =0;
@@ -540,7 +540,18 @@ Module_Status RGB_LED_toggle(uint8_t intensity){
 	return result;
 }
 /*-----------------------------------------------------------*/
+/* --- Set RGB colors on LED (continuously) using PWM intensity modulation.
+ */
+Module_Status RGB_LED_setRGB(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity){
+	if(intensity == 0)
+		return RGB_LED_on(0);
+	else if(intensity > 100)
+		return H01R0_ERR_WrongIntensity;
+	else
+		return startPWM(red,green,blue,intensity);
+}
 
+/*-----------------------------------------------------------*/
 /* --- Set LED color from a predefined color list (continuously)
  using PWM intensity modulation.
  */
@@ -560,22 +571,22 @@ Module_Status RGB_LED_setColor(uint8_t color,uint8_t intensity){
 				result =RGB_LED_on(intensity);
 				break;
 			case RED:
-				result =RGB_LED_setRGB(0,0,255,intensity);
-				break;
-			case BLUE:
 				result =RGB_LED_setRGB(255,0,0,intensity);
 				break;
-			case YELLOW:
-				result =RGB_LED_setRGB(0,255,255,intensity);
+			case BLUE:
+				result =RGB_LED_setRGB(0,0,255,intensity);
 				break;
-			case CYAN:
+			case YELLOW:
 				result =RGB_LED_setRGB(255,255,0,intensity);
 				break;
+			case CYAN:
+				result =RGB_LED_setRGB(0,255,255,intensity);
+				break;
 			case MAGENTA:
-				result =RGB_LED_setRGB(0,0,0,intensity);
+				result =RGB_LED_setRGB(255,0,255,intensity);
 				break;
 			case GREEN:
-				result =RGB_LED_setRGB(255,255,255,intensity);
+				result =RGB_LED_setRGB(0,255,0,intensity);
 				break;
 			default:
 				result =H01R0_ERR_WrongColor;
@@ -586,17 +597,77 @@ Module_Status RGB_LED_setColor(uint8_t color,uint8_t intensity){
 	return result;
 }
 /*-----------------------------------------------------------*/
-/* --- Set RGB colors on LED (continuously) using PWM intensity modulation.
+/* --- Activate the RGB LED pulse command with RGB values. Set repeat to -1 for periodic signals ---
  */
-Module_Status RGB_LED_setRGB(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity){
-	if(intensity == 0)
-		return RGB_LED_on(0);
-	else if(intensity > 100)
-		return H01R0_ERR_WrongIntensity;
-	else
-		return startPWM(red,green,blue,intensity);
+Module_Status RGB_LED_pulseRGB(uint8_t red,uint8_t green,uint8_t blue,uint32_t period,uint32_t dc,int32_t repeat){
+	Module_Status result =H01R0_OK;
+
+	rgbRed =red;
+	rgbGreen =green;
+	rgbBlue =blue;
+	rgbPeriod =period;
+	rgbDC =dc;
+	rgbCount =repeat;
+
+	rgbLedMode =RGB_PULSE_RGB;
+
+	return result;
 }
 /*-----------------------------------------------------------*/
+/* --- Activate the RGB LED pulse command with a specific color. Set repeat to -1 for periodic signals ---
+ */
+Module_Status RGB_LED_pulseColor(uint8_t color,uint32_t period,uint32_t dc,int32_t repeat){
+	Module_Status result =H01R0_OK;
+
+	rgbColor =color;
+	rgbPeriod =period;
+	rgbDC =dc;
+	rgbCount =repeat;
+
+	rgbLedMode =RGB_PULSE_COLOR;
+
+	return result;
+}
+
+/*-----------------------------------------------------------*/
+/* --- Activate the RGB LED sweep mode. Set repeat to -1 for periodic signals. Minimum period for fine sweep is 6 x 256 = 1536 ms ---
+ */
+Module_Status RGB_LED_sweep(uint8_t mode,uint32_t period,int32_t repeat){
+	if(mode == 3 || mode == 4){
+		Module_Status result =H01R0_OK;
+
+		rgbPeriod =period;
+		rgbCount =repeat;
+		rgbLedMode =mode;
+
+		return result;
+	}
+	else{
+		return H01R0_ERR_WrongMode;
+	}
+}
+/*-----------------------------------------------------------*/
+/* --- Activate RGB LED dim mode using one of the basic colors. Set repeat to -1 for periodic signals ---
+ */
+Module_Status RGB_LED_dim(uint8_t color,uint8_t mode,uint32_t period,uint32_t wait,int32_t repeat){
+	if(mode >= 5 && mode <= 12){
+		Module_Status result =H01R0_OK;
+
+		rgbColor =color;
+		rgbPeriod =period;
+		rgbDC =wait;
+		rgbCount =repeat;
+		rgbLedMode =mode;
+
+		return result;
+	}
+	else{
+		return H01R0_ERR_WrongMode;
+	}
+}
+
+/*-----------------------------------------------------------*/
+
 /* --- Load and start red LED PWM ---
  Inputs:
  red Duty cycle of red LED (0-255).
@@ -631,8 +702,8 @@ Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity)
 
 	return H01R0_OK;
 }
-/*-----------------------------------------------------------*/
 
+/*-----------------------------------------------------------*/
 /* --- Pulse the RGB LED ---
  */
 void RGBpulse(uint8_t mode){
