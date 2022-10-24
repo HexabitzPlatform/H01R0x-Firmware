@@ -53,6 +53,91 @@ void RGBsweepFine(void);
 void RGBdim(uint8_t mode);
 /* Create CLI commands --------------------------------------------------------*/
 
+portBASE_TYPE demoCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE onCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE offCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE colorCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE RGBCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE toggleCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE pulseColorCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE pulseRGBCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE sweepCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE dimCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+
+/* CLI command structure : demo */
+const CLI_Command_Definition_t demoCommandDefinition ={
+	(const int8_t* )"demo", /* The command string to type. */
+	(const int8_t* )"demo:\r\n Run a demo program to test module functionality\r\n\r\n", demoCommand, /* The function to run. */
+	0 /* No parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : on */
+const CLI_Command_Definition_t onCommandDefinition ={
+	(const int8_t* )"on", /* The command string to type. */
+	(const int8_t* )"on:\r\n Turn RGB LED on (white color) at a specific intensity (0-100%) (1st par.)\r\n\r\n", onCommand, /* The function to run. */
+	1 /* One parameter is expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : off */
+const CLI_Command_Definition_t offCommandDefinition ={
+	(const int8_t* )"off", /* The command string to type. */
+	(const int8_t* )"off:\r\n Turn RGB LED off\r\n\r\n", offCommand, /* The function to run. */
+	0 /* No parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : color */
+const CLI_Command_Definition_t colorCommandDefinition ={
+	(const int8_t* )"color", /* The command string to type. */
+	(const int8_t* )"color:\r\n Set RGB LED color (1st par.) at a specific intensity (0-100%) (2nd par.)\n\rRegistered colors are:\
+					\r\nblack, white, red, blue, green, yellow, cyan, and magenta \r\n\r\n", colorCommand, /* The function to run. */
+	2 /* Two parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : RGB */
+const CLI_Command_Definition_t RGBCommandDefinition ={
+	(const int8_t* )"rgb", /* The command string to type. */
+	(const int8_t* )"RGB:\r\n Set RGB LED red (1st par.), green (2nd par.), and blue (3rd par.) values (0-255) at a specific intensity (0-100%) (4th par.)\r\n\r\n", RGBCommand, /* The function to run. */
+	4 /* Four parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : toggle */
+const CLI_Command_Definition_t toggleCommandDefinition ={
+	(const int8_t* )"toggle", /* The command string to type. */
+	(const int8_t* )"toggle:\r\n Toggle RGB LED (white color) at a specific intensity (0-100%) (1st par.)\r\n\r\n", toggleCommand, /* The function to run. */
+	1 /* One parameter is expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : pulseColor */
+const CLI_Command_Definition_t pulseColorCommandDefinition ={
+	(const int8_t* )"pulsecolor", /* The command string to type. */
+	(const int8_t* )"pulseColor:\r\n Send a pulse on RGB LED using a specific color (1st par.), pulse period (ms) (2nd par.), pulse duty cycle (ms) (3rd par.) \
+					 and pulse repeat times (4th par.) (type 'inf' for periodic signal)\r\n\r\n", pulseColorCommand, /* The function to run. */
+	4 /* Four parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : pulseRGB */
+const CLI_Command_Definition_t pulseRGBCommandDefinition ={
+	(const int8_t* )"pulsergb", /* The command string to type. */
+	(const int8_t* )"pulseRGB:\r\n Send a pulse on RGB LED using RGB values (1st, 2nd and 3rd par.) (0-255), pulse period (ms) (4th par.), pulse duty cycle (ms) (5th par.) \
+					 and pulse repeat times (6th par.) (type 'inf' for periodic signal)\r\n\r\n", pulseRGBCommand, /* The function to run. */
+	6 /* Six parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : sweep */
+const CLI_Command_Definition_t sweepCommandDefinition ={
+	(const int8_t* )"sweep", /* The command string to type. */
+	(const int8_t* )"sweep:\r\n Perform color sweep on RGB LED using a specific sweep mode ('basic': sweep basic color only, 'fine': sweep all colors) (1st par.), sweep period (ms) (2nd par.) \
+					 and sweep repeat times (3rd par.) (type 'inf' for periodic signal)\r\n\r\n", sweepCommand, /* The function to run. */
+	3 /* Three parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : dim */
+const CLI_Command_Definition_t dimCommandDefinition ={
+	(const int8_t* )"dim", /* The command string to type. */
+	(const int8_t* )"dim:\r\n Dim a specific color (1st par.) on RGB LED using a specific dim mode ('up', 'upwait', 'down', 'downwait', 'updown', 'downup', 'updownwait', 'downupwait') (2nd par.), \
+					 sweep period (ms) (3rd par.), wait time (ms) (4th par.) and dim repeat times (5th par.) (type 'inf' for periodic signal)\r\n\r\n", dimCommand, /* The function to run. */
+	5 /* Five parameters are expected. */
+};
 /*-----------------------------------------------------------*/
 
 /* -----------------------------------------------------------------------
@@ -437,6 +522,16 @@ void RGBledTask(void *argument){
 /* --- Register this module CLI Commands
  */
 void RegisterModuleCLICommands(void){
+	FreeRTOS_CLIRegisterCommand(&demoCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&onCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&offCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&colorCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&RGBCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&toggleCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&pulseColorCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&pulseRGBCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&sweepCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&dimCommandDefinition);
 
 }
 
@@ -898,6 +993,540 @@ void RGBdim(uint8_t mode){
    -----------------------------------------------------------------------
  */
 
+portBASE_TYPE demoCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	static const int8_t *pcRedMessage =(int8_t* )"Red LED is on\r\n";
+	static const int8_t *pcGreenMessage =(int8_t* )"Green LED is on\r\n";
+	static const int8_t *pcBlueMessage =(int8_t* )"Blue LED is on";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )pcCommandString;
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Respond to the command */
+	RGB_LED_off();
+	RGB_LED_setColor(RED,50);
+	writePxMutex(PcPort,(char* )pcRedMessage,strlen((char* )pcRedMessage),10,10);
+	Delay_ms(1000);
+	RGB_LED_off();
+	RGB_LED_setColor(GREEN,50);
+	writePxMutex(PcPort,(char* )pcGreenMessage,strlen((char* )pcGreenMessage),10,10);
+	Delay_ms(1000);
+	RGB_LED_off();
+	RGB_LED_setColor(BLUE,50);
+	writePxMutex(PcPort,(char* )pcBlueMessage,strlen((char* )pcBlueMessage),10,10);
+	Delay_ms(1000);
+	RGB_LED_off();
+	strcpy((char* )pcWriteBuffer,"\r\n");
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE onCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+
+	int8_t *pcParameterString1;
+	portBASE_TYPE xParameterStringLength1 =0;
+	uint8_t intensity =0;
+	static const int8_t *pcOKMessage =(int8_t* )"RGB LED is on at intensity %d%%\r\n";
+	static const int8_t *pcWrongIntensityMessage =(int8_t* )"Wrong intensity!\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString, /* The command string itself. */
+	1, /* Return the first parameter. */
+	&xParameterStringLength1 /* Store the parameter string length. */
+	);
+	intensity =(uint8_t )atol((char* )pcParameterString1);
+
+	result =RGB_LED_on(intensity);
+
+	/* Respond to the command */
+	if(result == H01R0_OK)
+		sprintf((char* )pcWriteBuffer,(char* )pcOKMessage,intensity);
+	else if(result == H01R0_ERR_WrongIntensity)
+		strcpy((char* )pcWriteBuffer,(char* )pcWrongIntensityMessage);
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE offCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	static const int8_t *pcMessage =(int8_t* )"RGB LED is off\r\n";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )pcCommandString;
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Respond to the command */
+	strcpy((char* )pcWriteBuffer,(char* )pcMessage);
+	RGB_LED_off();
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE colorCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+	uint8_t color =0;
+	uint8_t intensity =0;
+	char par[15] ={0};
+	static int8_t *pcParameterString1, *pcParameterString2;
+	portBASE_TYPE xParameterStringLength1 =0, xParameterStringLength2 =0;
+
+	static const int8_t *pcOKMessage =(int8_t* )"RGB LED color is %s at intensity %d%%\n\r";
+	static const int8_t *pcWrongColorMessage =(int8_t* )"Unknown color!\n\r";
+	static const int8_t *pcWrongIntensityMessage =(int8_t* )"Wrong intensity!\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString, /* The command string itself. */
+	1, /* Return the first parameter. */
+	&xParameterStringLength1 /* Store the parameter string length. */
+	);
+	/* Read the color value. */
+	if(!strncmp((const char* )pcParameterString1,"black",xParameterStringLength1))
+		color =BLACK;
+	else if(!strncmp((const char* )pcParameterString1,"white",xParameterStringLength1))
+		color =WHITE;
+	else if(!strncmp((const char* )pcParameterString1,"red",xParameterStringLength1))
+		color =RED;
+	else if(!strncmp((const char* )pcParameterString1,"blue",xParameterStringLength1))
+		color =BLUE;
+	else if(!strncmp((const char* )pcParameterString1,"yellow",xParameterStringLength1))
+		color =YELLOW;
+	else if(!strncmp((const char* )pcParameterString1,"cyan",xParameterStringLength1))
+		color =CYAN;
+	else if(!strncmp((const char* )pcParameterString1,"magenta",xParameterStringLength1))
+		color =MAGENTA;
+	else if(!strncmp((const char* )pcParameterString1,"green",xParameterStringLength1))
+		color =GREEN;
+
+	/* Obtain the 2nd parameter string. */
+	pcParameterString2 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,2,&xParameterStringLength2);
+	intensity =(uint8_t )atol((char* )pcParameterString2);
+
+	result =RGB_LED_setColor(color,intensity);
+
+	/* Respond to the command */
+	if(result == H01R0_OK){
+		/* Isolate first parameter string */
+		strncpy(par,(char* )pcParameterString1,xParameterStringLength1);
+		sprintf((char* )pcWriteBuffer,(char* )pcOKMessage,par,intensity);
+	}
+	else if(result == H01R0_ERR_WrongColor)
+		strcpy((char* )pcWriteBuffer,(char* )pcWrongColorMessage);
+	else if(result == H01R0_ERR_WrongIntensity)
+		strcpy((char* )pcWriteBuffer,(char* )pcWrongIntensityMessage);
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE RGBCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+	uint8_t red =0;
+	uint8_t green =0;
+	uint8_t blue =0;
+	uint8_t intensity =0;
+	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4;
+	portBASE_TYPE xParameterStringLength1 =0, xParameterStringLength2 =0;
+	portBASE_TYPE xParameterStringLength3 =0, xParameterStringLength4 =0;
+
+	static const int8_t *pcOKMessage =(int8_t* )"RGB LED is (%d, %d, %d) at intensity %d%%\n\r";
+	static const int8_t *pcWrongColorMessage =(int8_t* )"Wrong color value!\n\r";
+	static const int8_t *pcWrongIntensityMessage =(int8_t* )"Wrong intensity!\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,1,&xParameterStringLength1);
+	red =(uint8_t )atol((char* )pcParameterString1);
+
+	/* Obtain the 2nd parameter string. */
+	pcParameterString2 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,2,&xParameterStringLength2);
+	green =(uint8_t )atol((char* )pcParameterString2);
+
+	/* Obtain the 3rd parameter string. */
+	pcParameterString3 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,3,&xParameterStringLength3);
+	blue =(uint8_t )atol((char* )pcParameterString3);
+
+	/* Obtain the 4th parameter string. */
+	pcParameterString4 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,4,&xParameterStringLength4);
+	intensity =(uint8_t )atol((char* )pcParameterString4);
+
+	result =RGB_LED_setRGB(red,green,blue,intensity);
+
+	/* Respond to the command */
+	if(result == H01R0_OK)
+		sprintf((char* )pcWriteBuffer,(char* )pcOKMessage,red,green,blue,intensity);
+	else if(result == H01R0_ERR_WrongColor)
+		strcpy((char* )pcWriteBuffer,(char* )pcWrongColorMessage);
+	else if(result == H01R0_ERR_WrongIntensity)
+		strcpy((char* )pcWriteBuffer,(char* )pcWrongIntensityMessage);
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE toggleCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+
+	int8_t *pcParameterString1;
+	portBASE_TYPE xParameterStringLength1 =0;
+	uint8_t intensity =0;
+	static const int8_t *pcOK1Message =(int8_t* )"RGB LED is on at intensity %d%%\r\n";
+	static const int8_t *pcOK0Message =(int8_t* )"RGB LED is off\r\n";
+	static const int8_t *pcWrongIntensityMessage =(int8_t* )"Wrong intensity!\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString, /* The command string itself. */
+	1, /* Return the first parameter. */
+	&xParameterStringLength1 /* Store the parameter string length. */
+	);
+	intensity =(uint8_t )atol((char* )pcParameterString1);
+
+	result =RGB_LED_toggle(intensity);
+
+	/* Respond to the command */
+	if((result == H01R0_OK) && RGB_LED_State)
+		sprintf((char* )pcWriteBuffer,(char* )pcOK1Message,intensity);
+	else if((result == H01R0_OK) && !RGB_LED_State)
+		sprintf((char* )pcWriteBuffer,(char* )pcOK0Message,intensity);
+	else if(result == H01R0_ERR_WrongIntensity)
+		strcpy((char* )pcWriteBuffer,(char* )pcWrongIntensityMessage);
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE pulseColorCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+	uint8_t color =0;
+	uint32_t period =0, dc =0;
+	int32_t repeat =0;
+	char par[15] ={0};
+	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4;
+	portBASE_TYPE xParameterStringLength1 =0, xParameterStringLength2 =0;
+	portBASE_TYPE xParameterStringLength3 =0, xParameterStringLength4 =0;
+
+	static const int8_t *pcMessage =(int8_t* )"A %s pulse with period %d ms and duty cycle %d ms is generated %d times\n\r";
+	static const int8_t *pcMessageInf =(int8_t* )"A %s pulse with period %d ms and duty cycle %d ms is generated periodically\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,1,&xParameterStringLength1);
+	/* Read the color value. */
+	if(!strncmp((const char* )pcParameterString1,"black",xParameterStringLength1))
+		color =BLACK;
+	else if(!strncmp((const char* )pcParameterString1,"white",xParameterStringLength1))
+		color =WHITE;
+	else if(!strncmp((const char* )pcParameterString1,"red",xParameterStringLength1))
+		color =RED;
+	else if(!strncmp((const char* )pcParameterString1,"blue",xParameterStringLength1))
+		color =BLUE;
+	else if(!strncmp((const char* )pcParameterString1,"yellow",xParameterStringLength1))
+		color =YELLOW;
+	else if(!strncmp((const char* )pcParameterString1,"cyan",xParameterStringLength1))
+		color =CYAN;
+	else if(!strncmp((const char* )pcParameterString1,"magenta",xParameterStringLength1))
+		color =MAGENTA;
+	else if(!strncmp((const char* )pcParameterString1,"green",xParameterStringLength1))
+		color =GREEN;
+
+	/* Obtain the 2nd parameter string. */
+	pcParameterString2 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,2,&xParameterStringLength2);
+	period =(uint32_t )atol((char* )pcParameterString2);
+
+	/* Obtain the 3rd parameter string. */
+	pcParameterString3 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,3,&xParameterStringLength3);
+	dc =(uint32_t )atol((char* )pcParameterString3);
+
+	/* Obtain the 4th parameter string. */
+	pcParameterString4 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,4,&xParameterStringLength4);
+	if(!strcmp((char* )pcParameterString4,"inf"))
+		repeat =-1;
+	else
+		repeat =(int32_t )atol((char* )pcParameterString4);
+
+	result =RGB_LED_pulseColor(color,period,dc,repeat);
+
+	/* Respond to the command */
+	if(result == H01R0_OK){
+		/* Isolate first parameter string */
+		strncpy(par,(char* )pcParameterString1,xParameterStringLength1);
+		if(repeat == -1)
+			sprintf((char* )pcWriteBuffer,(char* )pcMessageInf,par,period,dc);
+		else
+			sprintf((char* )pcWriteBuffer,(char* )pcMessage,par,period,dc,repeat);
+	}
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE pulseRGBCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+	uint8_t red =0;
+	uint8_t green =0;
+	uint8_t blue =0;
+	uint32_t period =0, dc =0;
+	int32_t repeat =0;
+	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4;
+	static int8_t *pcParameterString5, *pcParameterString6;
+	portBASE_TYPE xParameterStringLength1 =0, xParameterStringLength2 =0, xParameterStringLength3 =0;
+	portBASE_TYPE xParameterStringLength4 =0, xParameterStringLength5 =0, xParameterStringLength6 =0;
+
+	static const int8_t *pcMessage =(int8_t* )"A (%d, %d, %d) RGB pulse with period %d ms and duty cycle %d ms is generated %d times\n\r";
+	static const int8_t *pcMessageInf =(int8_t* )"A (%d, %d, %d) RGB pulse with period %d ms and duty cycle %d ms is generated periodically\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,1,&xParameterStringLength1);
+	red =(uint8_t )atol((char* )pcParameterString1);
+
+	/* Obtain the 2nd parameter string. */
+	pcParameterString2 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,2,&xParameterStringLength2);
+	green =(uint8_t )atol((char* )pcParameterString2);
+
+	/* Obtain the 3rd parameter string. */
+	pcParameterString3 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,3,&xParameterStringLength3);
+	blue =(uint8_t )atol((char* )pcParameterString3);
+
+	/* Obtain the 4th parameter string. */
+	pcParameterString4 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,4,&xParameterStringLength4);
+	period =(uint32_t )atol((char* )pcParameterString4);
+
+	/* Obtain the 5th parameter string. */
+	pcParameterString5 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,5,&xParameterStringLength5);
+	dc =(uint32_t )atol((char* )pcParameterString5);
+
+	/* Obtain the 6th parameter string. */
+	pcParameterString6 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,6,&xParameterStringLength6);
+	if(!strcmp((char* )pcParameterString6,"inf"))
+		repeat =-1;
+	else
+		repeat =(int32_t )atol((char* )pcParameterString6);
+
+	result =RGB_LED_pulseRGB(red,green,blue,period,dc,repeat);
+
+	/* Respond to the command */
+	if(result == H01R0_OK){
+		if(repeat == -1)
+			sprintf((char* )pcWriteBuffer,(char* )pcMessageInf,red,green,blue,period,dc);
+		else
+			sprintf((char* )pcWriteBuffer,(char* )pcMessage,red,green,blue,period,dc,repeat);
+	}
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE sweepCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+	uint8_t mode =0;
+	uint32_t period =0;
+	int32_t repeat =0;
+	char par[15] ={0};
+	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3;
+	portBASE_TYPE xParameterStringLength1 =0, xParameterStringLength2 =0, xParameterStringLength3 =0;
+
+	static const int8_t *pcMessage =(int8_t* )"The RGB LED performs a %s color sweep with period %d ms. The sweep is repeated %d times\n\r";
+	static const int8_t *pcMessageInf =(int8_t* )"The RGB LED performs a %s color sweep with period %d ms. The sweep is repeated periodically\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,1,&xParameterStringLength1);
+	if(!strncmp((char* )pcParameterString1,"basic",xParameterStringLength1))
+		mode =RGB_SWEEP_BASIC;
+	else if(!strncmp((char* )pcParameterString1,"fine",xParameterStringLength1))
+		mode =RGB_SWEEP_FINE;
+
+	/* Obtain the 2nd parameter string. */
+	pcParameterString2 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,2,&xParameterStringLength2);
+	period =(uint32_t )atol((char* )pcParameterString2);
+
+	/* Obtain the 3rd parameter string. */
+	pcParameterString3 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,3,&xParameterStringLength3);
+	if(!strcmp((char* )pcParameterString3,"inf"))
+		repeat =-1;
+	else
+		repeat =(int32_t )atol((char* )pcParameterString3);
+
+	result =RGB_LED_sweep(mode,period,repeat);
+
+	/* Respond to the command */
+	if(result == H01R0_OK){
+		/* Isolate first parameter string */
+		strncpy(par,(char* )pcParameterString1,xParameterStringLength1);
+		if(repeat == -1)
+			sprintf((char* )pcWriteBuffer,(char* )pcMessageInf,par,period);
+		else
+			sprintf((char* )pcWriteBuffer,(char* )pcMessage,par,period,repeat);
+	}
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE dimCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString){
+	Module_Status result =H01R0_OK;
+	uint8_t color =0, mode =0;
+	uint32_t period =0, wait =0;
+	int32_t repeat =0;
+	static int8_t *pcParameterString1, *pcParameterString2, *pcParameterString3, *pcParameterString4, *pcParameterString5;
+	portBASE_TYPE xParameterStringLength1 =0, xParameterStringLength2 =0, xParameterStringLength3 =0;
+	portBASE_TYPE xParameterStringLength4 =0, xParameterStringLength5 =0;
+	char par1[15] ={0}, par2[15] ={0};
+
+	static const int8_t *pcMessage =(int8_t* )"The RGB LED dims a %s color with period %d ms and wait time %d ms. The dim mode is %s and the dim cycle is repeated %d times\n\r";
+	static const int8_t *pcMessageInf =(int8_t* )"The RGB LED dims a %s color with period %d ms and wait time %d ms. The dim mode is %s and the dim cycle is repeated periodically\n\r";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void )xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,1,&xParameterStringLength1);
+	/* Read the color value. */
+	if(!strncmp((const char* )pcParameterString1,"black",xParameterStringLength1))
+		color =BLACK;
+	else if(!strncmp((const char* )pcParameterString1,"white",xParameterStringLength1))
+		color =WHITE;
+	else if(!strncmp((const char* )pcParameterString1,"red",xParameterStringLength1))
+		color =RED;
+	else if(!strncmp((const char* )pcParameterString1,"blue",xParameterStringLength1))
+		color =BLUE;
+	else if(!strncmp((const char* )pcParameterString1,"yellow",xParameterStringLength1))
+		color =YELLOW;
+	else if(!strncmp((const char* )pcParameterString1,"cyan",xParameterStringLength1))
+		color =CYAN;
+	else if(!strncmp((const char* )pcParameterString1,"magenta",xParameterStringLength1))
+		color =MAGENTA;
+	else if(!strncmp((const char* )pcParameterString1,"green",xParameterStringLength1))
+		color =GREEN;
+
+	/* Obtain the 2nd parameter string. */
+	pcParameterString2 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,2,&xParameterStringLength2);
+	if(!strncmp((char* )pcParameterString2,"up",xParameterStringLength2))
+		mode =RGB_DIM_UP;
+	else if(!strncmp((char* )pcParameterString2,"upwait",xParameterStringLength2))
+		mode =RGB_DIM_UP_WAIT;
+	else if(!strncmp((char* )pcParameterString2,"down",xParameterStringLength2))
+		mode =RGB_DIM_DOWN;
+	else if(!strncmp((char* )pcParameterString2,"downwait",xParameterStringLength2))
+		mode =RGB_DIM_DOWN_WAIT;
+	else if(!strncmp((char* )pcParameterString2,"updown",xParameterStringLength2))
+		mode =RGB_DIM_UP_DOWN;
+	else if(!strncmp((char* )pcParameterString2,"downup",xParameterStringLength2))
+		mode =RGB_DIM_DOWN_UP;
+	else if(!strncmp((char* )pcParameterString2,"updownwait",xParameterStringLength2))
+		mode =RGB_DIM_UP_DOWN_WAIT;
+	else if(!strncmp((char* )pcParameterString2,"downupwait",xParameterStringLength2))
+		mode =RGB_DIM_DOWN_UP_WAIT;
+
+	/* Obtain the 3rd parameter string. */
+	pcParameterString3 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,3,&xParameterStringLength3);
+	period =(uint32_t )atol((char* )pcParameterString3);
+
+	/* Obtain the 4th parameter string. */
+	pcParameterString4 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,4,&xParameterStringLength4);
+	wait =(uint32_t )atol((char* )pcParameterString4);
+
+	/* Obtain the 5th parameter string. */
+	pcParameterString5 =(int8_t* )FreeRTOS_CLIGetParameter(pcCommandString,5,&xParameterStringLength5);
+	if(!strcmp((char* )pcParameterString5,"inf"))
+		repeat =-1;
+	else
+		repeat =(int32_t )atol((char* )pcParameterString5);
+
+	result =RGB_LED_dim(color,mode,period,wait,repeat);
+
+	/* Respond to the command */
+	if(result == H01R0_OK){
+		/* Isolate first and second parameter strings. */
+		strncpy(par1,(char* )pcParameterString1,xParameterStringLength1);
+		strncpy(par2,(char* )pcParameterString2,xParameterStringLength2);
+		if(repeat == -1)
+			sprintf((char* )pcWriteBuffer,(char* )pcMessageInf,par1,period,wait,par2);
+		else
+			sprintf((char* )pcWriteBuffer,(char* )pcMessage,par1,period,wait,par2,repeat);
+	}
+
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
 
 
 /*-----------------------------------------------------------*/
