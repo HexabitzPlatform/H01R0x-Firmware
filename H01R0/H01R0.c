@@ -45,7 +45,7 @@ uint8_t color =0, intensity_LED =0, intensity_RGB =0, mode =0;
 TaskHandle_t RGBledTaskHandle = NULL;
 /* Private function prototypes -----------------------------------------------*/
 void ExecuteMonitor(void);
-
+void FLASH_Page_Eras(uint32_t Addr );
 void RGBledTask(void *argument);
 void RGBpulse(uint8_t mode);
 void RGBsweepBasic(void);
@@ -191,7 +191,7 @@ void SystemClock_Config(void){
 	  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-	 HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
+	 HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
 
 	  /** Initializes the peripherals clocks
 	  */
@@ -224,13 +224,15 @@ void SystemClock_Config(void){
 uint8_t SaveToRO(void){
 	BOS_Status result =BOS_OK;
 	HAL_StatusTypeDef FlashStatus =HAL_OK;
-	uint16_t add =2, temp =0;
+	uint16_t add =8;
+    uint16_t temp =0;
 	uint8_t snipBuffer[sizeof(snippet_t) + 1] ={0};
 	
 	HAL_FLASH_Unlock();
-	
 	/* Erase RO area */
 	FLASH_PageErase(FLASH_BANK_1,RO_START_ADDRESS);
+	FlashStatus =FLASH_WaitForLastOperation((uint32_t ) HAL_FLASH_TIMEOUT_VALUE);
+	FLASH_PageErase(FLASH_BANK_1,RO_MID_ADDRESS);
 	//TOBECHECKED
 	FlashStatus =FLASH_WaitForLastOperation((uint32_t ) HAL_FLASH_TIMEOUT_VALUE);
 	if(FlashStatus != HAL_OK){
@@ -260,10 +262,9 @@ uint8_t SaveToRO(void){
 		for(uint8_t i =1; i <= N; i++){
 			for(uint8_t j =0; j <= MaxNumOfPorts; j++){
 				if(array[i - 1][0]){
-					HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,              //HALFWORD
-						//TOBECHECKED
-					RO_START_ADDRESS + add,array[i - 1][j]);
-					add +=2;
+
+          	HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,RO_START_ADDRESS + add,array[i - 1][j]);
+				 //HALFWORD 	//TOBECHECKED
 					FlashStatus =FLASH_WaitForLastOperation((uint32_t ) HAL_FLASH_TIMEOUT_VALUE);
 					if(FlashStatus != HAL_OK){
 						return pFlash.ErrorCode;
@@ -271,6 +272,7 @@ uint8_t SaveToRO(void){
 					else{
 						/* If the program operation is completed, disable the PG Bit */
 						CLEAR_BIT(FLASH->CR,FLASH_CR_PG);
+						add +=8;
 					}
 				}
 			}
@@ -282,10 +284,10 @@ uint8_t SaveToRO(void){
 	for(uint8_t s =0; s < numOfRecordedSnippets; s++){
 		if(snippets[s].cond.conditionType){
 			snipBuffer[0] =0xFE;		// A marker to separate Snippets
-			memcpy((uint8_t* )&snipBuffer[1],(uint8_t* )&snippets[s],sizeof(snippet_t));
+			memcpy((uint32_t* )&snipBuffer[1],(uint8_t* )&snippets[s],sizeof(snippet_t));
 			// Copy the snippet struct buffer (20 x numOfRecordedSnippets). Note this is assuming sizeof(snippet_t) is even.
-			for(uint8_t j =0; j < (sizeof(snippet_t) / 2); j++){
-				HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,currentAdd,*(uint16_t* )&snipBuffer[j * 2]);
+			for(uint8_t j =0; j < (sizeof(snippet_t)/4); j++){
+				HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,currentAdd,*(uint64_t* )&snipBuffer[j*8]);
 				//HALFWORD
 				//TOBECHECKED
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t ) HAL_FLASH_TIMEOUT_VALUE);
@@ -295,12 +297,12 @@ uint8_t SaveToRO(void){
 				else{
 					/* If the program operation is completed, disable the PG Bit */
 					CLEAR_BIT(FLASH->CR,FLASH_CR_PG);
-					currentAdd +=2;
+					currentAdd +=8;
 				}
 			}
 			// Copy the snippet commands buffer. Always an even number. Note the string termination char might be skipped
-			for(uint8_t j =0; j < ((strlen(snippets[s].cmd) + 1) / 2); j++){
-				HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,currentAdd,*(uint16_t* )(snippets[s].cmd + j * 2));
+			for(uint8_t j =0; j < ((strlen(snippets[s].cmd) + 1)/4); j++){
+				HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,currentAdd,*(uint64_t* )(snippets[s].cmd + j*4 ));
 				//HALFWORD
 				//TOBECHECKED
 				FlashStatus =FLASH_WaitForLastOperation((uint32_t ) HAL_FLASH_TIMEOUT_VALUE);
@@ -310,7 +312,7 @@ uint8_t SaveToRO(void){
 				else{
 					/* If the program operation is completed, disable the PG Bit */
 					CLEAR_BIT(FLASH->CR,FLASH_CR_PG);
-					currentAdd +=2;
+					currentAdd +=8;
 				}
 			}
 		}
@@ -1586,7 +1588,6 @@ portBASE_TYPE dimCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8
 	 pdFALSE. */
 	return pdFALSE;
 }
-
 
 /*-----------------------------------------------------------*/
 
