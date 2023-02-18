@@ -79,7 +79,7 @@ void USART1_IRQHandler(void){
 /**
  * @brief This function handles USART2 global interrupt / USART2 wake-up interrupt through EXTI line 26.
  */
-void USART2_IRQHandler(void){
+void USART2_LPUART2_IRQHandler(void){
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	
 #if defined (_Usart2)	
@@ -97,7 +97,8 @@ void USART2_IRQHandler(void){
 /**
  * @brief This function handles USART3 to USART8 global interrupts / USART3 wake-up interrupt through EXTI line 28.
  */
-void USART3_8_IRQHandler(void){
+
+void USART3_4_5_6_LPUART1_IRQHandler(void){
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	
 #if defined (_Usart3)
@@ -197,7 +198,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 	/* Loop here */
 	//for(;;) {};
 	/* Set the UART state ready to be able to start the process again */
-	huart->State =HAL_UART_STATE_READY;
+	huart->gState =HAL_UART_STATE_READY;
 	
 	/* Resume streaming DMA for this UART port */
 	uint8_t port =GetPort(huart);
@@ -217,7 +218,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	uint8_t port_index = port_number - 1;
 	if(Rx_Data[port_index] == 0x0D && portStatus[port_number] == FREE)
 	{
-		for(int i=0;i<=NumOfPorts;i++) portStatus[i] = FREE; // Free all ports
+		for(int i=0;i<=NumOfPorts;i++) // Free previous CLI port
+		{
+			if(portStatus[i] == CLI)
+			{
+				portStatus[i] = FREE;
+			}
+		}
 		portStatus[port_number] =CLI; // Continue the CLI session on this port
 		PcPort = port_number;
 		xTaskNotifyGive(xCommandConsoleTaskHandle);
@@ -278,15 +285,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 		}
 	}
 
-		HAL_UART_Receive_DMA(huart,(uint8_t* )&Rx_Data[GetPort(huart) - 1] , 1);
+//		HAL_UART_Receive_DMA(huart,(uint8_t* )&Rx_Data[GetPort(huart) - 1] , 1);
+	HAL_UART_Receive_IT(huart,(uint8_t* )&Rx_Data[GetPort(huart) - 1] , 1);
 }
 
 /*-----------------------------------------------------------*/
-/* This function handles TIM3 global interrupt.
- */
-void TIM3_IRQHandler(void){
-	HAL_TIM_IRQHandler(&htim3);
-}
 
 /*-----------------------------------------------------------*/
 

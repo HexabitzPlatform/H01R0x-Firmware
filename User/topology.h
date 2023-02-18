@@ -15,9 +15,9 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f0xx_hal.h"
+#include "stm32g0xx_hal.h"
 
-#define __N	5					// Number of array modules
+#define __N	2					// Number of array modules
 
 // Array modules
 #define _mod1	1<<3
