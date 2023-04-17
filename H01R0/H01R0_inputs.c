@@ -881,14 +881,14 @@ float GetReadPrecentage(uint8_t port, float *precentageValue) {
  */
 uint32_t Get_channel(UART_HandleTypeDef *huart, char *side) {
 
-	if (huart->Instance == USART2 && side == "top")
+	if (huart->Instance == USART2 && !strcmp(side,"top"))
 		return ADC_CHANNEL_2;
-	else if (huart->Instance == USART2 && side == "bottom")
+	else if (huart->Instance == USART2 && !strcmp(side,"bottom"))
 		return ADC_CHANNEL_3;
-	else if (huart->Instance == USART6 && side == "top")
-		return ADC_CHANNEL_4;
-	else if (huart->Instance == USART6 && side == "bottom")
-		return ADC_CHANNEL_5;
+	else if (huart->Instance == USART3 && !strcmp(side,"top"))
+		return ADC_CHANNEL_11;
+	else if (huart->Instance == USART3 && !strcmp(side,"bottom"))
+		return ADC_CHANNEL_15;
 }
 
 void Error_Handler(void) {
@@ -899,13 +899,13 @@ void Error_Handler(void) {
 
 uint8_t Get_Rank(uint8_t Port, char *side) {
 
-	if (Port == 2 && side == "top")
+	if (Port == 2 && !strcmp(side,"top"))
 		Rank_t = 0;
-	else if (Port == 2 && side == "bottom")
+	else if (Port == 2 && !strcmp(side,"bottom"))
 		Rank_t = 1;
-	else if (Port == 3 && side == "top")
+	else if (Port == 3 && !strcmp(side,"top"))
 		Rank_t = 2;
-	else if (Port == 3 && side == "bottom")
+	else if (Port == 3 && !strcmp(side,"bottom"))
 		Rank_t = 3;
 	return Rank_t;
 }
