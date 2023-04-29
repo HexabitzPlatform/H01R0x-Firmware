@@ -416,31 +416,22 @@ void Module_Peripheral_Init(void){
 	MX_TIM1_Init();
 	MX_TIM2_Init();
 
-
-         if( GetUart(P1)==P1uart)
-         {
-      		index_dma[0]=&(DMA1_Channel4->CNDTR);
-         }
-         if( GetUart(P2)==P2uart)
-           {
-        		index_dma[1]=&(DMA1_Channel2->CNDTR);
-           }
-         if( GetUart(P3)==P3uart)
-           {
-        		index_dma[2]=&(DMA1_Channel3->CNDTR);
-           }
-         if( GetUart(P4)==P4uart)
-           {
-        		index_dma[3]=&(DMA1_Channel1->CNDTR);
-           }
-         if( GetUart(P5)==P5uart)
-           {
-        		index_dma[4]=&(DMA1_Channel5->CNDTR);
-           }
-         if( GetUart(P6)==P6uart)
-           {
-        		index_dma[5]=&(DMA1_Channel6->CNDTR);
-           }
+	//Circulating DMA Channels ON All Module
+	 for(int i=1;i<=6;i++)
+		{
+		  if(GetUart(i)==&huart1)
+		           { index_dma[i-1]=&(DMA1_Channel1->CNDTR); }
+		  else if(GetUart(i)==&huart2)
+				   { index_dma[i-1]=&(DMA1_Channel2->CNDTR); }
+		  else if(GetUart(i)==&huart3)
+				   { index_dma[i-1]=&(DMA1_Channel3->CNDTR); }
+		  else if(GetUart(i)==&huart4)
+				   { index_dma[i-1]=&(DMA1_Channel4->CNDTR); }
+		  else if(GetUart(i)==&huart5)
+				   { index_dma[i-1]=&(DMA1_Channel5->CNDTR); }
+		  else if(GetUart(i)==&huart6)
+				   { index_dma[i-1]=&(DMA1_Channel6->CNDTR); }
+		}
 
 	/* Create module special task (if needed) */
 	if(RGBledTaskHandle == NULL)
