@@ -49,14 +49,14 @@ void Deinit_ADC_Channel(uint8_t port);
 #define Vref_Cal ((uint16_t *)((uint32_t)0x1ffff7BA))
 #define V25  1.41
 #define Avg_Slope 4.3
-uint8_t Channel = 0;
+uint16_t Channel = 0;
 
 uint16_t ADCchannelvalue[4] = { 0 };
 uint16_t ADC_value_temp = 0;
 uint16_t ADC_value_Vref = 0;
 uint8_t ADC_flag = 0, Rank_t = 0;
 float percentage = 0, current = 0;
-uint8_t flag_ADC_Select=0;
+uint8_t flag_ADC_Select[2]={0};
 /* -----------------------------------------------------------------------
  |												 Private Functions	 														|
  -----------------------------------------------------------------------
@@ -666,17 +666,23 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *adcHandle) {
 		/* ADC1 clock enable */
 		__HAL_RCC_ADC_CLK_ENABLE();
 		__HAL_RCC_GPIOA_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
 		/**ADC GPIO Configuration
 		 PA2     ------> ADC_IN2
 		 PA3     ------> ADC_IN3
-		 PA4     ------> ADC_IN4
-		 PA5     ------> ADC_IN5
+		 PB10    ------> ADC_IN11
+		 PB11    ------> ADC_IN15
 		 */
-		if(flag_ADC_Select==1){
-		GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
-		GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+		if(flag_ADC_Select[0]==1){
+		GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3 ;
+	    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);}
+	    else{
+        GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 ;
+		GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+	    GPIO_InitStruct.Pull = GPIO_NOPULL;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);	}
 
 }
 
@@ -708,7 +714,10 @@ void ADCSelectChannel(uint8_t ADC_port, char *side) {
 
 
 	if (ADC_port == 2 || ADC_port == 3) {
-		flag_ADC_Select=1;
+		if(ADC_port == 2)
+		{flag_ADC_Select[0]=1;}
+		else
+		{flag_ADC_Select[1]=1;}
 		HAL_UART_DeInit(GetUart(ADC_port));
 		portStatus[ADC_port] = CUSTOM;
 		Channel = Get_channel(GetUart(ADC_port), side);
@@ -819,8 +828,8 @@ uint16_t Get_PIN(UART_HandleTypeDef *huart) {
 
 	if (huart->Instance == USART2)
 		return GPIO_PIN_2;
-	else if (huart->Instance == USART6)
-		return GPIO_PIN_4;
+	else if (huart->Instance == USART3)
+		return GPIO_PIN_10;
 }
 
 float GetReadPrecentage(uint8_t port, float *precentageValue) {
@@ -831,21 +840,21 @@ float GetReadPrecentage(uint8_t port, float *precentageValue) {
 			MX_ADC_Init();
 			HAL_UART_DeInit(GetUart(port));
 			if (port == 3) {
-				HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4);
-				GPIO_InitStruct.Pin = GPIO_PIN_4;
+				HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10);
+				GPIO_InitStruct.Pin = GPIO_PIN_10;
 				GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 				GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-				HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-				portStatus[port - 1] = CUSTOM;
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+				HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+				portStatus[port] = CUSTOM;
+				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
 			} else {
-				HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
-				GPIO_InitStruct.Pin = GPIO_PIN_2;
+				HAL_GPIO_DeInit(GPIOA, GPIO_PIN_3);
+				GPIO_InitStruct.Pin = GPIO_PIN_3;
 				GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 				GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 				HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-				portStatus[port - 1] = CUSTOM;
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
+				portStatus[port] = CUSTOM;
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
 
 			}
 		}
@@ -914,7 +923,7 @@ void Deinit_ADC_Channel(uint8_t port) {
 
 	HAL_ADC_DeInit(&hadc);
 	HAL_UART_Init(GetUart(port));
-	portStatus[port - 1] = FREE;
+	portStatus[port] = FREE;
 	ADC_flag = 0;
 }
 
