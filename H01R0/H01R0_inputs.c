@@ -848,13 +848,13 @@ float GetReadPrecentage(uint8_t port, float *precentageValue) {
 				portStatus[port] = CUSTOM;
 				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
 			} else {
-				HAL_GPIO_DeInit(GPIOA, GPIO_PIN_3);
-				GPIO_InitStruct.Pin = GPIO_PIN_3;
+				HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
+				GPIO_InitStruct.Pin = GPIO_PIN_2;
 				GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 				GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 				HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 				portStatus[port] = CUSTOM;
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
 
 			}
 		}
