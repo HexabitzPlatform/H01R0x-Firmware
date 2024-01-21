@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.2.9 - Copyright (C) 2017-2023 Hexabitz
+ BitzOS (BOS) V0.3.0 - Copyright (C) 2017-2024 Hexabitz
  All rights reserved
 
  File Name     : topology.h
@@ -25,8 +25,8 @@
 
 // Topology
 static uint16_t array[__N ][7] ={
-	{_H01R0, 0, 0, 0, 0, 0, _mod2 | P1}, 								 // Module 1
-	{_H26R0, _mod1 | P6, 0,0, 0, 0, 0},					    			 // Module 2
+	{_H01R0, _mod2 | P1, 0, 0, 0, 0,0}, 								 // Module 1
+	{_H26R0, _mod1 | P1, 0,0, 0, 0, 0},					    			 // Module 2
 };
 
 // Configurations for duplex serial ports
