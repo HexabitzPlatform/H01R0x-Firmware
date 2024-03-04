@@ -102,18 +102,18 @@
 /* Module-specific Definitions */
 
 #define NUM_MODULE_PARAMS						1
-#define _RGB_RED_PORT							GPIOB
-#define _RGB_RED_PIN							GPIO_PIN_13
+#define _RGB_RED_PORT							GPIOA
+#define _RGB_RED_PIN							GPIO_PIN_15
 #define _RGB_RED_TIM_CH							TIM_CHANNEL_1
 #define _RGB_RED_GPIO_CLK()						__GPIOA_CLK_ENABLE();
-#define _RGB_GREEN_PORT							GPIOA
-#define _RGB_GREEN_PIN							GPIO_PIN_5
-#define _RGB_GREEN_TIM_CH						TIM_CHANNEL_1
+#define _RGB_GREEN_PORT							GPIOB
+#define _RGB_GREEN_PIN							GPIO_PIN_7
+#define _RGB_GREEN_TIM_CH						TIM_CHANNEL_2
 #define _RGB_GREEN_GPIO_CLK()					__GPIOB_CLK_ENABLE();
-#define _RGB_BLUE_PORT							GPIOB
-#define _RGB_BLUE_PIN							GPIO_PIN_1
-#define _RGB_BLUE_TIM_CH						TIM_CHANNEL_3
-#define _RGB_BLUE_GPIO_CLK()					__GPIOB_CLK_ENABLE();
+#define _RGB_BLUE_PORT							GPIOA
+#define _RGB_BLUE_PIN							GPIO_PIN_6
+#define _RGB_BLUE_TIM_CH						TIM_CHANNEL_1
+#define _RGB_BLUE_GPIO_CLK()					__GPIOA_CLK_ENABLE();
 
 #define PWM_TIMER_CLOCK							122880			//freq 120 HZ at ARR 1023
 #define RGB_PWM_FREQ							120
