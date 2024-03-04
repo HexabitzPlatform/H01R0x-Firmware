@@ -32,11 +32,13 @@ extern uint8_t numOfRecordedSnippets;
 module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr = NULL, .paramFormat =FMT_FLOAT, .paramName =""}};
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
-void MX_TIM1_Init(void);
+TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
 void MX_TIM2_Init(void);
-//TIM_HandleTypeDef htim16;
+void MX_TIM3_Init(void);
+void MX_TIM4_Init(void);
+
 uint8_t globalRed =0, globalGreen =0, globalBlue =0;
 uint8_t RGB_LED_State =0, rgbLedMode =0, rgbColor =0, rgbRed =0, rgbGreen =0, rgbBlue =0;
 uint32_t rgbPeriod =0, rgbDC =0;
@@ -413,9 +415,10 @@ void Module_Peripheral_Init(void){
 	MX_USART4_UART_Init();
 	MX_USART5_UART_Init();
 	MX_USART6_UART_Init();
-	MX_TIM1_Init();
-	MX_TIM2_Init();
 
+	MX_TIM2_Init();
+	MX_TIM3_Init();
+	MX_TIM4_Init();
 	 //Circulating DMA Channels ON All Module
 		 for(int i=1;i<=NumOfPorts;i++)
 			{
