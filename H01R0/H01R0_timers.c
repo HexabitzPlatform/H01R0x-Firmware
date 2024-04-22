@@ -41,7 +41,7 @@ void MX_TIM2_Init(void)
 {
 
 	/* USER CODE BEGIN TIM2_Init 0 */
-
+	__TIM2_CLK_ENABLE();
 	/* USER CODE END TIM2_Init 0 */
 
 	TIM_MasterConfigTypeDef sMasterConfig = {0};
@@ -93,7 +93,7 @@ void MX_TIM3_Init(void)
 {
 
 	/* USER CODE BEGIN TIM3_Init 0 */
-
+	__TIM3_CLK_ENABLE();
 	/* USER CODE END TIM3_Init 0 */
 
 	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
@@ -142,7 +142,7 @@ void MX_TIM3_Init(void)
 void MX_TIM4_Init(void)
 {
 	/* USER CODE BEGIN TIM4_Init 0 */
-
+	__TIM4_CLK_ENABLE();
 	/* USER CODE END TIM4_Init 0 */
 
 	TIM_ClockConfigTypeDef sClockSourceConfig = {0};

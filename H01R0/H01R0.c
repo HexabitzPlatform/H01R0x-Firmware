@@ -206,7 +206,7 @@ void SystemClock_Config(void){
 		__HAL_RCC_PWR_CLK_ENABLE();
 		HAL_PWR_EnableBkUpAccess();
 		__HAL_RCC_TIM1_CLK_ENABLE();
-		  __HAL_RCC_TIM2_CLK_ENABLE();
+//		  __HAL_RCC_TIM2_CLK_ENABLE();
 
 		HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
@@ -416,8 +416,8 @@ void Module_Peripheral_Init(void){
 	MX_USART5_UART_Init();
 	MX_USART6_UART_Init();
 
-	MX_TIM2_Init();
 	MX_TIM3_Init();
+	MX_TIM2_Init();
 	MX_TIM4_Init();
 	 //Circulating DMA Channels ON All Module
 		 for(int i=1;i<=NumOfPorts;i++)
