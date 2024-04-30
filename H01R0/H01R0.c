@@ -32,11 +32,13 @@ extern uint8_t numOfRecordedSnippets;
 module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr = NULL, .paramFormat =FMT_FLOAT, .paramName =""}};
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
-void MX_TIM1_Init(void);
+TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
 void MX_TIM2_Init(void);
-//TIM_HandleTypeDef htim16;
+void MX_TIM3_Init(void);
+void MX_TIM4_Init(void);
+
 uint8_t globalRed =0, globalGreen =0, globalBlue =0;
 uint8_t RGB_LED_State =0, rgbLedMode =0, rgbColor =0, rgbRed =0, rgbGreen =0, rgbBlue =0;
 uint32_t rgbPeriod =0, rgbDC =0;
@@ -204,7 +206,7 @@ void SystemClock_Config(void){
 		__HAL_RCC_PWR_CLK_ENABLE();
 		HAL_PWR_EnableBkUpAccess();
 		__HAL_RCC_TIM1_CLK_ENABLE();
-		  __HAL_RCC_TIM2_CLK_ENABLE();
+//		  __HAL_RCC_TIM2_CLK_ENABLE();
 
 		HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
@@ -413,9 +415,10 @@ void Module_Peripheral_Init(void){
 	MX_USART4_UART_Init();
 	MX_USART5_UART_Init();
 	MX_USART6_UART_Init();
-	MX_TIM1_Init();
-	MX_TIM2_Init();
 
+	MX_TIM3_Init();
+	MX_TIM2_Init();
+	MX_TIM4_Init();
 	 //Circulating DMA Channels ON All Module
 		 for(int i=1;i<=NumOfPorts;i++)
 			{
@@ -655,9 +658,9 @@ Module_Status RGB_LED_on(uint8_t intensity){
 	Module_Status result =H01R0_OK;
 
 	if(intensity == 0){
-		htim1.Instance->CCR2 =0;
-		htim2.Instance->CCR3 =0;
-		htim1.Instance->CCR4 =0;
+		htim2.Instance->CCR1 =0;
+		htim3.Instance->CCR1 =0;
+		htim4.Instance->CCR2 =0;
 
 		RGB_LED_State =0;
 
@@ -680,19 +683,14 @@ Module_Status RGB_LED_on(uint8_t intensity){
 /* --- Turn off RGB LED ---
  */
 Module_Status RGB_LED_off(void){
-//	if(HAL_TIM_Base_Stop(&htim1) != HAL_OK)
-//		return H01R0_ERROR;
-//	if(HAL_TIM_Base_Stop(&htim2) != HAL_OK)
-//			return H01R0_ERROR;
-	HAL_TIM_PWM_Stop(&htim2,_RGB_GREEN_TIM_CH);
-	HAL_TIM_PWM_Stop(&htim1,_RGB_BLUE_TIM_CH);
-	HAL_TIMEx_PWMN_Stop(&htim1,_RGB_BLUE_TIM_CH);
-	HAL_TIM_PWM_Stop(&htim1,_RGB_RED_TIM_CH);
-	HAL_TIMEx_PWMN_Stop(&htim1,_RGB_RED_TIM_CH);
 
-	htim1.Instance->CCR1 =0;
+	HAL_TIM_PWM_Stop(&htim2,_RGB_RED_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim3,_RGB_BLUE_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim4,_RGB_GREEN_TIM_CH);
+
 	htim2.Instance->CCR1 =0;
-	htim1.Instance->CCR3 =0;
+	htim3.Instance->CCR1 =0;
+	htim4.Instance->CCR2 =0;
 
 	RGB_LED_State =0;
 	rgbLedMode =0;
@@ -853,26 +851,24 @@ Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity)
 	uint32_t period = (PWM_TIMER_CLOCK / RGB_PWM_FREQ)-1;
 
 	/* PWM period */
-	htim1.Instance->ARR =period;
 	htim2.Instance->ARR =period;
-	// htim1.Instance->BDTR = 0;
+	htim3.Instance->ARR =period;
+	htim4.Instance->ARR =period;
+
 	/* PWM duty cycle */
-	htim1.Instance->CCR1 =period - ((intensity / 100.0f) *  ((uint8_t)red / 255.0f) * period);
-	htim2.Instance->CCR1 =	 	   ((intensity / 100.0f) *  ((uint8_t )green / 255.0f) * period);
-	htim1.Instance->CCR3 =period - ((intensity / 100.0f) *  ((uint8_t )blue / 255.0f) * period);
-//if(red!=255){
-	if(HAL_TIMEx_PWMN_Start(&htim1,_RGB_RED_TIM_CH) != HAL_OK)
+	htim2.Instance->CCR1 =period - ((intensity / 100.0f) *  ((uint8_t)red / 255.0f) * period);
+	htim3.Instance->CCR1 =period - ((intensity / 100.0f) *  ((uint8_t )green / 255.0f) * period);
+	htim4.Instance->CCR2 =period - ((intensity / 100.0f) *  ((uint8_t )blue / 255.0f) * period);
+
+	if(HAL_TIM_PWM_Start(&htim2,_RGB_RED_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
-	if(HAL_TIM_PWM_Start(&htim1,_RGB_RED_TIM_CH) != HAL_OK)
-			return H01R0_ERROR;
-//if(green!=0){
-	if(HAL_TIM_PWM_Start(&htim2,_RGB_GREEN_TIM_CH) != HAL_OK)
+
+	if(HAL_TIM_PWM_Start(&htim3,_RGB_BLUE_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
-//	if(blue!=255){
-	if(HAL_TIMEx_PWMN_Start(&htim1,_RGB_BLUE_TIM_CH) != HAL_OK)
+
+	if(HAL_TIM_PWM_Start(&htim4,_RGB_GREEN_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
-	if(HAL_TIM_PWM_Start(&htim1,_RGB_BLUE_TIM_CH) != HAL_OK)
-				return H01R0_ERROR;
+
 
 	return H01R0_OK;
 }
