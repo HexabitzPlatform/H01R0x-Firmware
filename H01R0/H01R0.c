@@ -856,9 +856,9 @@ Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity)
 	htim4.Instance->ARR =period;
 
 	/* PWM duty cycle */
-	htim2.Instance->CCR1 =period - ((intensity / 100.0f) *  ((uint8_t)red / 255.0f) * period);
-	htim3.Instance->CCR1 =period - ((intensity / 100.0f) *  ((uint8_t )green / 255.0f) * period);
-	htim4.Instance->CCR2 =period - ((intensity / 100.0f) *  ((uint8_t )blue / 255.0f) * period);
+	htim2.Instance->CCR1 = ((intensity / 100.0f) * ((uint8_t) red   / 255.0f)* period);
+	htim3.Instance->CCR1 = ((intensity / 100.0f) * ((uint8_t) blue  / 255.0f)* period);
+	htim4.Instance->CCR2 = ((intensity / 100.0f) * ((uint8_t) green / 255.0f)* period);
 
 	if(HAL_TIM_PWM_Start(&htim2,_RGB_RED_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
