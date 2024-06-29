@@ -215,7 +215,13 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
 		PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
 		HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
-		/* USART2 GPIO Configuration */
+		__HAL_RCC_USART2_CLK_ENABLE();
+
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+		/**USART2 GPIO Configuration
+		 PA2     ------> USART2_TX
+		 PA3     ------> USART2_RX
+		 /* USART2 GPIO Configuration */
 		GPIO_InitStruct.Pin = USART2_TX_PIN;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
