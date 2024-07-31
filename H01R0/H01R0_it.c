@@ -18,9 +18,9 @@ uint8_t* error_restart_message = "Restarting...\r\n";
 /* External variables --------------------------------------------------------*/
 extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
 extern uint8_t UARTRxBufIndex[NumOfPorts];
+extern uint8_t WakeupFromStopFlag;
 
 /* External function prototypes ----------------------------------------------*/
-
 extern TaskHandle_t xCommandConsoleTaskHandle; // CLI Task handler.
 
 
@@ -294,6 +294,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 }
 
 /*-----------------------------------------------------------*/
+
+/**
+  * @brief UART wakeup from Stop mode callback
+  * @param huart: uart handle
+  * @retval None
+  */
+void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart) {
+
+	WakeupFromStopFlag = 1;
+
+}
 
 /*-----------------------------------------------------------*/
 

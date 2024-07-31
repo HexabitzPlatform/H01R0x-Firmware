@@ -9,8 +9,8 @@
 #include "BOS.h"
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t buff[4];
-float dataS;
+extern uint8_t WakeupFromStopFlag;
+uint32_t u ;
 /* Private function prototypes -----------------------------------------------*/
 
 /* Main function ------------------------------------------------------------*/
@@ -29,22 +29,23 @@ int main(void) {
 /* User Task */
 void UserTask(void *argument) {
 
+	EnableStopModebyUARTx(P2);
+
 	// put your code here, to run repeatedly.
 	while (1) {
 
-//		SendMessageToModule(2, CODE_PING, 0);
-//		Delay_ms(100);
-//		SendMessageToModule(3, CODE_PING, 0);
-//		Delay_ms(100);
-//		ReadDataFromSensorModule(3, CODE_H0AR9_SAMPLE_COLOR, 3, &buff[0]); // 3 * uint16_t
 
-//		ReadDataFromSensorModule(3, CODE_H0AR9_SAMPLE_DISTANCE, 1, &buff[0]);  // 1 * uint16_t
+//		if (WakeupFromStopFlag) {
+//			SystemClock_Config();
 //
-		ReadDataFromSensorModule(3, CODE_H0AR9_SAMPLE_TEMP, 1, &buff[0]);   // 1 * float
-		dataS = *((float *) &buff);
-//		ReadDataFromSensorModule(3, CODE_H0AR9_SAMPLE_HUMIDITY, 1, &buff[0]);  // 1 * float
+//			HAL_Delay(2000);
+//			IND_blink(500);
+//			WakeupFromStopFlag = 0;
+//			u = HAL_RCC_GetSysClockFreq();
+//		}
 
-
+//		EnableStopMode(P2);
+//		HAL_Delay(100);
 	}
 }
 
