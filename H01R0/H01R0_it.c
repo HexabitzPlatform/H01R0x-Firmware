@@ -304,6 +304,15 @@ void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart) {
 
 	WakeupFromStopFlag = 1;
 
+	if (huart->Instance == USART1)
+		HAL_UARTEx_DisableStopMode(huart);
+
+	if (huart->Instance == USART2)
+		HAL_UARTEx_DisableStopMode(huart);
+
+	if (huart->Instance == USART3)
+		HAL_UARTEx_DisableStopMode(huart);
+
 }
 
 /*-----------------------------------------------------------*/
