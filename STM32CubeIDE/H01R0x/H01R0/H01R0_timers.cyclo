@@ -1,8 +1,0 @@
-..\..\H01R0\H01R0_timers.c:40:6:MX_TIM2_Init	1
-..\..\H01R0\H01R0_timers.c:92:6:MX_TIM3_Init	1
-..\..\H01R0\H01R0_timers.c:142:6:MX_TIM4_Init	1
-..\..\H01R0\H01R0_timers.c:191:6:HAL_TIM_MspPostInit	4
-..\..\H01R0\H01R0_timers.c:265:6:TIM_USEC_Init	1
-..\..\H01R0\H01R0_timers.c:284:6:TIM_MSEC_Init	1
-..\..\H01R0\H01R0_timers.c:303:6:StartMicroDelay	3
-..\..\H01R0\H01R0_timers.c:321:6:StartMilliDelay	3
