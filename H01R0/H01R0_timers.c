@@ -27,7 +27,7 @@ TIM_HandleTypeDef htim17; /* milli-second delay counter */
 extern TIM_HandleTypeDef htim2;  /* Timer for RGB red */
 extern TIM_HandleTypeDef htim3;  /* Timer for RGB blue */
 extern TIM_HandleTypeDef htim4;  /* Timer for RGB green */
-
+IWDG_HandleTypeDef hiwdg;
 
 extern void MX_TIM2_Init(void);
 extern void MX_TIM3_Init(void);
@@ -36,6 +36,25 @@ extern void MX_TIM4_Init(void);
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /*-----------------------------------------------------------*/
+
+/* IWDG init function */
+void MX_IWDG_Init(void){
+
+	/* Reload Value = [(Time * 32 KHz) / (4 * 2^(pr) * 1000)] - 1
+	 * RL = [(500 mS * 32000) / (4 * 2^1 * 1000)]  - 1 = 2000 - 1 = 1999
+	 * timeout time = 500 mS
+	 * Pre-scaler = 8
+	 * Reload Value = 1999
+	 *  */
+
+	hiwdg.Instance = IWDG;
+	hiwdg.Init.Prescaler = IWDG_PRESCALER_8;
+	hiwdg.Init.Window = IWDG_WINDOW_DISABLE;
+	hiwdg.Init.Reload =1999;
+
+	HAL_IWDG_Init(&hiwdg);
+
+}
 /* TIM2 init function */
 void MX_TIM2_Init(void)
 {
