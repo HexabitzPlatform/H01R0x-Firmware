@@ -18,7 +18,7 @@
 /* Exported constants --------------------------------------------------------*/
 
 /* EEPROM Variables' number (up to 1024 16-bit variables) */
-#define NumOfEEPROMvar        1024
+#define NumOfEEPROMvar        1000
 
 /* EEPROM virtual addresses - Consider MaxNumOfModules is 25 */
 // BOS Addressing Space 1 - 499

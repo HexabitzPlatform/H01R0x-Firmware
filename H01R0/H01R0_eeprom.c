@@ -29,8 +29,10 @@ extern FLASH_ProcessTypeDef pFlash;
  *         - FLASH_COMPLETE: on success
  */
 uint16_t EE_Init(void){
+	HAL_FLASH_Unlock();
 	if(EE_OK != EEPROM_Init(EE_FORCED_ERASE))
 		return HAL_ERROR;
+	HAL_FLASH_Lock();
 	return HAL_OK;
 }
 
@@ -93,10 +95,18 @@ uint16_t EE_WriteVariable(uint16_t VirtAddress,uint16_t Data){
  */
 uint16_t EE_Format(void){
 	HAL_StatusTypeDef FlashStatus =HAL_OK;
+	HAL_FLASH_Unlock();
 	if(EE_ERASE_ERROR != EEPROM_Format(EE_FORCED_ERASE))
+	{
+		HAL_FLASH_Lock();
 		return FlashStatus =HAL_OK;
+	}
 	else
+	{
+		HAL_FLASH_Lock();
 		return FlashStatus =HAL_ERROR;
+	}
+
 }
 
 /**
