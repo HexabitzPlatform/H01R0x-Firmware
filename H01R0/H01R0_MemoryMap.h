@@ -25,7 +25,7 @@
 #define APP_START_ADDRESS  		((uint32_t)0x08000000) 
 #define RO_START_ADDRESS  		((uint32_t)0x08040000)      // topology is stored here
 #define RO_MID_ADDRESS  		((uint32_t)0x08041000) 		// Snippets are stored here
-#define EEPROM_START_ADDRESS  	((uint32_t)0x0807D800U)      // EE_Variables are stored gere
+#define EEPROM_START_ADDRESS  	((uint32_t)0x0807B800U)      // EE_Variables are stored gere
 #define FLASH_SIZE				((uint32_t)0x20000)			// All sizes in bytes
 #define SRAM_SIZE				((uint32_t)0x8000)
 
