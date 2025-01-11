@@ -44,7 +44,7 @@
 #define PAGE_SIZE               FLASH_PAGE_SIZE                                  /*!< Page size */
 #define PAGE_HEADER_SIZE        EE_ELEMENT_SIZE * 4U                             /*!< Page Header is 4 elements to save page state */
 #define NB_MAX_ELEMENTS_BY_PAGE ((PAGE_SIZE - PAGE_HEADER_SIZE) / EE_ELEMENT_SIZE) /*!< Max number of elements by page */
-#define PAGES_NUMBER            (((((NB_OF_VARIABLES + NB_MAX_ELEMENTS_BY_PAGE - 1U) / NB_MAX_ELEMENTS_BY_PAGE) * 2U) * CYCLES_NUMBER) + GUARD_PAGES_NUMBER )
+#define PAGES_NUMBER            (((((NB_OF_VARIABLES + NB_MAX_ELEMENTS_BY_PAGE - 1U) / NB_MAX_ELEMENTS_BY_PAGE) * 2U) * CYCLES_NUMBER)/* + GUARD_PAGES_NUMBER */)
                                                                                  /*!< Number of consecutives pages used by the application */
 #define NB_MAX_WRITTEN_ELEMENTS ((NB_MAX_ELEMENTS_BY_PAGE * PAGES_NUMBER) / 2U)  /*!< Max number of elements written before triggering pages transfer */
 #define START_PAGE              PAGE(START_PAGE_ADDRESS)                         /*!< Page index of the 1st page used for EEPROM emul, in the bank */
