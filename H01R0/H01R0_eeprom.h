@@ -8,6 +8,27 @@
 
  */
 
+/*
+ * EEPROM Emulated Description :
+ * number of EEPROM elements is 1000 which can be stored in EEPROM emulated in 4 pages
+ * where Each element is 8 bytes :
+ *  Description of the 8 Bytes (64 bits) element in flash
+ *  Bit:  63                  32  31      16  15         0
+ *       <--- Data Value ----->  <-unused->  <-VirtAddr->
+ *  number of pages = (number of elements * 8) / flash page size
+ *  				= (1000 * 8) / 2048
+ *  				= 4 pages
+ *  We will reserve 4 pages as a first group + 4 pages backup as a second group
+ *  The purpose of the second group is to transfer the latest update of the elements
+ *  from the first group to the second group, then complete the storage process in
+ *  the second group.If the second group is full, the latest updates of the elements will
+ *  be transferred from the second group to the first group, and then the storage process
+ *  will be completed in the first group.And so on.
+ *
+ *
+ *
+ * */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __BOS_EEPROM_H
 #define __BOS_EEPROM_H

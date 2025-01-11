@@ -30,10 +30,9 @@ extern FLASH_ProcessTypeDef pFlash;
  */
 uint16_t EE_Init(void){
 	HAL_FLASH_Unlock();
-	if(EE_OK != EEPROM_Init(EE_FORCED_ERASE))
-		return HAL_ERROR;
+	uint16_t InitStatus = EEPROM_Init(EE_FORCED_ERASE);
 	HAL_FLASH_Lock();
-	return HAL_OK;
+	return InitStatus;
 }
 
 /**
@@ -76,15 +75,17 @@ uint16_t EE_WriteVariable(uint16_t VirtAddress,uint16_t Data){
 
 	WriteStatus = EE_WriteVariable16bits(VirtAddress, Data);
 	if(EE_OK == WriteStatus)
-		return EE_OK;
+		WriteStatus = EE_OK;
 	else if(EE_INVALID_VIRTUALADDRESS == WriteStatus)
-		return EE_INVALID_VIRTUALADDRESS;
-	else if(EE_PAGE_FULL == WriteStatus)
-		return EE_PAGE_FULL;
-	else
-		return WriteStatus;
+		WriteStatus = EE_INVALID_VIRTUALADDRESS;
+	else if(EE_CLEANUP_REQUIRED == WriteStatus)
+	{
+		EE_CleanUp();
+		WriteStatus = EE_CLEANUP_REQUIRED;
+	}
 
 	HAL_FLASH_Lock();
+	return WriteStatus;
 }
 
 /**
