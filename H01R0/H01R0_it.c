@@ -67,7 +67,9 @@ void USART1_IRQHandler(void){
 #if defined (_Usart1)		
 	HAL_UART_IRQHandler(&huart1);
 #endif
-	
+	/* Fix problem stuck CPU in UART IRQhandler because of error on UART bus through use
+	 * HAL_UART_Transmit_IT() ,this prevented the TXFNFIE flag from being cleared which caused this problem
+	 */
 	if( (READ_BIT(huart1.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
 			(huart1.gState == HAL_UART_STATE_READY))
 	{
@@ -132,9 +134,6 @@ void USART3_4_5_6_LPUART1_IRQHandler(void){
 	HAL_UART_IRQHandler(&huart6);
 #endif
 
-	/* Fix problem stuck CPU in UART IRQhandler because of error on UART bus through use
-	 * HAL_UART_Transmit_IT() ,this prevented the TXFNFIE flag from being cleared which caused this problem
-	 */
 	if( (READ_BIT(huart3.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
 			(huart3.gState == HAL_UART_STATE_READY))
 	{
@@ -145,7 +144,7 @@ void USART3_4_5_6_LPUART1_IRQHandler(void){
 	      ATOMIC_SET_BIT(huart3.Instance->CR1, USART_CR1_TCIE);
 	}
 
-	if( (READ_BIT(huart4.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
+	else if( (READ_BIT(huart4.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
 			(huart4.gState == HAL_UART_STATE_READY))
 	{
 	      /* Disable the UART Transmit Data Register Empty Interrupt */
@@ -155,7 +154,7 @@ void USART3_4_5_6_LPUART1_IRQHandler(void){
 	      ATOMIC_SET_BIT(huart4.Instance->CR1, USART_CR1_TCIE);
 	}
 
-	if( (READ_BIT(huart5.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
+	else if( (READ_BIT(huart5.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
 			(huart5.gState == HAL_UART_STATE_READY))
 	{
 	      /* Disable the UART Transmit Data Register Empty Interrupt */
@@ -165,7 +164,7 @@ void USART3_4_5_6_LPUART1_IRQHandler(void){
 	      ATOMIC_SET_BIT(huart5.Instance->CR1, USART_CR1_TCIE);
 	}
 
-	if( (READ_BIT(huart6.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
+	else if( (READ_BIT(huart6.Instance->CR1, USART_CR1_TXEIE_TXFNFIE) == USART_CR1_TXEIE_TXFNFIE_Msk) &&
 			(huart6.gState == HAL_UART_STATE_READY))
 	{
 	      /* Disable the UART Transmit Data Register Empty Interrupt */
