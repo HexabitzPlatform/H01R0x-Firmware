@@ -67,6 +67,7 @@ void USART1_IRQHandler(void){
 #if defined (_Usart1)		
 	HAL_UART_IRQHandler(&huart1);
 #endif
+
 	/* Fix problem stuck CPU in UART IRQhandler because of error on UART bus through use
 	 * HAL_UART_Transmit_IT() ,this prevented the TXFNFIE flag from being cleared which caused this problem
 	 */
