@@ -66,11 +66,19 @@ BOS_Status EE_ReadVariable(uint16_t VirtAddress, uint16_t *Data) {
  */
 BOS_Status EE_WriteVariable(uint16_t VirtAddress, uint16_t Data) {
 	BOS_Status Status = BOS_OK;
+	EE_Status EEStatus = EE_OK;
 
 	HAL_FLASH_Unlock();
-	if (EE_OK != EE_WriteVariable16bits(VirtAddress, Data)) {
+	EEStatus = EE_WriteVariable16bits(VirtAddress, Data);
+	if (EE_PAGE_FULL == EEStatus) {
+		EE_CleanUp();
 		HAL_FLASH_Lock();
-		return Status = BOS_ERR_EEPROM;
+		return Status = BOS_OK;
+	}
+	else if(EE_OK != EEStatus)
+	{
+		HAL_FLASH_Lock();
+		return BOS_ERR_EEPROM;
 	}
 	HAL_FLASH_Lock();
 
