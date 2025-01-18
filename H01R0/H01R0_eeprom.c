@@ -13,7 +13,7 @@
 /* Variables used for Erase pages under interruption */
 extern FLASH_ProcessTypeDef pFlash;
 
-/* functions -----------------------------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 
 /******************************************************************************/
 
@@ -26,11 +26,15 @@ extern FLASH_ProcessTypeDef pFlash;
  */
 BOS_Status EE_Init(void) {
 	BOS_Status Status = BOS_OK;
+	EE_Status eeStatus = EE_OK;
 
 	HAL_FLASH_Unlock();
-	if (EE_OK != EEPROM_Init(EE_FORCED_ERASE)) {
+	eeStatus = EEPROM_Init(EE_FORCED_ERASE);
+	if((EE_WRITE_ERROR == eeStatus || EE_INVALID_PAGE_SEQUENCE == eeStatus || EE_TRANSFER_ERROR == eeStatus))
+	{
+		EE_Format();
 		HAL_FLASH_Lock();
-		return Status = BOS_ERR_EEPROM;
+		NVIC_SystemReset();
 	}
 	HAL_FLASH_Lock();
 
@@ -49,7 +53,7 @@ BOS_Status EE_Init(void) {
 BOS_Status EE_ReadVariable(uint16_t VirtAddress, uint16_t *Data) {
 	BOS_Status Status = BOS_OK;
 
-	if (EE_OK != EE_ReadVariable16bits(VirtAddress, Data))
+	if(EE_OK != EE_ReadVariable16bits(VirtAddress, Data))
 		return Status = BOS_ERR_EEPROM;
 
 	return Status;
@@ -64,18 +68,17 @@ BOS_Status EE_ReadVariable(uint16_t VirtAddress, uint16_t *Data) {
  * @retval - BOS_OK.
  *         - BOS_ERR_EEPROM.
  */
-BOS_Status EE_WriteVariable(uint16_t VirtAddress, uint16_t Data) {
+BOS_Status EE_WriteVariable(uint16_t VirtAddress,uint16_t Data){
 	BOS_Status Status = BOS_OK;
-	EE_Status EEStatus = EE_OK;
+	EE_Status eeStatus = EE_OK;
 
 	HAL_FLASH_Unlock();
-	EEStatus = EE_WriteVariable16bits(VirtAddress, Data);
-	if (EE_PAGE_FULL == EEStatus) {
+	eeStatus = EE_WriteVariable16bits(VirtAddress, Data);
+	if (EE_CLEANUP_REQUIRED == eeStatus)
+	{
 		EE_CleanUp();
-		HAL_FLASH_Lock();
-		return Status = BOS_OK;
 	}
-	else if(EE_OK != EEStatus)
+	else if(EE_OK != eeStatus)
 	{
 		HAL_FLASH_Lock();
 		return BOS_ERR_EEPROM;
@@ -97,14 +100,15 @@ BOS_Status EE_Format(void) {
 	BOS_Status Status = BOS_OK;
 
 	HAL_FLASH_Unlock();
-	if (EE_OK != EEPROM_Format(EE_FORCED_ERASE)) {
+	if(EE_OK != EEPROM_Format(EE_FORCED_ERASE))
+	{
 		HAL_FLASH_Lock();
 		return Status = BOS_ERR_EEPROM;
 	}
-
 	HAL_FLASH_Lock();
 
 	return Status;
+
 }
 
 /******************************************************************************/
@@ -123,7 +127,6 @@ uint16_t Flash_WriteVariable(uint32_t Address, uint16_t Data) {
 	HAL_StatusTypeDef FlashStatus = HAL_OK;
 
 	HAL_FLASH_Unlock();
-
 	/* Set variable data */
 //	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,Address,Data);
 	//TOBECHECKED
@@ -136,7 +139,6 @@ uint16_t Flash_WriteVariable(uint32_t Address, uint16_t Data) {
 		/* If the program operation is completed, disable the PG Bit */
 		CLEAR_BIT(FLASH->CR, FLASH_CR_PG);
 	}
-
 	HAL_FLASH_Lock();
 
 	/* Return last operation flash status */
