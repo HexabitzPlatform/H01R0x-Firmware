@@ -23,7 +23,8 @@ extern uint8_t WakeupFromStopFlag;
 /* External function prototypes ----------------------------------------------*/
 extern TaskHandle_t xCommandConsoleTaskHandle; // CLI Task handler.
 
-
+uint16_t PacketLength = 0;
+uint8_t count = 0;
 /******************************************************************************/
 /*            Cortex-M0 Processor Interruption and Exception Handlers         */
 /******************************************************************************/
@@ -52,11 +53,36 @@ void HardFault_Handler(void){
 }
 
 /******************************************************************************/
-/* STM32F0xx Peripheral Interrupt Handlers                                    */
+/* STM32G0xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f0xx.s).                    */
 /******************************************************************************/
+
+/* Use of HAL_UARTEx_ReceiveToIdle_DMA service, will generate calls to
+   user defined HAL_UARTEx_RxEventCallback callback for each occurrence of
+    following events :
+    - HT (Half Transfer) : Half of Rx buffer is filled)
+    - TC (Transfer Complete) : Rx buffer is full.
+      (In case of Circular DMA, reception could go on, and next reception data will be stored
+      in index 0 of reception buffer by DMA).
+    - Idle Event on Rx line : Triggered when RX line has been in idle state (normally high state)
+      for 1 frame time, after last received byte. */
+
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart,uint16_t Size){
+	extern TaskHandle_t BackEndTaskHandle;
+
+	PacketLength =Size;
+	count++;
+
+	/* Notify backend task */
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	vTaskNotifyGiveFromISR(BackEndTaskHandle,&xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+}
+
+/*-----------------------------------------------------------*/
 
 /**
  * @brief This function handles USART1 global interrupt / USART1 wake-up interrupt through EXTI line 25.
@@ -264,14 +290,16 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 	/* Resume streaming DMA for this UART port */
 	uint8_t port =GetPort(huart);
 	if(portStatus[port] == STREAM){
-		HAL_UART_Receive_DMA(huart,(uint8_t* )(&(dmaStreamDst[port - 1]->Instance->TDR)),huart->hdmarx->Instance->CNDTR);
+//		HAL_UART_Receive_DMA(huart,(uint8_t* )(&(dmaStreamDst[port - 1]->Instance->TDR)),huart->hdmarx->Instance->CNDTR);
+		HAL_UARTEx_ReceiveToIdle_DMA(huart,(uint8_t* )(&(dmaStreamDst[port - 1]->Instance->TDR)),huart->hdmarx->Instance->CNDTR);
 		/* Or parse the circular buffer and restart messaging DMA for this port */
 	}
 	else{
 		index_input[port - 1] = 0;
 		index_process[port - 1] = 0;
 		memset((uint8_t* )&UARTRxBuf[port - 1], 0, MSG_RX_BUF_SIZE);
-		HAL_UART_Receive_DMA(huart,(uint8_t* )&UARTRxBuf[port - 1] ,MSG_RX_BUF_SIZE);
+//		HAL_UART_Receive_DMA(huart,(uint8_t* )&UARTRxBuf[port - 1] ,MSG_RX_BUF_SIZE);
+		HAL_UARTEx_ReceiveToIdle_DMA(huart,(uint8_t* )&UARTRxBuf[port - 1] ,MSG_RX_BUF_SIZE);
 		MsgDMAStopped[port - 1] = true;		// Set a flag here and let the backend task restart DMA after parsing the buffer	
 	}
 }
