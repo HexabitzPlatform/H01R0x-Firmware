@@ -44,8 +44,9 @@ void UserTask(void *argument) {
 
 	// put your code here, to run repeatedly.
 	while (1) {
+//		HAL_Delay(3000);
 //		Explore();
-//		HAL_Delay(2000);
+
 		//
 //		BackEndTaskWaterMark = uxTaskGetStackHighWaterMark(BackEndTaskHandle);
 //		//
