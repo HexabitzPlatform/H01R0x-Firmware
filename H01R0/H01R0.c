@@ -220,6 +220,8 @@ void SystemClock_Config(void){
 
 /*-----------------------------------------------------------*/
 
+/* --- Save Command Topology in Flash RO --- */
+
 uint8_t SaveTopologyToRO(void)
 {
 	HAL_StatusTypeDef flashStatus =HAL_OK;
@@ -298,6 +300,10 @@ uint8_t SaveTopologyToRO(void)
 	HAL_FLASH_Lock();
 }
 
+/*-----------------------------------------------------------*/
+
+/* --- Save Command Snippets in Flash RO --- */
+
 uint8_t SaveSnippetsToRO(void)
 {
 	HAL_StatusTypeDef FlashStatus =HAL_OK;
@@ -358,11 +364,11 @@ uint8_t SaveSnippetsToRO(void)
 	/* Lock the FLASH control register access */
 	HAL_FLASH_Lock();
 }
-/* --- Save array topology and Command Snippets in Flash RO --- 
- */
 
-/* --- Clear array topology in SRAM and Flash RO --- 
- */
+/*-----------------------------------------------------------*/
+
+/* --- Clear array topology in SRAM and Flash RO --- */
+
 uint8_t ClearROtopology(void){
 	// Clear the array 
 	memset(array,0,sizeof(array));
