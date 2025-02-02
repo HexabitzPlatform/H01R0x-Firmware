@@ -2,14 +2,14 @@
  BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
  All rights reserved
  
- File Name     : H01R0_MemoryMap.h
+ File Name     : H08R7_MemoryMap.h
  Description   : Module MCU memory map header file.
 
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef H01R0_MEMORYMAP_H
-#define H01R0_MEMORYMAP_H
+#ifndef H08R7_MEMORYMAP_H
+#define H08R7_MEMORYMAP_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -17,25 +17,24 @@
 #ifdef FLASH_SIZE
 #undef FLASH_SIZE
 #endif
-/* Memory map: - STM32G0B0
- - Application: 0x08000000 - 0x0807FFFF >> 512 KB
- - Read-only (RO): 0x08040000 -  >> 2 KB, used to store topology information
-  - Read-only (RO): 0x08040800 -  >> 2 KB, used to store Command Snippets
- - Emulated EEPROM: 0x0807B800 -  >> 8 KB, fits 1000 16-bit variables in 4 pages
+/* Memory map: - STM32G0B0 : 0x08000000 - 0x0807FFFF >> 512 KB
+   512 KB divided into :
+ - Application: 0x08000000 - 0x0807A7FF >> 500 KB
+ - Topology Address (RO): 0x0807A800 - 0x0807AFFF >> 2 KB, used to store topology information
+ - Snippets Address (RO): 0x0807B000 - 0x0807B7FF >> 2 KB, used to store Command Snippet
+ - Emulated EEPROM Address: 0x0807B800 - 0x0807F800 >> 8 KB, fits 1000 16-bit variables in 8 pages (4 basic pages + 4 backup pages)
  */
-#define APP_START_ADDRESS  		((uint32_t)0x08000000) 
-#define TOPOLOGY_START_ADDRESS  ((uint32_t)0x08040000)      // topology is stored here
-#define SNIPPETS_START_ADDRESS  ((uint32_t)0x08040800) 		// Snippets are stored here
-#define EEPROM_START_ADDRESS  	((uint32_t)0x0807B800U)      // EE_Variables are stored gere
-#define FLASH_SIZE				((uint32_t)0x20000)			// All sizes in bytes
-#define SRAM_SIZE				((uint32_t)0x8000)
-#define TOPOLOGY_PAGE_NUM		256
-#define SNIPPETS_PAGE_NUM		258
+#define APP_START_ADDRESS  		((uint32_t)0x08000000)
+#define TOPOLOGY_START_ADDRESS  ((uint32_t)0x0807A800)      /* topology is stored here 		*/
+#define SNIPPETS_START_ADDRESS  ((uint32_t)0x0807B000) 		/* Snippet are stored here      */
+#define EEPROM_START_ADDRESS  	((uint32_t)0x0807B800)      /* EE_Variables are stored here */
+#define TOPOLOGY_PAGE_NUM		373
+#define SNIPPETS_PAGE_NUM		374
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* H01R0_MEMORYMAP_H */
+#endif /* H08R7_MEMORYMAP_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
