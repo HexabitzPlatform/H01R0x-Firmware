@@ -30,7 +30,7 @@ int main(void) {
 }
 
 /*-----------------------------------------------------------*/
-
+uint8_t f = 0;
 /* User Task */
 void UserTask(void *argument) {
 
@@ -40,13 +40,18 @@ void UserTask(void *argument) {
 //#endif
 
 //	RGB_LED_sweep(RGB_SWEEP_BASIC, 2000, -1);
-
+	Unbridge(5, 6);
+	Bridge(5, 6);
 
 	// put your code here, to run repeatedly.
 	while (1) {
 //		HAL_Delay(3000);
 //		Explore();
-
+		if(f == 1)
+		{
+		Unbridge(5, 6);
+		f = 0;
+		}
 		//
 //		BackEndTaskWaterMark = uxTaskGetStackHighWaterMark(BackEndTaskHandle);
 //		//
