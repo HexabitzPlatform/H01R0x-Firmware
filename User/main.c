@@ -30,7 +30,7 @@ int main(void) {
 }
 
 /*-----------------------------------------------------------*/
-uint8_t f = 0;
+uint8_t f;
 /* User Task */
 void UserTask(void *argument) {
 
@@ -47,9 +47,15 @@ void UserTask(void *argument) {
 	while (1) {
 //		HAL_Delay(3000);
 //		Explore();
+
 		if(f == 1)
 		{
-		Unbridge(5, 6);
+			Bridge(5, 6);
+		f = 0;
+		}
+		if(f == 2)
+		{
+			Unbridge(5, 6);
 		f = 0;
 		}
 		//

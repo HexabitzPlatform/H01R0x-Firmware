@@ -42,8 +42,13 @@ extern DMA_HandleTypeDef hdma_usart6_rx;
 
 
 /*-----------------------------------------------------------*/
-
-/**
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart2_rx;
+extern DMA_HandleTypeDef hdma_usart3_rx;
+extern DMA_HandleTypeDef hdma_usart4_rx;
+extern DMA_HandleTypeDef hdma_usart5_rx;
+extern DMA_HandleTypeDef hdma_usart6_rx;
+/** 
  * Initialize the DMAs
  */
 void DMA_Init(void){
@@ -52,6 +57,31 @@ void DMA_Init(void){
 	__DMA1_CLK_ENABLE();
 	__DMA2_CLK_ENABLE();
 
+//	msgRxDMA[0] = hdma_usart1_rx;
+//	msgRxDMA[1] = hdma_usart2_rx;
+//	msgRxDMA[2] = hdma_usart3_rx;
+//	msgRxDMA[3] = hdma_usart4_rx;
+//	msgRxDMA[4] = hdma_usart5_rx;
+//	msgRxDMA[5] = hdma_usart6_rx;
+//	/* Initialize messaging RX DMAs x 6 - Update for non-standard MCUs */
+//#ifdef _P1
+//	DMA_MSG_RX_CH_Init(&msgRxDMA[0],DMA1_Channel4);
+//#endif
+//#ifdef _P2
+//	DMA_MSG_RX_CH_Init(&msgRxDMA[1],DMA1_Channel2);
+//#endif
+//#ifdef _P3
+//	DMA_MSG_RX_CH_Init(&msgRxDMA[2],DMA1_Channel3);
+//#endif
+//#ifdef _P4
+//	DMA_MSG_RX_CH_Init(&msgRxDMA[3],DMA1_Channel1);
+//#endif
+//#ifdef _P5
+//	DMA_MSG_RX_CH_Init(&msgRxDMA[4],DMA1_Channel5);
+//#endif
+//#ifdef _P6
+//	DMA_MSG_RX_CH_Init(&msgRxDMA[5],DMA1_Channel6);
+//#endif
 
 	msgRxDMA[0] = hdma_usart1_rx;
 	msgRxDMA[1] = hdma_usart2_rx;
@@ -145,7 +175,7 @@ void DMA_Init(void){
 //	hDMA->Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
 //	hDMA->Init.Mode = DMA_CIRCULAR;
 //	hDMA->Init.Priority = STREAM_DMA_PRIORITY;
-////	hDMA->Init.Request = DMA_REQUEST_USART5_RX;
+//
 //	HAL_DMA_Init(hDMA);
 //}
 
@@ -165,6 +195,39 @@ void DMA_Init(void){
 //
 //	HAL_DMA_Init(hDMA);
 //}
+
+/*-----------------------------------------------------------*/
+/* Setup and control functions ------------------------------*/
+/*-----------------------------------------------------------*/
+
+/* Setup and start Messaging DMAs 
+ */
+void SetupMessagingRxDMAs(void){
+#ifdef _P1
+	if(portStatus[P1] == FREE)
+		DMA_MSG_RX_Setup(P1uart,&hdma_usart1_rx/*msgRxDMA[0]*/);
+#endif
+#ifdef _P2
+	if(portStatus[P2] == FREE)
+		DMA_MSG_RX_Setup(P2uart,&hdma_usart2_rx/*msgRxDMA[1]*/);
+#endif
+#ifdef _P3	
+	if(portStatus[P3] == FREE)
+		DMA_MSG_RX_Setup(P3uart,&hdma_usart3_rx/*msgRxDMA[2]*/);
+#endif
+#ifdef _P4		
+	if(portStatus[P4] == FREE)
+		DMA_MSG_RX_Setup(P4uart,&hdma_usart4_rx/*msgRxDMA[3]*/);
+#endif
+#ifdef _P5		
+	if(portStatus[P5] == FREE)
+		DMA_MSG_RX_Setup(P5uart,&hdma_usart5_rx/*msgRxDMA[4]*/);
+#endif
+#ifdef _P6
+	if(portStatus[P6] == FREE)
+		DMA_MSG_RX_Setup(P6uart,&hdma_usart6_rx/*msgRxDMA[5]*/);
+#endif
+}
 
 /*-----------------------------------------------------------*/
 
@@ -237,7 +300,7 @@ void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,
 //
 //	/* Remap and link to UART RX */
 //	RemapAndLinkDMAtoUARTRx(huartSrc,hDMA);
-
+	HAL_UART_MspInit(huartSrc);
 	/* Setup DMA interrupts */
 	//SetupDMAInterrupts(hDMA,STREAM_DMA_INT_PRIORITY);
 	
@@ -291,7 +354,7 @@ void SetupMessagingRxDMAs(void){
 //	DMA_HandleTypeDef *hDMA;
 //	UART_HandleTypeDef *huartSrc;
 //	/* Select DMA struct */
-//	hDMA = &streamDMA[port - 1];
+//	hDMA = &msgRxDMA/*streamDMA*/[port - 1];
 //	huartSrc=GetUart(port);
 //	HAL_UART_DMAStop(huartSrc);
 //	hDMA->Instance->CNDTR = 0;
@@ -301,31 +364,42 @@ void SetupMessagingRxDMAs(void){
 //}
 
 
-///* --- Stop a messaging DMA ---
-// */
-//void StopMsgDMA(uint8_t port){
-//	DMA_HandleTypeDef *hDMA;
-//	UART_HandleTypeDef *huartSrc;
-//	huartSrc=GetUart(port);
-//	/* Select DMA struct */
-//	hDMA =&msgRxDMA[port - 1];
-//	HAL_UART_DMAStop(huartSrc);
-//	hDMA->Instance->CNDTR =0;
-//}
+/* --- Stop a messaging DMA ---
+ */
+//void StopMsgDMA(uint8_t port)
+void StopDMA(uint8_t port)
+{
+	DMA_HandleTypeDef *hDMA;
+	UART_HandleTypeDef *huartSrc;
+	huartSrc=GetUart(port);
+	/* Select DMA struct */
+	hDMA =&msgRxDMA[port - 1];
+	HAL_UART_DMAStop(huartSrc);
+	hDMA->Instance->CNDTR =0;
+
+	/* added from StopStreamDMA*/
+	dmaStreamCount[port - 1] = 0;
+	dmaStreamTotal[port - 1] = 0;
+}
 
 
 /*-----------------------------------------------------------*/
 
-///* Switch messaging DMA channels to streaming
-// */
-//void SwitchMsgDMAToStream(uint8_t port) {
-//	// TODO - Make sure all messages in the RX buffer have been parsed?
-//
-//	// Stop the messaging DMA
+/* Switch messaging DMA channels to streaming
+ */
+void SwitchMsgDMAToStream(uint8_t port) {
+	// TODO - Make sure all messages in the RX buffer have been parsed?
+//	UART_HandleTypeDef *huartSrc;
+	StopDMA(port);
+//	huartSrc=GetUart(port);
+	// Stop the messaging DMA
 //	StopMsgDMA(port);
-//	// Initialize a streaming DMA using same channel
+
+	// Initialize a streaming DMA using same channel
 //	DMA_STREAM_CH_Init(&streamDMA[port - 1], msgRxDMA[port - 1].Instance);
-//}
+//	HAL_UART_MspInit(huartSrc);
+
+}
 
 /*-----------------------------------------------------------*/
 
@@ -333,16 +407,17 @@ void SetupMessagingRxDMAs(void){
  */
 void SwitchStreamDMAToMsg(uint8_t port) {
 	// Stop the streaming DMA
-//	UART_HandleTypeDef *huartSrc;
+	UART_HandleTypeDef *huartSrc;
 //	StopStreamDMA(port);
-//	huartSrc=GetUart(port);
+	StopDMA(port);
+	huartSrc=GetUart(port);
 	/* Select DMA struct */
 	// Initialize a messaging DMA using same channels
 //	DMA_MSG_RX_CH_Init(&msgRxDMA[port - 1], streamDMA[port - 1].Instance);
-//	HAL_UART_MspInit(huartSrc);
+	HAL_UART_MspInit(huartSrc);
 	// Remove stream DMA and change port status
-	portStatus[GetPort(streamDMA[port - 1].Parent)] = FREE;
-	streamDMA[port - 1].Instance = 0;
+	portStatus[GetPort(msgRxDMA/*streamDMA*/[port - 1].Parent)] = FREE;
+	msgRxDMA/*streamDMA*/[port - 1].Instance = 0;
 	dmaStreamDst[port - 1] = 0;
 
 	// Read this port again in messaging mode
@@ -462,9 +537,9 @@ void SwitchStreamDMAToMsg(uint8_t port) {
 //
 //	__HAL_LINKDMA(huart,hdmarx,*hDMA);
 //}
-
-/*-----------------------------------------------------------*/
-
+//
+///*-----------------------------------------------------------*/
+//
 ///* Remap and link the UART TX and DMA structs
 // */
 //void RemapAndLinkDMAtoUARTTx(UART_HandleTypeDef *huart,DMA_HandleTypeDef *hDMA){
