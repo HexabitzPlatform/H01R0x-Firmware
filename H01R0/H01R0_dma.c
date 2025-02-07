@@ -42,12 +42,7 @@ extern DMA_HandleTypeDef hdma_usart6_rx;
 
 
 /*-----------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_usart1_rx;
-extern DMA_HandleTypeDef hdma_usart2_rx;
-extern DMA_HandleTypeDef hdma_usart3_rx;
-extern DMA_HandleTypeDef hdma_usart4_rx;
-extern DMA_HandleTypeDef hdma_usart5_rx;
-extern DMA_HandleTypeDef hdma_usart6_rx;
+
 /** 
  * Initialize the DMAs
  */
@@ -83,12 +78,12 @@ void DMA_Init(void){
 //	DMA_MSG_RX_CH_Init(&msgRxDMA[5],DMA1_Channel6);
 //#endif
 
-	msgRxDMA[0] = hdma_usart1_rx;
-	msgRxDMA[1] = hdma_usart2_rx;
-	msgRxDMA[2] = hdma_usart3_rx;
-	msgRxDMA[3] = hdma_usart4_rx;
-	msgRxDMA[4] = hdma_usart5_rx;
-	msgRxDMA[5] = hdma_usart6_rx;
+//	msgRxDMA[0] = hdma_usart1_rx;
+//	msgRxDMA[1] = hdma_usart2_rx;
+//	msgRxDMA[2] = hdma_usart3_rx;
+//	msgRxDMA[3] = hdma_usart4_rx;
+//	msgRxDMA[4] = hdma_usart5_rx;
+//	msgRxDMA[5] = hdma_usart6_rx;
 
 //	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
 //	HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
@@ -311,38 +306,6 @@ void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,
 
 }
 
-/*-----------------------------------------------------------*/
-/* Setup and control functions ------------------------------*/
-/*-----------------------------------------------------------*/
-
-/* Setup and start Messaging DMAs
- */
-void SetupMessagingRxDMAs(void){
-#ifdef _P1
-	if(portStatus[P1] == FREE)
-		DMA_MSG_RX_Setup(P1uart,&hdma_usart1_rx);
-#endif
-#ifdef _P2
-	if(portStatus[P2] == FREE)
-		DMA_MSG_RX_Setup(P2uart,&hdma_usart2_rx);
-#endif
-#ifdef _P3
-	if(portStatus[P3] == FREE)
-		DMA_MSG_RX_Setup(P3uart,&hdma_usart3_rx);
-#endif
-#ifdef _P4
-	if(portStatus[P4] == FREE)
-		DMA_MSG_RX_Setup(P4uart,&hdma_usart4_rx);
-#endif
-#ifdef _P5
-	if(portStatus[P5] == FREE)
-		DMA_MSG_RX_Setup(P5uart,&hdma_usart5_rx);
-#endif
-#ifdef _P6
-	if(portStatus[P6] == FREE)
-		DMA_MSG_RX_Setup(P6uart,&hdma_usart6_rx);
-#endif
-}
 
 /*-----------------------------------------------------------*/
 /* Private functions ----------------------------------------*/
@@ -377,9 +340,9 @@ void StopDMA(uint8_t port)
 	HAL_UART_DMAStop(huartSrc);
 	hDMA->Instance->CNDTR =0;
 
-	/* added from StopStreamDMA*/
-	dmaStreamCount[port - 1] = 0;
-	dmaStreamTotal[port - 1] = 0;
+//	/* added from StopStreamDMA*/
+//	dmaStreamCount[port - 1] = 0;
+//	dmaStreamTotal[port - 1] = 0;
 }
 
 
