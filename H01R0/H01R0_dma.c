@@ -271,16 +271,16 @@ void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart,DMA_HandleTypeDef *hDMA){
 
 /*-----------------------------------------------------------*/
 
-///* Unsetup messaging DMA TX (memory-to-port) since TX DMAs are shared
-// */
-//void DMA_MSG_TX_UnSetup(UART_HandleTypeDef *huart){
-//	/* Setup DMA interrupts */
+/* Unsetup messaging DMA TX (memory-to-port) since TX DMAs are shared
+ */
+void DMA_MSG_TX_UnSetup(UART_HandleTypeDef *huart){
+	/* Setup DMA interrupts */
 //	UnSetupDMAInterrupts(huart->hdmatx);
-//
-//	/* Unlink the TX DMA and UART */
-//	huart->hdmatx->Parent = NULL;
-//	huart->hdmatx = NULL;
-//}
+
+	/* Unlink the TX DMA and UART */
+	huart->hdmatx->Parent = NULL;
+	huart->hdmatx = NULL;
+}
 
 /*-----------------------------------------------------------*/
 
@@ -424,8 +424,8 @@ void SwitchStreamDMAToMsg(uint8_t port) {
 //TOBECHECKED
 /*-----------------------------------------------------------*/
 
-///* UnSetup DMA interrupts
-// */
+/* UnSetup DMA interrupts
+ */
 //void UnSetupDMAInterrupts(DMA_HandleTypeDef *hDMA){
 //	switch((uint32_t )hDMA->Instance){
 //		case (uint32_t ) DMA1_Channel1:
