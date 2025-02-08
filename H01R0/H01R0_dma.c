@@ -52,7 +52,7 @@ void DMA_Init(void){
 	__DMA1_CLK_ENABLE();
 	__DMA2_CLK_ENABLE();
 
-	//	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+//	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
 //	HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 //	/* DMA1_Channel2_3_IRQn interrupt configuration */
 //	HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
@@ -261,16 +261,16 @@ void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,
 
 /*-----------------------------------------------------------*/
 
-/* Unsetup messaging DMA TX (memory-to-port) since TX DMAs are shared
- */
-void DMA_MSG_TX_UnSetup(UART_HandleTypeDef *huart){
-	/* Setup DMA interrupts */
-//	UnSetupDMAInterrupts(huart->hdmatx);
-
-	/* Unlink the TX DMA and UART */
-	huart->hdmatx->Parent = NULL;
-	huart->hdmatx = NULL;
-}
+///* Unsetup messaging DMA TX (memory-to-port) since TX DMAs are shared
+// */
+//void DMA_MSG_TX_UnSetup(UART_HandleTypeDef *huart){
+//	/* Setup DMA interrupts */
+////	UnSetupDMAInterrupts(huart->hdmatx);
+//
+//	/* Unlink the TX DMA and UART */
+//	huart->hdmatx->Parent = NULL;
+//	huart->hdmatx = NULL;
+//}
 
 /*-----------------------------------------------------------*/
 /* Private functions ----------------------------------------*/

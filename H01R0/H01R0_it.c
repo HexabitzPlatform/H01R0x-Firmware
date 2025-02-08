@@ -272,8 +272,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	
 	/* TX DMAs are shared so unsetup them here to be reused */
-	if(huart->hdmatx != NULL)
-		DMA_MSG_TX_UnSetup(huart);
+//	if(huart->hdmatx != NULL)
+//		DMA_MSG_TX_UnSetup(huart);
 	
 	/* Give back the mutex. */
 	xSemaphoreGiveFromISR(PxTxSemaphoreHandle[GetPort(huart)],&(xHigherPriorityTaskWoken));
