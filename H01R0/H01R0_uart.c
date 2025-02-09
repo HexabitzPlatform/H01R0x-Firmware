@@ -211,7 +211,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 	   	HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
 	   	HAL_NVIC_EnableIRQ(USART1_IRQn);
 
-		__HAL_DMA_DISABLE_IT(&hdma_usart1_rx , DMA_IT_HT);
+//		__HAL_DMA_DISABLE_IT(&hdma_usart1_rx , DMA_IT_HT);
 //		__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 
 #endif
@@ -263,7 +263,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		 HAL_NVIC_SetPriority(USART2_LPUART2_IRQn, 0, 0);
 		 HAL_NVIC_EnableIRQ(USART2_LPUART2_IRQn);
 
-		__HAL_DMA_DISABLE_IT(&hdma_usart2_rx , DMA_IT_HT);
+//		__HAL_DMA_DISABLE_IT(&hdma_usart2_rx , DMA_IT_HT);
 //		__HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
 
 #endif
@@ -312,7 +312,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		HAL_NVIC_SetPriority(USART3_4_5_6_LPUART1_IRQn, 0, 0);
 		HAL_NVIC_EnableIRQ(USART3_4_5_6_LPUART1_IRQn);
 
-		__HAL_DMA_DISABLE_IT(&hdma_usart3_rx , DMA_IT_HT);
+//		__HAL_DMA_DISABLE_IT(&hdma_usart3_rx , DMA_IT_HT);
 //		__HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE);
 #endif
 	}
@@ -357,7 +357,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		HAL_NVIC_SetPriority(USART3_4_5_6_LPUART1_IRQn, 0, 0);
 		HAL_NVIC_EnableIRQ(USART3_4_5_6_LPUART1_IRQn);
 
-		__HAL_DMA_DISABLE_IT(&hdma_usart4_rx , DMA_IT_HT);
+//		__HAL_DMA_DISABLE_IT(&hdma_usart4_rx , DMA_IT_HT);
 //		__HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
 
 #endif
@@ -402,7 +402,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		HAL_NVIC_SetPriority(USART3_4_5_6_LPUART1_IRQn, 0, 0);
 		HAL_NVIC_EnableIRQ(USART3_4_5_6_LPUART1_IRQn);
 
-		__HAL_DMA_DISABLE_IT(&hdma_usart5_rx , DMA_IT_HT);
+//		__HAL_DMA_DISABLE_IT(&hdma_usart5_rx , DMA_IT_HT);
 //		__HAL_UART_ENABLE_IT(&huart5, UART_IT_IDLE);
 
 #endif
@@ -448,7 +448,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		HAL_NVIC_SetPriority(USART3_4_5_6_LPUART1_IRQn, 0, 0);
 		HAL_NVIC_EnableIRQ(USART3_4_5_6_LPUART1_IRQn);
 
-		__HAL_DMA_DISABLE_IT(&hdma_usart6_rx , DMA_IT_HT);
+//		__HAL_DMA_DISABLE_IT(&hdma_usart6_rx , DMA_IT_HT);
 //		__HAL_UART_ENABLE_IT(&huart6, UART_IT_IDLE);
 
 #endif
