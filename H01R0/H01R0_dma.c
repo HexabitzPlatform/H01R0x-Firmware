@@ -1,7 +1,7 @@
 /*
  BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
  All rights reserved
- 
+
  File Name     : H01R0_dma.c
  Description   : source file Contains Peripheral DMA setup .
 
@@ -16,10 +16,10 @@
 
 /* Variables ---------------------------------------------------------*/
 
-/* DMA structs. Number of structs depends on available DMA channels and array ports where some channels might be reconfigured. 
- - Update for non-standard MCUs 
+/* DMA structs. Number of structs depends on available DMA channels and array ports where some channels might be reconfigured.
+ - Update for non-standard MCUs
  */
-DMA_HandleTypeDef msgRxDMA[6] ={0};
+DMA_HandleTypeDef *msgRxDMA[6];
 //DMA_HandleTypeDef msgTxDMA[3] ={0};
 //DMA_HandleTypeDef streamDMA[6] ={0};
 //DMA_HandleTypeDef frontendDMA[3] ={0};
@@ -43,7 +43,7 @@ extern DMA_HandleTypeDef hdma_usart6_rx;
 
 /*-----------------------------------------------------------*/
 
-/** 
+/**
  * Initialize the DMAs
  */
 void DMA_Init(void){
@@ -51,6 +51,17 @@ void DMA_Init(void){
 	/* DMA controller clock enable */
 	__DMA1_CLK_ENABLE();
 	__DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel2_3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+  /* DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn);
 
 //	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
 //	HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
@@ -182,38 +193,38 @@ void DMA_NVIC_UnSetup(void)
 /* Setup and control functions ------------------------------*/
 /*-----------------------------------------------------------*/
 
-/* Setup and start Messaging DMAs 
+/* Setup and start Messaging DMAs
  */
 void SetupMessagingRxDMAs(void){
 #ifdef _P1
 	if(portStatus[P1] == FREE)
-		DMA_MSG_RX_Setup(P1uart,&hdma_usart1_rx/*msgRxDMA[0]*/);
+		DMA_MSG_RX_Setup(P1uart,msgRxDMA[0]);
 #endif
 #ifdef _P2
 	if(portStatus[P2] == FREE)
-		DMA_MSG_RX_Setup(P2uart,&hdma_usart2_rx/*msgRxDMA[1]*/);
+		DMA_MSG_RX_Setup(P2uart,msgRxDMA[1]);
 #endif
 #ifdef _P3	
 	if(portStatus[P3] == FREE)
-		DMA_MSG_RX_Setup(P3uart,&hdma_usart3_rx/*msgRxDMA[2]*/);
+		DMA_MSG_RX_Setup(P3uart,msgRxDMA[2]);
 #endif
 #ifdef _P4		
 	if(portStatus[P4] == FREE)
-		DMA_MSG_RX_Setup(P4uart,&hdma_usart4_rx/*msgRxDMA[3]*/);
+		DMA_MSG_RX_Setup(P4uart,msgRxDMA[3]);
 #endif
 #ifdef _P5		
 	if(portStatus[P5] == FREE)
-		DMA_MSG_RX_Setup(P5uart,&hdma_usart5_rx/*msgRxDMA[4]*/);
+		DMA_MSG_RX_Setup(P5uart,msgRxDMA[4]);
 #endif
 #ifdef _P6
 	if(portStatus[P6] == FREE)
-		DMA_MSG_RX_Setup(P6uart,&hdma_usart6_rx/*msgRxDMA[5]*/);
+		DMA_MSG_RX_Setup(P6uart,msgRxDMA[5]);
 #endif
 }
 
 /*-----------------------------------------------------------*/
 
-/* Messaging DMA RX setup (port-to-memory) 
+/* Messaging DMA RX setup (port-to-memory)
  */
 void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart,DMA_HandleTypeDef *hDMA){
 	/* Remap and link to UART Rx */
@@ -236,11 +247,11 @@ void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart,DMA_HandleTypeDef *hDMA){
 /* Streaming DMA setup (port-to-port)
  */
 void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,uint16_t num){
-//	DMA_HandleTypeDef *hDMA;
-//	uint8_t port =GetPort(huartSrc);
+	DMA_HandleTypeDef *hDMA;
+	uint8_t port =GetPort(huartSrc);
 //
 //	/* Select DMA struct */
-//	hDMA =&streamDMA[port - 1];
+	hDMA = msgRxDMA[port - 1];
 //
 //	/* Remap and link to UART RX */
 //	RemapAndLinkDMAtoUARTRx(huartSrc,hDMA);
@@ -252,6 +263,7 @@ void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,
 //	huartSrc->gState =HAL_UART_STATE_READY;
 //	HAL_UART_Receive_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
 	HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
+	__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
 
 }
 /*-----------------------------------------------------------*/
@@ -321,13 +333,16 @@ void StopDMA(uint8_t port)
 	UART_HandleTypeDef *huartSrc;
 	huartSrc=GetUart(port);
 	/* Select DMA struct */
-	hDMA =&msgRxDMA[port - 1];
+	hDMA = msgRxDMA[port - 1];
 	HAL_UART_DMAStop(huartSrc);
 	hDMA->Instance->CNDTR =0;
 
+	if(portStatus[port] == STREAM)
+	{
 	/* added from StopStreamDMA*/
 	dmaStreamCount[port - 1] = 0;
 	dmaStreamTotal[port - 1] = 0;
+	}
 }
 
 
@@ -363,12 +378,12 @@ void SwitchStreamDMAToMsg(uint8_t port) {
 //	DMA_MSG_RX_CH_Init(&msgRxDMA[port - 1], streamDMA[port - 1].Instance);
 	HAL_UART_MspInit(huartSrc);
 	// Remove stream DMA and change port status
-	portStatus[GetPort(msgRxDMA/*streamDMA*/[port - 1].Parent)] = FREE;
-	msgRxDMA/*streamDMA*/[port - 1].Instance = 0;
+	portStatus[GetPort(msgRxDMA/*streamDMA*/[port - 1]->Parent)] = FREE;
+	msgRxDMA/*streamDMA*/[port - 1]->Instance = 0;
 	dmaStreamDst[port - 1] = 0;
 
 	// Read this port again in messaging mode
-	DMA_MSG_RX_Setup(GetUart(port), &msgRxDMA[port - 1]);
+	DMA_MSG_RX_Setup(GetUart(port), msgRxDMA[port - 1]);
 
 }
 
@@ -598,7 +613,7 @@ uint8_t  CalculateCRC8(uint8_t pBuffer[], uint16_t size)
 
 	return pTemp;
   }
-  
+
 else
 	return 0;
 }
