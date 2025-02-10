@@ -87,6 +87,26 @@ void DMA_Init(void){
 //	//DMA_FRONTEND_CH_Init(&frontendDMA[0], DMA2_Channel5);
 }
 
+void DMA_NVIC_Setup(void)
+{
+		HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+		HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+		/* DMA1_Channel2_3_IRQn interrupt configuration */
+		HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
+		HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+		/* DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn interrupt configuration */
+		HAL_NVIC_SetPriority(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn, 0, 0);
+		HAL_NVIC_EnableIRQ(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn);
+}
+
+void DMA_NVIC_UnSetup(void)
+{
+		HAL_NVIC_DisableIRQ(DMA1_Channel1_IRQn);
+		/* DMA1_Channel2_3_IRQn interrupt configuration */
+		HAL_NVIC_DisableIRQ(DMA1_Channel2_3_IRQn);
+		/* DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn interrupt configuration */
+		HAL_NVIC_DisableIRQ(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn);
+}
 /*-----------------------------------------------------------*/
 /* Initialization functions ---------------------------------*/
 /*-----------------------------------------------------------*/
@@ -167,27 +187,27 @@ void DMA_Init(void){
 void SetupMessagingRxDMAs(void){
 #ifdef _P1
 	if(portStatus[P1] == FREE)
-		DMA_MSG_RX_Setup(P1uart,&msgRxDMA[0]);
+		DMA_MSG_RX_Setup(P1uart,&hdma_usart1_rx/*msgRxDMA[0]*/);
 #endif
 #ifdef _P2
 	if(portStatus[P2] == FREE)
-		DMA_MSG_RX_Setup(P2uart,&msgRxDMA[1]);
+		DMA_MSG_RX_Setup(P2uart,&hdma_usart2_rx/*msgRxDMA[1]*/);
 #endif
 #ifdef _P3	
 	if(portStatus[P3] == FREE)
-		DMA_MSG_RX_Setup(P3uart,&msgRxDMA[2]);
+		DMA_MSG_RX_Setup(P3uart,&hdma_usart3_rx/*msgRxDMA[2]*/);
 #endif
 #ifdef _P4		
 	if(portStatus[P4] == FREE)
-		DMA_MSG_RX_Setup(P4uart,&msgRxDMA[3]);
+		DMA_MSG_RX_Setup(P4uart,&hdma_usart4_rx/*msgRxDMA[3]*/);
 #endif
 #ifdef _P5		
 	if(portStatus[P5] == FREE)
-		DMA_MSG_RX_Setup(P5uart,&msgRxDMA[4]);
+		DMA_MSG_RX_Setup(P5uart,&hdma_usart5_rx/*msgRxDMA[4]*/);
 #endif
 #ifdef _P6
 	if(portStatus[P6] == FREE)
-		DMA_MSG_RX_Setup(P6uart,&msgRxDMA[5]);
+		DMA_MSG_RX_Setup(P6uart,&hdma_usart6_rx/*msgRxDMA[5]*/);
 #endif
 }
 

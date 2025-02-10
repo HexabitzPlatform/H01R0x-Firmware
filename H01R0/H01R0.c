@@ -437,6 +437,8 @@ void Module_Peripheral_Init(void){
 	MX_USART5_UART_Init();
 	MX_USART6_UART_Init();
 
+//	DMA_NVIC_Setup();
+
 	MX_TIM3_Init();
 	MX_TIM2_Init();
 	MX_TIM4_Init();
