@@ -269,10 +269,12 @@ void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,
 //		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
 ////	else if(type == 1)
 ////		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,Buffer,512);
-//	__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
+//	__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);		index_process[GetPort(huartSrc) - 1] = 0;
 //	}
 	if(dstPort == 0)
 	{
+		index_process[GetPort(huartSrc) - 1] = 0;
+		memset(Buffer,0,512);
 		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,Buffer,num);
 		__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
 	}
@@ -397,7 +399,7 @@ void SwitchStreamDMAToMsg(uint8_t port) {
 	portStatus[GetPort(msgRxDMA/*streamDMA*/[port - 1]->Parent)] = FREE;
 //	msgRxDMA/*streamDMA*/[port - 1]->Instance = 0;
 	dmaStreamDst[port - 1] = 0;
-
+	index_process[port - 1] = 0;
 	// Read this port again in messaging mode
 	DMA_MSG_RX_Setup(GetUart(port), msgRxDMA[port - 1]);
 
