@@ -243,12 +243,14 @@ void DMA_MSG_RX_Setup(UART_HandleTypeDef *huart,DMA_HandleTypeDef *hDMA){
 }
 
 /*-----------------------------------------------------------*/
-
+extern uint8_t Buffer[512];
+extern uint8_t streamType;
 /* Streaming DMA setup (port-to-port)
  */
 void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,uint16_t num){
 	DMA_HandleTypeDef *hDMA;
 	uint8_t port =GetPort(huartSrc);
+	uint8_t dstPort =GetPort(huartDst);
 //
 //	/* Select DMA struct */
 	hDMA = msgRxDMA[port - 1];
@@ -262,9 +264,23 @@ void DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *huartDst,
 	/* Start DMA stream	*/
 //	huartSrc->gState =HAL_UART_STATE_READY;
 //	HAL_UART_Receive_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
-	HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
-	__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
-
+//	if(streamType != 1)
+//	{
+//		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
+////	else if(type == 1)
+////		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,Buffer,512);
+//	__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
+//	}
+	if(dstPort == 0)
+	{
+		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,Buffer,num);
+		__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
+	}
+	else
+	{
+		HAL_UARTEx_ReceiveToIdle_DMA(huartSrc,(uint8_t* )(&(huartDst->Instance->TDR)),num);
+		__HAL_DMA_DISABLE_IT(hDMA , DMA_IT_HT);
+	}
 }
 /*-----------------------------------------------------------*/
 
