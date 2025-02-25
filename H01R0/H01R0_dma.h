@@ -24,7 +24,7 @@
 /* External variables --------------------------------------------------------*/
 
 /* Export DMA structs */
-extern DMA_HandleTypeDef *hUartDMA[6];
+extern DMA_HandleTypeDef *UARTDMAHandler[6];
 extern CRC_HandleTypeDef hcrc;
 
 /* External function prototypes ----------------------------------------------*/
