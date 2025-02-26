@@ -21,13 +21,15 @@ extern const char *monthStringAbreviated[];
 
 BOS_Status RTC_Init(void);
 BOS_Status RTC_CalendarConfig(void);
+void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc);
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc);
 /*-----------------------------------------------------------*/
 
 /* --- Initialize and config the internal real-time clock (RTC) and boot status.
  */
 BOS_Status RTC_Init(void){
 	/* RTC clock enable */
-	__HAL_RCC_RTC_ENABLE();
+//	__HAL_RCC_RTC_ENABLE();
 	
 	/* Configure the RTC 
 	 f_ckspre = f_rtcclk / ((PREDIV_S+1) * (PREDIV_A+1))
@@ -36,10 +38,19 @@ BOS_Status RTC_Init(void){
 	 - PREDIV_A should be as high as possible to minimize power consumption
 	 >> Choose PREDIV_A = 124 and PREDIV_S = 1999
 	 */
+//	RtcHandle.Instance = RTC;
+//	RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+//	RtcHandle.Init.AsynchPrediv = 124;
+//	RtcHandle.Init.SynchPrediv = 1999;
+//	RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
+//	RtcHandle.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
+//	RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+//	RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+//	RtcHandle.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
 	RtcHandle.Instance = RTC;
 	RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
-	RtcHandle.Init.AsynchPrediv = 124;
-	RtcHandle.Init.SynchPrediv = 1999;
+	RtcHandle.Init.AsynchPrediv = 127;
+	RtcHandle.Init.SynchPrediv = 255;
 	RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
 	RtcHandle.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
 	RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
@@ -195,11 +206,68 @@ void GetTimeDate(void){
 	BOS.time.msec =stimestructureget.SubSeconds / 2;
 	BOS.time.seconds =stimestructureget.Seconds;
 	BOS.time.minutes =stimestructureget.Minutes;
-	BOS.time.hours =stimestructureget.Hours;
+	BOS.time.hours =stimestructureget.Hours-1;
 	BOS.date.day =sdatestructureget.Date;
 	BOS.date.month =sdatestructureget.Month;
 	BOS.date.weekday =sdatestructureget.WeekDay;
 	BOS.date.year =sdatestructureget.Year + 2000;
+}
+
+/**
+* @brief RTC MSP Initialization
+* This function configures the hardware resources used in this example
+* @param hrtc: RTC handle pointer
+* @retval None
+*/
+void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
+{
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  if(hrtc->Instance==RTC)
+  {
+  /* USER CODE BEGIN RTC_MspInit 0 */
+
+  /* USER CODE END RTC_MspInit 0 */
+
+  /** Initializes the peripherals clocks
+  */
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+    PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+//      Error_Handler();
+    }
+
+    /* Peripheral clock enable */
+    __HAL_RCC_RTC_ENABLE();
+    __HAL_RCC_RTCAPB_CLK_ENABLE();
+  /* USER CODE BEGIN RTC_MspInit 1 */
+
+  /* USER CODE END RTC_MspInit 1 */
+  }
+
+}
+
+/**
+* @brief RTC MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param hrtc: RTC handle pointer
+* @retval None
+*/
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc)
+{
+  if(hrtc->Instance==RTC)
+  {
+  /* USER CODE BEGIN RTC_MspDeInit 0 */
+
+  /* USER CODE END RTC_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_RTC_DISABLE();
+    __HAL_RCC_RTCAPB_CLK_DISABLE();
+  /* USER CODE BEGIN RTC_MspDeInit 1 */
+
+  /* USER CODE END RTC_MspDeInit 1 */
+  }
+
 }
 
 /*-----------------------------------------------------------*/
