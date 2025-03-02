@@ -165,7 +165,7 @@ void CheckAttachedButtons(void) {
 				// This is noise. Ignore it
 			} else {
 				if (pressCounter[i] == BOS.buttons.debounce) {
-					button[i].state = PRESSED;// Record a PRESSED event. This event is always reset on next tick.
+//					button[i].state = PRESSED;// Record a PRESSED event. This event is always reset on next tick.
 					++pressCounter[i];
 				}
 
@@ -222,10 +222,10 @@ void CheckAttachedButtons(void) {
 
 			/* 6. Run button callbacks if needed */
 			switch (button[i].state) {
-			case PRESSED:
-				buttonPressedCallback(i);
-				button[i].state = NONE;
-				break;
+//			case PRESSED:
+//				buttonPressedCallback(i);
+//				button[i].state = NONE;
+//				break;
 
 			case RELEASED:
 				buttonReleasedCallback(i);
