@@ -1,52 +1,30 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
+ BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
  File Name     : H01R0_rtc.c
  Description   : Peripheral RTC setup source file.
 
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
 
-/*----------------------------------------------------------------------------*/
-/* Configure RTC                                                              */
-/*----------------------------------------------------------------------------*/
-
-/* RTC */
+/* Variables ---------------------------------------------------------*/
 RTC_HandleTypeDef RtcHandle;
 uint8_t bootStatus =POWER_ON_BOOT;
-
 extern const char *monthStringAbreviated[];
 
+/* Function prototypes ----------------------------------------------*/
 BOS_Status RTC_Init(void);
 BOS_Status RTC_CalendarConfig(void);
 void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc);
 void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc);
-/*-----------------------------------------------------------*/
 
+/* Functions ---------------------------------------------------------*/
 /* --- Initialize and config the internal real-time clock (RTC) and boot status.
  */
 BOS_Status RTC_Init(void){
-	/* RTC clock enable */
-//	__HAL_RCC_RTC_ENABLE();
-	
-	/* Configure the RTC 
-	 f_ckspre = f_rtcclk / ((PREDIV_S+1) * (PREDIV_A+1))
-	 - f_rtcclk is HSE 8 MHz / 32 = 250 kHz
-	 - f_ckspre should be 1 Hz 
-	 - PREDIV_A should be as high as possible to minimize power consumption
-	 >> Choose PREDIV_A = 124 and PREDIV_S = 1999
-	 */
-//	RtcHandle.Instance = RTC;
-//	RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
-//	RtcHandle.Init.AsynchPrediv = 124;
-//	RtcHandle.Init.SynchPrediv = 1999;
-//	RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
-//	RtcHandle.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
-//	RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-//	RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-//	RtcHandle.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
 	RtcHandle.Instance = RTC;
 	RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
 	RtcHandle.Init.AsynchPrediv = 127;
@@ -56,9 +34,18 @@ BOS_Status RTC_Init(void){
 	RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
 	RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 	RtcHandle.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
+
+	RtcHandle.TampOffset = (TAMP_BASE - RTC_BASE);
+	HAL_RTC_MspInit(&RtcHandle);
+	if(HAL_RTCEx_BKUPRead(&RtcHandle,RTC_BKP_DR0) == 1)
+	{
+		RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
+	}
+
 	if (HAL_RTC_Init(&RtcHandle) != HAL_OK)
 		return BOS_ERROR;
-	
+
+
 	/* Check if Data stored in BackUp register1: No Need to reconfigure RTC */
 	/* Read the Back Up Register 1 Data */
 	if(HAL_RTCEx_BKUPRead(&RtcHandle,RTC_BKP_DR1) != 0x32F2){
@@ -77,11 +64,11 @@ BOS_Status RTC_Init(void){
 	}
 	/* Clear source Reset Flag */
 	__HAL_RCC_CLEAR_RESET_FLAGS();
-	
+
 	return BOS_OK;
 }
 
-/*-----------------------------------------------------------*/
+/**********************************************************************************/
 
 /* --- First time-configuration of the internal real-time clock.
  */
@@ -135,7 +122,7 @@ BOS_Status RTC_CalendarConfig(void){
 	return BOS_OK;
 }
 
-/*-----------------------------------------------------------*/
+/**********************************************************************************/
 
 /* --- BOS internal real-time clock and calendar configuration.
  */
@@ -149,39 +136,42 @@ BOS_Status BOS_CalendarConfig(uint8_t month,uint8_t day,uint16_t year,uint8_t we
 	sdatestructure.Date =day;
 	sdatestructure.WeekDay =weekday;		// Todo - Calculate weekday later
 	
-	if(HAL_RTC_SetDate(&RtcHandle,&sdatestructure,RTC_FORMAT_BIN) != HAL_OK)
-		return BOS_ERROR;
-	
 	/* Set Time */
 	stimestructure.Hours =hours;
 	stimestructure.Minutes =minutes;
 	stimestructure.Seconds =seconds;
 	stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;		// Todo - Use this to make sure user does not change daylight settings again
 	
-//	if (daylightsaving == DAYLIGHT_NONE) 											// Todo
-//		stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-//	else if (daylightsaving == DAYLIGHT_ADD1H)
-//		stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_ADD1H;
-//	else if (daylightsaving == DAYLIGHT_SUB1H)
-//		stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_SUB1H;
-	
-	if(hours > 12)
-		BOS.hourformat =24;
-	
-	if(AMPM == RTC_AM){
+	if(AMPM == RTC_AM && hours <= 12){
+		HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, 1);
 		stimestructure.TimeFormat = RTC_HOURFORMAT12_AM;
 		BOS.hourformat =12;
+		HAL_RTC_DeInit(&RtcHandle);
+		RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
+		HAL_RTC_Init(&RtcHandle);
 	}
-	else if(AMPM == RTC_PM){
+	else if(AMPM == RTC_PM && hours <= 12){
+		HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, 1);
 		stimestructure.TimeFormat = RTC_HOURFORMAT12_PM;
 		BOS.hourformat =12;
+		HAL_RTC_DeInit(&RtcHandle);
+		RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
+		HAL_RTC_Init(&RtcHandle);
 	}
 	else
+	{
+		HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, 0);
 		BOS.hourformat =24;
+		HAL_RTC_DeInit(&RtcHandle);
+		RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+		HAL_RTC_Init(&RtcHandle);
+	}
 	
 	if(HAL_RTC_SetTime(&RtcHandle,&stimestructure,RTC_FORMAT_BIN) != HAL_OK)
 		return BOS_ERROR;
 	
+	if(HAL_RTC_SetDate(&RtcHandle,&sdatestructure,RTC_FORMAT_BIN) != HAL_OK)
+		return BOS_ERROR;
 	/* Save RTC hourformat and daylightsaving to EEPROM */
 	EE_WriteVariable(_EE_PARAMS_RTC,((uint16_t )BOS.hourformat << 8) | (uint16_t )BOS.buttons.minInterClickTime);
 	
@@ -191,7 +181,7 @@ BOS_Status BOS_CalendarConfig(uint8_t month,uint8_t day,uint16_t year,uint8_t we
 	return BOS_OK;
 }
 
-/*-----------------------------------------------------------*/
+/**********************************************************************************/
 
 /* --- Get current RTC time and date.
  */
@@ -206,12 +196,14 @@ void GetTimeDate(void){
 	BOS.time.msec =stimestructureget.SubSeconds / 2;
 	BOS.time.seconds =stimestructureget.Seconds;
 	BOS.time.minutes =stimestructureget.Minutes;
-	BOS.time.hours =stimestructureget.Hours-1;
+	BOS.time.hours =stimestructureget.Hours;
 	BOS.date.day =sdatestructureget.Date;
 	BOS.date.month =sdatestructureget.Month;
 	BOS.date.weekday =sdatestructureget.WeekDay;
 	BOS.date.year =sdatestructureget.Year + 2000;
 }
+
+/**********************************************************************************/
 
 /**
 * @brief RTC MSP Initialization
@@ -246,6 +238,8 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
   }
 
 }
+
+/**********************************************************************************/
 
 /**
 * @brief RTC MSP De-Initialization

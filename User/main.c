@@ -25,6 +25,7 @@ int main(void) {
 /*-----------------------------------------------------------*/
 uint8_t f;
 uint8_t y;
+extern RTC_HandleTypeDef RtcHandle;
 /* User Task */
 void UserTask(void *argument) {
 
@@ -39,10 +40,45 @@ void UserTask(void *argument) {
 //	Unbridge(5, 6);
 //	Bridge(5, 6);
 //	BOS_CalendarConfig(uint8_t month,uint8_t day,uint16_t year,uint8_t weekday,uint8_t seconds,uint8_t minutes,uint8_t hours,uint8_t AMPM,int8_t daylightsaving);
-	BOS_CalendarConfig(1,1,2025,1,50,59,12,2,0);
+
 	// put your code here, to run repeatedly.
 	while (1) {
 		GetTimeDate();
+		if(f == 1)
+		{
+//			  HAL_RTC_DeInit(&RtcHandle);
+//			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
+//			  HAL_RTC_Init(&RtcHandle);
+			BOS_CalendarConfig(1,1,2025,1,55,59,12,2,0);
+			f=0;
+		}
+
+		else if(f == 2)
+		{
+//			  HAL_RTC_DeInit(&RtcHandle);
+//			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+//			  HAL_RTC_Init(&RtcHandle);
+			BOS_CalendarConfig(1,1,2025,1,55,59,12,0,0);
+			f=0;
+		}
+
+		else if(f == 3)
+		{
+//			  HAL_RTC_DeInit(&RtcHandle);
+//			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+//			  HAL_RTC_Init(&RtcHandle);
+			BOS_CalendarConfig(1,1,2025,1,55,59,13,0,0);
+			f=0;
+		}
+		else if(f == 4)
+		{
+//			  HAL_RTC_DeInit(&RtcHandle);
+//			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+//			  HAL_RTC_Init(&RtcHandle);
+			BOS_CalendarConfig(1,1,2025,1,55,59,23,0,0);
+			f=0;
+		}
+
 //		if(f==1)
 //		{
 //			RemovePortButton(2);
