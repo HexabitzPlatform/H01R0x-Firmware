@@ -49,7 +49,7 @@ void UserTask(void *argument) {
 //			  HAL_RTC_DeInit(&RtcHandle);
 //			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
 //			  HAL_RTC_Init(&RtcHandle);
-			BOS_CalendarConfig(1,1,2025,1,55,59,12,2,0);
+			BOS_CalendarConfig(1,1,2025,1,55,59,12,2);
 			f=0;
 		}
 
@@ -58,7 +58,7 @@ void UserTask(void *argument) {
 //			  HAL_RTC_DeInit(&RtcHandle);
 //			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
 //			  HAL_RTC_Init(&RtcHandle);
-			BOS_CalendarConfig(1,1,2025,1,55,59,12,0,0);
+			BOS_CalendarConfig(1,1,2025,1,55,59,12,0);
 			f=0;
 		}
 
@@ -67,7 +67,7 @@ void UserTask(void *argument) {
 //			  HAL_RTC_DeInit(&RtcHandle);
 //			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
 //			  HAL_RTC_Init(&RtcHandle);
-			BOS_CalendarConfig(1,1,2025,1,55,59,13,0,0);
+			BOS_CalendarConfig(1,1,2025,1,55,59,13,0);
 			f=0;
 		}
 		else if(f == 4)
@@ -75,7 +75,7 @@ void UserTask(void *argument) {
 //			  HAL_RTC_DeInit(&RtcHandle);
 //			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
 //			  HAL_RTC_Init(&RtcHandle);
-			BOS_CalendarConfig(1,1,2025,1,55,59,23,0,0);
+			BOS_CalendarConfig(1,1,2025,1,55,59,23,0);
 			f=0;
 		}
 

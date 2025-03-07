@@ -22,8 +22,12 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc);
 void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc);
 
 /* Functions ---------------------------------------------------------*/
-/* --- Initialize and config the internal real-time clock (RTC) and boot status.
+
+/*
+ * @brief: Initialize and configure the internal real-time clock (RTC) and boot status..
+ * @retval: BOS_Status.
  */
+
 BOS_Status RTC_Init(void){
 	RtcHandle.Instance = RTC;
 	RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
@@ -35,8 +39,11 @@ BOS_Status RTC_Init(void){
 	RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 	RtcHandle.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
 
+	/* read time format(12/24) from specified RTC Backup */
 	RtcHandle.TampOffset = (TAMP_BASE - RTC_BASE);
+	/* Enable RTC clock in order to read from RTC Backup */
 	HAL_RTC_MspInit(&RtcHandle);
+
 	if(HAL_RTCEx_BKUPRead(&RtcHandle,RTC_BKP_DR0) == 1)
 	{
 		RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
@@ -70,8 +77,11 @@ BOS_Status RTC_Init(void){
 
 /**********************************************************************************/
 
-/* --- First time-configuration of the internal real-time clock.
+/*
+ * @brief: First time-configuration of the internal real-time clock.
+ * @retval: BOS_Status.
  */
+
 BOS_Status RTC_CalendarConfig(void){
 	RTC_DateTypeDef sdatestructure;
 	RTC_TimeTypeDef stimestructure;
@@ -124,17 +134,28 @@ BOS_Status RTC_CalendarConfig(void){
 
 /**********************************************************************************/
 
-/* --- BOS internal real-time clock and calendar configuration.
+/*
+ * @brief: BOS internal real-time clock and calendar configuration.
+ * param1: month
+ * param2: month day
+ * param3: year
+ * param4: week day
+ * param5: seconds
+ * param6: minutes
+ * param7: hours
+ * param8: AMPM
+ * @retval: BOS_Status.
  */
-BOS_Status BOS_CalendarConfig(uint8_t month,uint8_t day,uint16_t year,uint8_t weekday,uint8_t seconds,uint8_t minutes,uint8_t hours,uint8_t AMPM,int8_t daylightsaving){
+
+BOS_Status BOS_CalendarConfig(Months_e month, uint8_t monthDay, uint16_t year, Weekdays_e weekDay, uint8_t seconds, uint8_t minutes, uint8_t hours, TimePeriod_e AMPM){
 	RTC_DateTypeDef sdatestructure;
 	RTC_TimeTypeDef stimestructure;
 	
 	/* Set Date */
 	sdatestructure.Year =year - 2000;
 	sdatestructure.Month =month;
-	sdatestructure.Date =day;
-	sdatestructure.WeekDay =weekday;		// Todo - Calculate weekday later
+	sdatestructure.Date =monthDay;
+	sdatestructure.WeekDay =weekDay;		// Todo - Calculate weekday later
 	
 	/* Set Time */
 	stimestructure.Hours =hours;
@@ -183,8 +204,11 @@ BOS_Status BOS_CalendarConfig(uint8_t month,uint8_t day,uint16_t year,uint8_t we
 
 /**********************************************************************************/
 
-/* --- Get current RTC time and date.
+/*
+ * @brief: Get current RTC time and date.
+ * @retval: None.
  */
+
 void GetTimeDate(void){
 	RTC_DateTypeDef sdatestructureget;
 	RTC_TimeTypeDef stimestructureget;
@@ -208,9 +232,10 @@ void GetTimeDate(void){
 /**
 * @brief RTC MSP Initialization
 * This function configures the hardware resources used in this example
-* @param hrtc: RTC handle pointer
+* @param: RTC handle pointer
 * @retval None
 */
+
 void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
 {
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
@@ -226,7 +251,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
     {
-//      Error_Handler();
+      /*Error_Handler();*/
     }
 
     /* Peripheral clock enable */
@@ -244,7 +269,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
 /**
 * @brief RTC MSP De-Initialization
 * This function freeze the hardware resources used in this example
-* @param hrtc: RTC handle pointer
+* @param: RTC handle pointer
 * @retval None
 */
 void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc)
