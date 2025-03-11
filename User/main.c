@@ -40,16 +40,17 @@ void UserTask(void *argument) {
 //	Unbridge(5, 6);
 //	Bridge(5, 6);
 //	BOS_CalendarConfig(uint8_t month,uint8_t day,uint16_t year,uint8_t weekday,uint8_t seconds,uint8_t minutes,uint8_t hours,uint8_t AMPM,int8_t daylightsaving);
-
+//	AddButton(2, MOMENTARY_NO, CLICKED);
 	// put your code here, to run repeatedly.
 	while (1) {
-		GetTimeDate();
+//		GetTimeDate();
 		if(f == 1)
 		{
 //			  HAL_RTC_DeInit(&RtcHandle);
 //			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_12;
 //			  HAL_RTC_Init(&RtcHandle);
-			BOS_CalendarConfig(1,1,2025,1,55,59,12,2);
+//			BOS_CalendarConfig(1,1,2025,1,55,59,12,2);
+			AddButton(2, MOMENTARY_NO, CLICKED);
 			f=0;
 		}
 
@@ -58,7 +59,9 @@ void UserTask(void *argument) {
 //			  HAL_RTC_DeInit(&RtcHandle);
 //			  RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
 //			  HAL_RTC_Init(&RtcHandle);
-			BOS_CalendarConfig(1,1,2025,1,55,59,12,0);
+//			BOS_CalendarConfig(1,1,2025,1,55,59,12,0);
+
+			RemovePortButton(2);
 			f=0;
 		}
 
