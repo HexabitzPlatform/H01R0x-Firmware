@@ -178,6 +178,16 @@ void UserTask(void *argument) {
 
 	}
 }
+//void buttonReleasedCallback(uint8_t port)
+//{
+//	IND_blink(100);
+//}
+void buttonClickedCallback(uint8_t port) {
+	IND_blink(100);
+}
+void buttonDblClickedCallback(uint8_t port){
+	IND_blink(100);
+}
 /*-----------------------------------------------------------*/
 //void buttonPressedCallback(uint8_t port){
 //	y=1;
