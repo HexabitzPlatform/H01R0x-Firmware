@@ -34,17 +34,13 @@ TIM_HandleTypeDef htim4;
 TaskHandle_t RGBledTaskHandle = NULL;
 
 /* Private Variables *******************************************************/
-uint8_t mode = 0;
-uint8_t color = 0;
 uint8_t rgbColor = 0;
 uint8_t rgbLedMode = 0;
-uint8_t RGB_LED_State = 0;
-uint8_t intensity_LED = 0, intensity_RGB = 0;
+uint8_t rgbLedState = 0;
 uint8_t rgbRed = 0, rgbGreen = 0, rgbBlue = 0;
-uint8_t globalRed = 0, globalGreen = 0, globalBlue = 0;
 int16_t rgbCount = 0;
-uint32_t rgbPeriod = 0;
 uint32_t rgbDC = 0;
+uint32_t rgbPeriod = 0;
 
 /* Module Parameters */
 ModuleParam_t ModuleParam[NUM_MODULE_PARAMS] = { 0 };
@@ -616,7 +612,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 		break;
 
 	case CODE_H01R0_TOGGLE:
-		if (RGB_LED_State)
+		if (rgbLedState)
 			RGB_LED_off();
 		else
 			RGB_LED_on(cMessage[port - 1][shift]);
@@ -830,13 +826,13 @@ Module_Status startPWM(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensi
 	htim3.Instance->CCR1 = ((intensity / 100.0f) * ((uint8_t) blue / 255.0f) * period);
 	htim4.Instance->CCR2 = ((intensity / 100.0f) * ((uint8_t) green / 255.0f) * period);
 
-	if (HAL_TIM_PWM_Start(&htim2, _RGB_RED_TIM_CH) != HAL_OK)
+	if (HAL_TIM_PWM_Start(&htim2, RGB_RED_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
 
-	if (HAL_TIM_PWM_Start(&htim3, _RGB_BLUE_TIM_CH) != HAL_OK)
+	if (HAL_TIM_PWM_Start(&htim3, RGB_BLUE_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
 
-	if (HAL_TIM_PWM_Start(&htim4, _RGB_GREEN_TIM_CH) != HAL_OK)
+	if (HAL_TIM_PWM_Start(&htim4, RGB_GREEN_TIM_CH) != HAL_OK)
 		return H01R0_ERROR;
 
 	return H01R0_OK;
@@ -1028,14 +1024,14 @@ Module_Status RGB_LED_on(uint8_t intensity) {
 		htim3.Instance->CCR1 = 0;
 		htim4.Instance->CCR2 = 0;
 
-		RGB_LED_State = 0;
+		rgbLedState = 0;
 
 		return H01R0_OK;
 	} else if (intensity <= 100) {
 		result = startPWM(255, 255, 255, intensity);
 
 		if (result == H01R0_OK)
-			RGB_LED_State = 1;
+			rgbLedState = 1;
 
 		return result;
 	} else
@@ -1047,15 +1043,15 @@ Module_Status RGB_LED_on(uint8_t intensity) {
 /* Turn off RGB LED  */
 Module_Status RGB_LED_off(void) {
 
-	HAL_TIM_PWM_Stop(&htim2, _RGB_RED_TIM_CH);
-	HAL_TIM_PWM_Stop(&htim3, _RGB_BLUE_TIM_CH);
-	HAL_TIM_PWM_Stop(&htim4, _RGB_GREEN_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim2, RGB_RED_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim3, RGB_BLUE_TIM_CH);
+	HAL_TIM_PWM_Stop(&htim4, RGB_GREEN_TIM_CH);
 
 	htim2.Instance->CCR1 = 0;
 	htim3.Instance->CCR1 = 0;
 	htim4.Instance->CCR2 = 0;
 
-	RGB_LED_State = 0;
+	rgbLedState = 0;
 	rgbLedMode = 0;
 
 	return H01R0_OK;
@@ -1066,7 +1062,7 @@ Module_Status RGB_LED_off(void) {
 Module_Status RGB_LED_toggle(uint8_t intensity) {
 	Module_Status result = H01R0_OK;
 
-	if (RGB_LED_State)
+	if (rgbLedState)
 		result = RGB_LED_off();
 	else
 		result = RGB_LED_on(intensity);
@@ -1099,27 +1095,35 @@ Module_Status RGB_LED_setColor(uint8_t color, uint8_t intensity) {
 		case BLACK:
 			result = RGB_LED_off();
 			break;
+
 		case WHITE:
 			result = RGB_LED_on(intensity);
 			break;
+
 		case RED:
 			result = RGB_LED_setRGB(255, 0, 0, intensity);
 			break;
+
 		case BLUE:
 			result = RGB_LED_setRGB(0, 0, 255, intensity);
 			break;
+
 		case YELLOW:
 			result = RGB_LED_setRGB(255, 255, 0, intensity);
 			break;
+
 		case CYAN:
 			result = RGB_LED_setRGB(0, 255, 255, intensity);
 			break;
+
 		case MAGENTA:
 			result = RGB_LED_setRGB(255, 0, 255, intensity);
 			break;
+
 		case GREEN:
 			result = RGB_LED_setRGB(0, 255, 0, intensity);
 			break;
+
 		default:
 			result = H01R0_ERR_WrongColor;
 			break;
@@ -1431,9 +1435,9 @@ portBASE_TYPE toggleCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 	result = RGB_LED_toggle(intensity);
 
 	/* Respond to the command */
-	if ((result == H01R0_OK) && RGB_LED_State)
+	if ((result == H01R0_OK) && rgbLedState)
 		sprintf((char*) pcWriteBuffer, (char*) pcOK1Message, intensity);
-	else if ((result == H01R0_OK) && !RGB_LED_State)
+	else if ((result == H01R0_OK) && !rgbLedState)
 		sprintf((char*) pcWriteBuffer, (char*) pcOK0Message, intensity);
 	else if (result == H01R0_ERR_WrongIntensity)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongIntensityMessage);

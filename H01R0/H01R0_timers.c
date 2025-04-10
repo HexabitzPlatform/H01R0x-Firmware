@@ -84,7 +84,7 @@ void MX_TIM2_Init(void) {
 	sConfigOC.Pulse = 0;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, _RGB_RED_TIM_CH);
+	HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, RGB_RED_TIM_CH);
 
 	HAL_TIM_MspPostInit(&htim2);
 
@@ -126,7 +126,7 @@ void MX_TIM3_Init(void) {
 	sConfigOC.Pulse = 0;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, _RGB_BLUE_TIM_CH);
+	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, RGB_BLUE_TIM_CH);
 
 	HAL_TIM_MspPostInit(&htim3);
 
@@ -168,7 +168,7 @@ void MX_TIM4_Init(void) {
 	sConfigOC.Pulse = 0;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, _RGB_GREEN_TIM_CH);
+	HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, RGB_GREEN_TIM_CH);
 
 	HAL_TIM_MspPostInit(&htim4);
 
@@ -191,12 +191,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timHandle) {
 		/**TIM2 GPIO Configuration
 		 PA15     ------> TIM2_CH1
 		 */
-		GPIO_InitStruct.Pin = _RGB_RED_PIN;
+		GPIO_InitStruct.Pin = RGB_RED_PIN;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		GPIO_InitStruct.Alternate = GPIO_AF2_TIM2;
-		HAL_GPIO_Init(_RGB_RED_PORT, &GPIO_InitStruct);
+		HAL_GPIO_Init(RGB_RED_PORT, &GPIO_InitStruct);
 	}
 
 	else if (timHandle->Instance == TIM3) {
@@ -205,12 +205,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timHandle) {
 		/**TIM3 GPIO Configuration
 		 PA6     ------> TIM3_CH1
 		 */
-		GPIO_InitStruct.Pin = _RGB_BLUE_PIN;
+		GPIO_InitStruct.Pin = RGB_BLUE_PIN;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
-		HAL_GPIO_Init(_RGB_BLUE_PORT, &GPIO_InitStruct);
+		HAL_GPIO_Init(RGB_BLUE_PORT, &GPIO_InitStruct);
 	}
 
 	else if (timHandle->Instance == TIM4) {
@@ -219,12 +219,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timHandle) {
 		/**TIM4 GPIO Configuration
 		 PB7     ------> TIM4_CH2
 		 */
-		GPIO_InitStruct.Pin = _RGB_GREEN_PIN;
+		GPIO_InitStruct.Pin = RGB_GREEN_PIN;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		GPIO_InitStruct.Alternate = GPIO_AF9_TIM4;
-		HAL_GPIO_Init(_RGB_GREEN_PORT, &GPIO_InitStruct);
+		HAL_GPIO_Init(RGB_GREEN_PORT, &GPIO_InitStruct);
 	}
 }
 
