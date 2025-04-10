@@ -161,7 +161,7 @@ extern int16_t rgbCount;
  |								  APIs							          |  																 	|
 /* -----------------------------------------------------------------------
  */
-extern Module_Status startPWM(uint8_t red,uint8_t green,uint8_t blue,uint8_t intensity);
+
 extern Module_Status RGB_LED_on(uint8_t intensity);
 extern Module_Status RGB_LED_off(void);
 extern Module_Status RGB_LED_toggle(uint8_t intensity);

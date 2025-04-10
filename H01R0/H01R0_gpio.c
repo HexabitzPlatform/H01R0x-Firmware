@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
+ BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
  File Name     : H01R0_gpio.c
@@ -12,25 +12,26 @@
 
 /*  */
 BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t *RX_Port,uint16_t *RX_Pin);
+uint8_t IsFactoryReset(void);
 
-/*----------------------------------------------------------------------------*/
-/* Configure GPIO                                                             */
-/*----------------------------------------------------------------------------*/
+/***************************************************************************/
+/* Configure GPIO **********************************************************/
+/***************************************************************************/
 
-/** Pinout Configuration
- */
+/* Pinout Configuration */
 void GPIO_Init(void){
 	/* GPIO Ports Clock Enable */
 	__GPIOC_CLK_ENABLE();
 	__GPIOA_CLK_ENABLE();
 	__GPIOD_CLK_ENABLE();
 	__GPIOB_CLK_ENABLE();
-	__GPIOF_CLK_ENABLE();		// for HSE and Boot0
+	__GPIOF_CLK_ENABLE();		/* for HSE and Boot0 */
 	
 	IND_LED_Init();
 }
 
-//-- Configure indicator LED
+/***************************************************************************/
+/* Configure indicator LED */
 void IND_LED_Init(void){
 	GPIO_InitTypeDef GPIO_InitStruct;
 	
@@ -41,17 +42,13 @@ void IND_LED_Init(void){
 	HAL_GPIO_Init(_IND_LED_PORT,&GPIO_InitStruct);
 }
 
-/*-----------------------------------------------------------*/
-
-/* --- Check for factory reset condition: 
- - P1 TXD is connected to last port RXD    
- */
+/***************************************************************************/
+/* Check for factory reset condition:
+ - P1 TXD is connected to last port RXD  */
 uint8_t IsFactoryReset(void){
 	GPIO_InitTypeDef GPIO_InitStruct;
 	uint32_t P1_TX_Port, P1_RX_Port, P_last_TX_Port, P_last_RX_Port;
 	uint16_t P1_TX_Pin, P1_RX_Pin, P_last_TX_Pin, P_last_RX_Pin;
-	
-	/* -- Setup GPIOs -- */
 
 	/* Enable all GPIO Ports Clocks */
 	__GPIOA_CLK_ENABLE();
@@ -93,10 +90,8 @@ uint8_t IsFactoryReset(void){
 	return 0;
 }
 
-/*-----------------------------------------------------------*/
-
-/* --- Get GPIO pins and ports of this array port
- */
+/***************************************************************************/
+/* Get GPIO pins and ports of this array port */
 BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t *RX_Port,uint16_t *RX_Pin){
 	BOS_Status result =BOS_OK;
 	
@@ -175,4 +170,5 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 	return result;
 }
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/***************************************************************************/
+/***************** (C) COPYRIGHT HEXABITZ ***** END OF FILE ****************/
