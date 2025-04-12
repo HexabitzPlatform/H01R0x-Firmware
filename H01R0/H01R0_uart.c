@@ -625,7 +625,7 @@ BOS_Status ReadPortsDir(void){
 		}
 		else{
 			/* Check my own ports */
-			for(uint8_t p =1; p <= NumOfPorts; p++){
+			for(uint8_t p =1; p <= NUM_OF_PORTS; p++){
 				ArrayPortsDir[myID - 1] |=(0x0000); /* Set bit to 1 */
 			}
 		}
@@ -640,7 +640,7 @@ BOS_Status ReadPortsDirMSG(uint8_t SourceModule){
 	BOS_Status result =BOS_OK;
 	uint16_t temp =0;
 	/* Check my own ports */
-	for(int p =1; p <= NumOfPorts; p++){
+	for(int p =1; p <= NUM_OF_PORTS; p++){
 		if(GetUart(p)->AdvancedInit.Swap == UART_ADVFEATURE_SWAP_ENABLE){
 			MessageParams[temp++] =p;
 		}
@@ -657,7 +657,7 @@ BOS_Status UpdateMyPortsDir(void){
 	BOS_Status result =BOS_OK;
 
 	/* Check port direction */
-	for(uint8_t p =1; p <= NumOfPorts; p++){
+	for(uint8_t p =1; p <= NUM_OF_PORTS; p++){
 		if(!(ArrayPortsDir[myID - 1] & (0x8000 >> (p - 1)))){
 			/* Port is normal */
 			SwapUartPins(GetUart(p),NORMAL);

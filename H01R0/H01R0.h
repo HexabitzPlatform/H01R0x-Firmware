@@ -27,11 +27,11 @@
 #include "H01R0_eeprom.h"
 
 /* Exported Macros *********************************************************/
-#define	modulePN		_H01R0
+#define	MODULE_PN		_H01R0
 
 /* Port-related Definitions */
-#define	NumOfPorts			6
-#define P_PROG 				P2		/* ST factory bootloader UART */
+#define	NUM_OF_PORTS	6
+#define P_PROG 			P2		/* ST factory bootloader UART */
 
 /* Define available ports */
 #define _P1
@@ -109,14 +109,35 @@
 #define RGB_GREEN_TIM_CH	TIM_CHANNEL_2
 
 /* Indicator LED */
-#define _IND_LED_PORT			GPIOB
-#define _IND_LED_PIN			GPIO_PIN_14
+#define _IND_LED_PORT		GPIOB
+#define _IND_LED_PIN		GPIO_PIN_14
 
 /* Module-specific Macro Definitions ***************************************/
 #define PWM_TIMER_CLOCK			122880	    /* freq 120 HZ at ARR 1023 */
 #define RGB_PWM_FREQ			120
 #define RGB_PWM_PERIOD			((float) (1/RGB_PWM_FREQ) )
 #define NUM_MODULE_PARAMS		1
+
+/* Module-specific Enumeration Definitions *********************************/
+/* Basic colors */
+enum BasicColors {
+	BLACK = 1, WHITE, RED, BLUE, YELLOW, CYAN, MAGENTA, GREEN, AQUA, PURPLE, LIGHTBLUE, ORANGE, INDIGO,
+};
+
+enum RGBLedMode {
+	RGB_PULSE_RGB = 1,    /* Pulsing RGB colors */
+	RGB_PULSE_COLOR,      /* Pulsing a single color */
+	RGB_SWEEP_BASIC,      /* Sweeping through basic colors */
+	RGB_SWEEP_FINE,       /* Smooth color sweeping */
+	RGB_DIM_UP,           /* Gradually increasing brightness */
+	RGB_DIM_UP_WAIT,      /* Gradually increasing brightness with wait time */
+	RGB_DIM_DOWN,         /* Gradually decreasing brightness */
+	RGB_DIM_DOWN_WAIT,    /* Gradually decreasing brightness with wait time */
+	RGB_DIM_UP_DOWN,      /* Brightness up then down */
+	RGB_DIM_DOWN_UP,      /* Brightness down then up */
+	RGB_DIM_UP_DOWN_WAIT, /* Brightness up-down with wait */
+	RGB_DIM_DOWN_UP_WAIT  /* Brightness down-up with wait */
+};
 
 /* Module-specific Type Definition *****************************************/
 /* Module-status Type Definition */
@@ -149,18 +170,18 @@ extern void SystemClock_Config(void);
 /***************************************************************************/
 /***************************** General Functions ***************************/
 /***************************************************************************/
-extern Module_Status RGB_LED_on(uint8_t intensity);
-extern Module_Status RGB_LED_off(void);
-extern Module_Status RGB_LED_toggle(uint8_t intensity);
-extern Module_Status RGB_LED_setColor(uint8_t color, uint8_t intensity);
-extern Module_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
-extern Module_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat);
-extern Module_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat);
-extern Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat);
-extern Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat);
+Module_Status LedOff(void);
+Module_Status LedOn(uint8_t intensity);
+Module_Status LedToggle(uint8_t intensity);
+Module_Status SetColor(uint8_t color, uint8_t intensity);
+Module_Status LedSweep(uint8_t mode, uint32_t period, int32_t repeat);
+Module_Status SetRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
+Module_Status SetPulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat);
+Module_Status LedDim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat);
+Module_Status SetPulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat);
 
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);
-void remoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport, uint8_t outport);
+void RemoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport, uint8_t outport);
 
 #endif /* H01R0_H */
 

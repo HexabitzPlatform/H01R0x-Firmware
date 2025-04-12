@@ -10,13 +10,13 @@
 /* Includes ****************************************************************/
 #include "BOS.h"
 
-uint8_t temp_length[NumOfPorts] = { 0 };
-uint8_t temp_index[NumOfPorts] = { 0 };
+uint8_t temp_length[NUM_OF_PORTS] = { 0 };
+uint8_t temp_index[NUM_OF_PORTS] = { 0 };
 uint8_t *error_restart_message = "Restarting...\r\n";
 
 /* Exported Variables ******************************************************/
 extern uint8_t WakeupFromStopFlag;
-extern uint8_t UARTRxBuf[NumOfPorts][MSG_RX_BUF_SIZE];
+extern uint8_t UARTRxBuf[NUM_OF_PORTS][MSG_RX_BUF_SIZE];
 extern TaskHandle_t xCommandConsoleTaskHandle; /* CLI Task handler */
 
 /* Local Variables *********************************************************/

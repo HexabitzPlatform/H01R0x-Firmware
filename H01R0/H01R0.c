@@ -492,7 +492,7 @@ uint8_t ClearROtopology(void) {
 
 /***************************************************************************/
 /* Trigger ST factory bootloader update for a remote module */
-void remoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport, uint8_t outport) {
+void RemoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport, uint8_t outport) {
 
 	uint8_t myOutport = 0, lastModule = 0;
 	int8_t *pcOutputString;
@@ -572,7 +572,7 @@ void Module_Peripheral_Init(void) {
 	MX_TIM4_Init();
 
 	/* Circulating DMA Channels ON All Module */
-	for (int i = 1; i <= NumOfPorts; i++) {
+	for (int i = 1; i <= NUM_OF_PORTS; i++) {
 		if (GetUart(i) == &huart1) {
 			dmaIndex[i - 1] = &(DMA1_Channel1->CNDTR);
 		} else if (GetUart(i) == &huart2) {
@@ -604,27 +604,27 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 
 	switch (code) {
 	case CODE_H01R0_ON:
-		RGB_LED_on(cMessage[port - 1][shift]);
+		LedOn(cMessage[port - 1][shift]);
 		break;
 
 	case CODE_H01R0_OFF:
-		RGB_LED_off();
+		LedOff();
 		break;
 
 	case CODE_H01R0_TOGGLE:
 		if (rgbLedState)
-			RGB_LED_off();
+			LedOff();
 		else
-			RGB_LED_on(cMessage[port - 1][shift]);
+			LedOn(cMessage[port - 1][shift]);
 		break;
 
 	case CODE_H01R0_COLOR:
 		if (cMessage[port - 1][shift] == 0) {
 			/* Color definition from color list */
-			RGB_LED_setColor(cMessage[port - 1][1 + shift], cMessage[port - 1][2 + shift]);
+			SetColor(cMessage[port - 1][1 + shift], cMessage[port - 1][2 + shift]);
 		} else if (cMessage[port - 1][shift] == 1) {
 			/* RGB color */
-			RGB_LED_setRGB(cMessage[port - 1][1 + shift], cMessage[port - 1][2 + shift], cMessage[port - 1][3 + shift], cMessage[port - 1][4 + shift]);
+			SetRGB(cMessage[port - 1][1 + shift], cMessage[port - 1][2 + shift], cMessage[port - 1][3 + shift], cMessage[port - 1][4 + shift]);
 		}
 		break;
 
@@ -640,7 +640,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 			repeat = ((uint32_t) cMessage[port - 1][10 + shift]) + ((uint32_t) cMessage[port - 1][11 + shift] << 8)
 					+ ((uint32_t) cMessage[port - 1][12 + shift] << 16)
 					+ ((uint32_t) cMessage[port - 1][13 + shift] << 24);
-			RGB_LED_pulseColor(cMessage[port - 1][1 + shift], period, dc, repeat);
+			SetPulseColor(cMessage[port - 1][1 + shift], period, dc, repeat);
 		} else if (cMessage[port - 1][shift] == 1) {
 			/* RGB color */
 			period = ((uint32_t) cMessage[port - 1][4 + shift]) + ((uint32_t) cMessage[port - 1][5 + shift] << 8)
@@ -652,7 +652,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 			repeat = ((uint32_t) cMessage[port - 1][12 + shift]) + ((uint32_t) cMessage[port - 1][13 + shift] << 8)
 					+ ((uint32_t) cMessage[port - 1][14 + shift] << 16)
 					+ ((uint32_t) cMessage[port - 1][15 + shift] << 24);
-			RGB_LED_pulseRGB(cMessage[port - 1][1 + shift], cMessage[port - 1][2 + shift],
+			SetPulseRGB(cMessage[port - 1][1 + shift], cMessage[port - 1][2 + shift],
 					cMessage[port - 1][3 + shift], period, dc, repeat);
 		}
 		break;
@@ -663,7 +663,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 				+ ((uint32_t) cMessage[port - 1][3 + shift] << 16) + ((uint32_t) cMessage[port - 1][4 + shift] << 24);
 		repeat = ((uint32_t) cMessage[port - 1][5 + shift]) + ((uint32_t) cMessage[port - 1][6 + shift] << 8)
 				+ ((uint32_t) cMessage[port - 1][7 + shift] << 16) + ((uint32_t) cMessage[port - 1][8 + shift] << 24);
-		RGB_LED_sweep(cMessage[port - 1][shift], period, repeat);
+		LedSweep(cMessage[port - 1][shift], period, repeat);
 
 		break;
 
@@ -674,7 +674,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 				+ ((uint32_t) cMessage[port - 1][8 + shift] << 16) + ((uint32_t) cMessage[port - 1][9 + shift] << 24);
 		repeat = ((uint32_t) cMessage[port - 1][10 + shift]) + ((uint32_t) cMessage[port - 1][11 + shift] << 8)
 				+ ((uint32_t) cMessage[port - 1][12 + shift] << 16) + ((uint32_t) cMessage[port - 1][13 + shift] << 24);
-		RGB_LED_dim(cMessage[port - 1][shift], cMessage[port - 1][1 + shift], period, dc, repeat);
+		LedDim(cMessage[port - 1][shift], cMessage[port - 1][1 + shift], period, dc, repeat);
 
 		break;
 	default:
@@ -844,13 +844,15 @@ void RGBpulse(uint8_t mode) {
 	uint8_t temp = 0;
 
 	if (rgbCount > 0 || rgbCount == -1) {
+
 		if (mode == RGB_PULSE_RGB)
-			RGB_LED_setRGB(rgbRed, rgbGreen, rgbBlue, 100);
+			SetRGB(rgbRed, rgbGreen, rgbBlue, 100);
 		else if (mode == RGB_PULSE_COLOR)
-			RGB_LED_setColor(rgbColor, 100);
+			SetColor(rgbColor, 100);
+
 		osDelay(rgbDC);
 		temp = rgbLedMode; /* Backup rgbLedMode so that it's not reset */
-		RGB_LED_off();
+		LedOff();
 		rgbLedMode = temp;
 		osDelay(rgbPeriod - rgbDC);
 
@@ -869,23 +871,23 @@ void RGBsweepBasic(void) {
 	temp = rgbPeriod / 6;
 
 	if (rgbCount > 0 || rgbCount == -1) {
-		RGB_LED_setColor(RED, 100);
+		SetColor(RED, 100);
 		osDelay(temp);
-		RGB_LED_setColor(YELLOW, 100);
+		SetColor(YELLOW, 100);
 		osDelay(temp);
-		RGB_LED_setColor(GREEN, 100);
+		SetColor(GREEN, 100);
 		osDelay(temp);
-		RGB_LED_setColor(CYAN, 100);
+		SetColor(CYAN, 100);
 		osDelay(temp);
-		RGB_LED_setColor(BLUE, 100);
+		SetColor(BLUE, 100);
 		osDelay(temp);
-		RGB_LED_setColor(MAGENTA, 100);
+		SetColor(MAGENTA, 100);
 		osDelay(temp);
 
 		if (rgbCount > 0)
 			rgbCount--;
 	} else {
-		RGB_LED_off();
+		LedOff();
 	}
 }
 
@@ -899,39 +901,39 @@ void RGBsweepFine(void) {
 	if (rgbCount > 0 || rgbCount == -1) {
 		/* Red */
 		for (uint8_t i = 0; i < 255; i++) {
-			RGB_LED_setRGB(255, i, 0, 100);
+			SetRGB(255, i, 0, 100);
 			osDelay(ceil(temp / 255));
 		}
 		/* Yellow */
 		for (uint8_t i = 255; i > 0; i--) {
-			RGB_LED_setRGB(i, 255, 0, 100);
+			SetRGB(i, 255, 0, 100);
 			osDelay(ceil(temp / 255));
 		}
 		/* Green */
 		for (uint8_t i = 0; i < 255; i++) {
-			RGB_LED_setRGB(0, 255, i, 100);
+			SetRGB(0, 255, i, 100);
 			osDelay(ceil(temp / 255));
 		}
 		/* Cyan */
 		for (uint8_t i = 255; i > 0; i--) {
-			RGB_LED_setRGB(0, i, 255, 100);
+			SetRGB(0, i, 255, 100);
 			osDelay(ceil(temp / 255));
 		}
 		/* Blue */
 		for (uint8_t i = 0; i < 255; i++) {
-			RGB_LED_setRGB(i, 0, 255, 100);
+			SetRGB(i, 0, 255, 100);
 			osDelay(ceil(temp / 255));
 		}
 		/* Magenta */
 		for (uint8_t i = 255; i > 0; i--) {
-			RGB_LED_setRGB(255, 0, i, 100);
+			SetRGB(255, 0, i, 100);
 			osDelay(ceil(temp / 255));
 		}
 
 		if (rgbCount > 0)
 			rgbCount--;
 	} else {
-		RGB_LED_off();
+		LedOff();
 	}
 }
 
@@ -944,61 +946,61 @@ void RGBdim(uint8_t mode) {
 		temp = rgbLedMode; /* Store mode so that it's not reset */
 		if (mode == RGB_DIM_UP) {
 			for (uint8_t i = 0; i <= 100; i++) {
-				RGB_LED_setColor(rgbColor, i);
+				SetColor(rgbColor, i);
 				osDelay(rgbPeriod / 100);
 			}
 		} else if (mode == RGB_DIM_UP_WAIT) {
 			for (uint8_t i = 0; i <= 100; i++) {
-				RGB_LED_setColor(rgbColor, i);
+				SetColor(rgbColor, i);
 				osDelay((rgbPeriod - rgbDC) / 100);
 			}
 			osDelay(rgbDC);
 		} else if (mode == RGB_DIM_DOWN) {
 			for (uint8_t i = 101; i > 0; i--) {
-				RGB_LED_setColor(rgbColor, i - 1);
+				SetColor(rgbColor, i - 1);
 				osDelay(rgbPeriod / 100);
 			}
 		} else if (mode == RGB_DIM_DOWN_WAIT) {
 			for (uint8_t i = 101; i > 0; i--) {
-				RGB_LED_setColor(rgbColor, i - 1);
+				SetColor(rgbColor, i - 1);
 				osDelay((rgbPeriod - rgbDC) / 100);
 			}
 			osDelay(rgbDC);
 		} else if (mode == RGB_DIM_UP_DOWN) {
 			for (uint8_t i = 0; i <= 100; i++) {
-				RGB_LED_setColor(rgbColor, i);
+				SetColor(rgbColor, i);
 				osDelay(rgbPeriod / 200);
 			}
 			for (uint8_t i = 101; i > 0; i--) {
-				RGB_LED_setColor(rgbColor, i - 1);
+				SetColor(rgbColor, i - 1);
 				osDelay(rgbPeriod / 200);
 			}
 		} else if (mode == RGB_DIM_DOWN_UP) {
 			for (uint8_t i = 101; i > 0; i--) {
-				RGB_LED_setColor(rgbColor, i - 1);
+				SetColor(rgbColor, i - 1);
 				osDelay(rgbPeriod / 200);
 			}
 			for (uint8_t i = 0; i <= 100; i++) {
-				RGB_LED_setColor(rgbColor, i);
+				SetColor(rgbColor, i);
 				osDelay(rgbPeriod / 200);
 			}
 		} else if (mode == RGB_DIM_UP_DOWN_WAIT) {
 			for (uint8_t i = 0; i <= 100; i++) {
-				RGB_LED_setColor(rgbColor, i);
+				SetColor(rgbColor, i);
 				osDelay((rgbPeriod - rgbDC) / 200);
 			}
 			for (uint8_t i = 101; i > 0; i--) {
-				RGB_LED_setColor(rgbColor, i - 1);
+				SetColor(rgbColor, i - 1);
 				osDelay((rgbPeriod - rgbDC) / 200);
 			}
 			osDelay(rgbDC);
 		} else if (mode == RGB_DIM_DOWN_UP_WAIT) {
 			for (uint8_t i = 101; i > 0; i--) {
-				RGB_LED_setColor(rgbColor, i - 1);
+				SetColor(rgbColor, i - 1);
 				osDelay((rgbPeriod - rgbDC) / 200);
 			}
 			for (uint8_t i = 0; i <= 100; i++) {
-				RGB_LED_setColor(rgbColor, i);
+				SetColor(rgbColor, i);
 				osDelay((rgbPeriod - rgbDC) / 200);
 			}
 			osDelay(rgbDC);
@@ -1016,7 +1018,7 @@ void RGBdim(uint8_t mode) {
 /***************************** General Functions ***************************/
 /***************************************************************************/
 /* Turn on RGB LED (white color) */
-Module_Status RGB_LED_on(uint8_t intensity) {
+Module_Status LedOn(uint8_t intensity) {
 	Module_Status result = H01R0_OK;
 
 	if (intensity == 0) {
@@ -1041,7 +1043,7 @@ Module_Status RGB_LED_on(uint8_t intensity) {
 
 /***************************************************************************/
 /* Turn off RGB LED  */
-Module_Status RGB_LED_off(void) {
+Module_Status LedOff(void) {
 
 	HAL_TIM_PWM_Stop(&htim2, RGB_RED_TIM_CH);
 	HAL_TIM_PWM_Stop(&htim3, RGB_BLUE_TIM_CH);
@@ -1059,22 +1061,22 @@ Module_Status RGB_LED_off(void) {
 
 /***************************************************************************/
 /* Toggle RGB LED  */
-Module_Status RGB_LED_toggle(uint8_t intensity) {
+Module_Status LedToggle(uint8_t intensity) {
 	Module_Status result = H01R0_OK;
 
 	if (rgbLedState)
-		result = RGB_LED_off();
+		result = LedOff();
 	else
-		result = RGB_LED_on(intensity);
+		result = LedOn(intensity);
 
 	return result;
 }
 
 /***************************************************************************/
 /* Set RGB colors on LED (continuously) using PWM intensity modulation */
-Module_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity) {
+Module_Status SetRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity) {
 	if (intensity == 0)
-		return RGB_LED_on(0);
+		return LedOn(0);
 	else if (intensity > 100)
 		return H01R0_ERR_WrongIntensity;
 	else
@@ -1083,45 +1085,45 @@ Module_Status RGB_LED_setRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t i
 
 /***************************************************************************/
 /* Set LED color from a predefined color list (continuously) */
-Module_Status RGB_LED_setColor(uint8_t color, uint8_t intensity) {
+Module_Status SetColor(uint8_t color, uint8_t intensity) {
 	Module_Status result = H01R0_OK;
 
 	if (!intensity)
-		return RGB_LED_on(0);
+		return LedOn(0);
 	else if (intensity > 100)
 		return H01R0_ERR_WrongIntensity;
 	else {
 		switch (color) {
 		case BLACK:
-			result = RGB_LED_off();
+			result = LedOff();
 			break;
 
 		case WHITE:
-			result = RGB_LED_on(intensity);
+			result = LedOn(intensity);
 			break;
 
 		case RED:
-			result = RGB_LED_setRGB(255, 0, 0, intensity);
+			result = SetRGB(255, 0, 0, intensity);
 			break;
 
 		case BLUE:
-			result = RGB_LED_setRGB(0, 0, 255, intensity);
+			result = SetRGB(0, 0, 255, intensity);
 			break;
 
 		case YELLOW:
-			result = RGB_LED_setRGB(255, 255, 0, intensity);
+			result = SetRGB(255, 255, 0, intensity);
 			break;
 
 		case CYAN:
-			result = RGB_LED_setRGB(0, 255, 255, intensity);
+			result = SetRGB(0, 255, 255, intensity);
 			break;
 
 		case MAGENTA:
-			result = RGB_LED_setRGB(255, 0, 255, intensity);
+			result = SetRGB(255, 0, 255, intensity);
 			break;
 
 		case GREEN:
-			result = RGB_LED_setRGB(0, 255, 0, intensity);
+			result = SetRGB(0, 255, 0, intensity);
 			break;
 
 		default:
@@ -1135,7 +1137,7 @@ Module_Status RGB_LED_setColor(uint8_t color, uint8_t intensity) {
 
 /***************************************************************************/
 /* Activate the RGB LED pulse command with RGB values. Set repeat to -1 for periodic signals */
-Module_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat) {
+Module_Status SetPulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat) {
 	Module_Status result = H01R0_OK;
 
 	rgbRed = red;
@@ -1152,7 +1154,7 @@ Module_Status RGB_LED_pulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_
 
 /***************************************************************************/
 /* Activate the RGB LED pulse command with a specific color. Set repeat to -1 for periodic signals */
-Module_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat) {
+Module_Status SetPulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat) {
 	Module_Status result = H01R0_OK;
 
 	rgbColor = color;
@@ -1169,8 +1171,10 @@ Module_Status RGB_LED_pulseColor(uint8_t color, uint32_t period, uint32_t dc, in
 /* Activate the RGB LED sweep mode. Set repeat to -1 for periodic signals.
  * Minimum period for fine sweep is 6 x 256 = 1536 ms
  */
-Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat) {
+Module_Status LedSweep(uint8_t mode, uint32_t period, int32_t repeat) {
+
 	if (mode == 3 || mode == 4) {
+
 		Module_Status result = H01R0_OK;
 
 		rgbPeriod = period;
@@ -1185,7 +1189,7 @@ Module_Status RGB_LED_sweep(uint8_t mode, uint32_t period, int32_t repeat) {
 
 /***************************************************************************/
 /* Activate RGB LED dim mode using one of the basic colors. Set repeat to -1 for periodic signals */
-Module_Status RGB_LED_dim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat) {
+Module_Status LedDim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat) {
 	if (mode >= 5 && mode <= 12) {
 		Module_Status result = H01R0_OK;
 
@@ -1217,19 +1221,19 @@ portBASE_TYPE demoCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const i
 	configASSERT(pcWriteBuffer);
 
 	/* Respond to the command */
-	RGB_LED_off();
-	RGB_LED_setColor(RED, 50);
+	LedOff();
+	SetColor(RED, 50);
 	writePxMutex(pcPort, (char*) pcRedMessage, strlen((char*) pcRedMessage), 10, 10);
 	Delay_ms(1000);
-	RGB_LED_off();
-	RGB_LED_setColor(GREEN, 50);
+	LedOff();
+	SetColor(GREEN, 50);
 	writePxMutex(pcPort, (char*) pcGreenMessage, strlen((char*) pcGreenMessage), 10, 10);
 	Delay_ms(1000);
-	RGB_LED_off();
-	RGB_LED_setColor(BLUE, 50);
+	LedOff();
+	SetColor(BLUE, 50);
 	writePxMutex(pcPort, (char*) pcBlueMessage, strlen((char*) pcBlueMessage), 10, 10);
 	Delay_ms(1000);
-	RGB_LED_off();
+	LedOff();
 	strcpy((char*) pcWriteBuffer, "\r\n");
 
 	/* There is no more data to return after this single string, so return
@@ -1260,7 +1264,7 @@ portBASE_TYPE onCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int
 	);
 	intensity = (uint8_t) atol((char*) pcParameterString1);
 
-	result = RGB_LED_on(intensity);
+	result = LedOn(intensity);
 
 	/* Respond to the command */
 	if (result == H01R0_OK)
@@ -1286,7 +1290,7 @@ portBASE_TYPE offCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const in
 
 	/* Respond to the command */
 	strcpy((char*) pcWriteBuffer, (char*) pcMessage);
-	RGB_LED_off();
+	LedOff();
 
 	/* There is no more data to return after this single string, so return
 	 pdFALSE. */
@@ -1339,7 +1343,7 @@ portBASE_TYPE colorCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const 
 	pcParameterString2 = (int8_t*) FreeRTOS_CLIGetParameter(pcCommandString, 2, &xParameterStringLength2);
 	intensity = (uint8_t) atol((char*) pcParameterString2);
 
-	result = RGB_LED_setColor(color, intensity);
+	result = SetColor(color, intensity);
 
 	/* Respond to the command */
 	if (result == H01R0_OK) {
@@ -1393,7 +1397,7 @@ portBASE_TYPE RGBCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const in
 	pcParameterString4 = (int8_t*) FreeRTOS_CLIGetParameter(pcCommandString, 4, &xParameterStringLength4);
 	intensity = (uint8_t) atol((char*) pcParameterString4);
 
-	result = RGB_LED_setRGB(red, green, blue, intensity);
+	result = SetRGB(red, green, blue, intensity);
 
 	/* Respond to the command */
 	if (result == H01R0_OK)
@@ -1432,7 +1436,7 @@ portBASE_TYPE toggleCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 	);
 	intensity = (uint8_t) atol((char*) pcParameterString1);
 
-	result = RGB_LED_toggle(intensity);
+	result = LedToggle(intensity);
 
 	/* Respond to the command */
 	if ((result == H01R0_OK) && rgbLedState)
@@ -1504,7 +1508,7 @@ portBASE_TYPE pulseColorCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, c
 	else
 		repeat = (int32_t) atol((char*) pcParameterString4);
 
-	result = RGB_LED_pulseColor(color, period, dc, repeat);
+	result = SetPulseColor(color, period, dc, repeat);
 
 	/* Respond to the command */
 	if (result == H01R0_OK) {
@@ -1572,7 +1576,7 @@ portBASE_TYPE pulseRGBCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, con
 	else
 		repeat = (int32_t) atol((char*) pcParameterString6);
 
-	result = RGB_LED_pulseRGB(red, green, blue, period, dc, repeat);
+	result = SetPulseRGB(red, green, blue, period, dc, repeat);
 
 	/* Respond to the command */
 	if (result == H01R0_OK) {
@@ -1626,7 +1630,7 @@ portBASE_TYPE sweepCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const 
 	else
 		repeat = (int32_t) atol((char*) pcParameterString3);
 
-	result = RGB_LED_sweep(mode, period, repeat);
+	result = LedSweep(mode, period, repeat);
 
 	/* Respond to the command */
 	if (result == H01R0_OK) {
@@ -1720,7 +1724,7 @@ portBASE_TYPE dimCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const in
 	else
 		repeat = (int32_t) atol((char*) pcParameterString5);
 
-	result = RGB_LED_dim(color, mode, period, wait, repeat);
+	result = LedDim(color, mode, period, wait, repeat);
 
 	/* Respond to the command */
 	if (result == H01R0_OK) {
