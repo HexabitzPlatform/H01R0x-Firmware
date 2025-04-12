@@ -42,20 +42,20 @@
 #define _P6
 
 /* Define Available USARTs */
-#define _Usart1
-#define _Usart2
-#define _Usart3
-#define _Usart4
-#define _Usart5
-#define _Usart6
+#define _USART1
+#define _USART2
+#define _USART3
+#define _USART4
+#define _USART5
+#define _USART6
 
 /* Port-UART mapping */
-#define P1uart &huart4
-#define P2uart &huart2
-#define P3uart &huart3
-#define P4uart &huart1
-#define P5uart &huart5
-#define P6uart &huart6
+#define UART_P1 &huart4
+#define UART_P2 &huart2
+#define UART_P3 &huart3
+#define UART_P4 &huart1
+#define UART_P5 &huart5
+#define UART_P6 &huart6
 
 /* Module-specific Hardware Definitions ************************************/
 /* Port Definitions */

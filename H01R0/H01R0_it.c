@@ -75,7 +75,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 void USART1_IRQHandler(void) {
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-#if defined (_Usart1)		
+#if defined (_USART1)
 	HAL_UART_IRQHandler(&huart1);
 #endif
 
@@ -101,7 +101,7 @@ void USART1_IRQHandler(void) {
 void USART2_LPUART2_IRQHandler(void) {
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-#if defined (_Usart2)	
+#if defined (_USART2)
 	HAL_UART_IRQHandler(&huart2);
 #endif
 
@@ -124,16 +124,16 @@ void USART2_LPUART2_IRQHandler(void) {
 void USART3_4_5_6_LPUART1_IRQHandler(void) {
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-#if defined (_Usart3)
+#if defined (_USART3)
 	HAL_UART_IRQHandler(&huart3);
 #endif
-#if defined (_Usart4)
+#if defined (_USART4)
 	HAL_UART_IRQHandler(&huart4);
 #endif
-#if defined (_Usart5)
+#if defined (_USART5)
 	HAL_UART_IRQHandler(&huart5);
 #endif
-#if defined (_Usart6)
+#if defined (_USART6)
 	HAL_UART_IRQHandler(&huart6);
 #endif
 

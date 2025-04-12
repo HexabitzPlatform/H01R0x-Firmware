@@ -22,7 +22,7 @@ DMA_HandleTypeDef hdma_usart6_rx;
 /* Configure UARTs *********************************************************/
 /***************************************************************************/
 /* USART1 init function */
-#ifdef _Usart1
+#ifdef _USART1
 void MX_USART1_UART_Init(void){
 	huart1.Instance = USART1;
 	huart1.Init.BaudRate = DEF_ARRAY_BAUDRATE;
@@ -53,7 +53,7 @@ void MX_USART1_UART_Init(void){
 
 /***************************************************************************/
 /* USART2 init function */
-#ifdef _Usart2
+#ifdef _USART2
 void MX_USART2_UART_Init(void){
 	huart2.Instance = USART2;
 	huart2.Init.BaudRate = DEF_ARRAY_BAUDRATE;
@@ -84,7 +84,7 @@ void MX_USART2_UART_Init(void){
 
 /***************************************************************************/
 /* USART3 init function */
-#ifdef _Usart3
+#ifdef _USART3
 void MX_USART3_UART_Init(void){
 	huart3.Instance = USART3;
 	huart3.Init.BaudRate = DEF_ARRAY_BAUDRATE;
@@ -115,7 +115,7 @@ void MX_USART3_UART_Init(void){
 
 /***************************************************************************/
 /* USART4 init function */
-#ifdef _Usart4
+#ifdef _USART4
 void MX_USART4_UART_Init(void){
 	huart4.Instance = USART4;
 	huart4.Init.BaudRate = DEF_ARRAY_BAUDRATE;
@@ -140,7 +140,7 @@ void MX_USART4_UART_Init(void){
 
 /***************************************************************************/
 /* USART5 init function */
-#ifdef _Usart5
+#ifdef _USART5
 void MX_USART5_UART_Init(void){
 	huart5.Instance = USART5;
 	huart5.Init.BaudRate = DEF_ARRAY_BAUDRATE;
@@ -165,7 +165,7 @@ void MX_USART5_UART_Init(void){
 
 /***************************************************************************/
 /* USART6 init function */
-#ifdef _Usart6
+#ifdef _USART6
 void MX_USART6_UART_Init(void){
 	huart6.Instance = USART6;
 	huart6.Init.BaudRate = DEF_ARRAY_BAUDRATE;
@@ -194,7 +194,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 		GPIO_InitTypeDef GPIO_InitStruct = {0};
 		RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 		if(huart->Instance == USART1){
-		#ifdef _Usart1
+		#ifdef _USART1
 		/** Initializes the peripherals clocks  */
 		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
 		PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_HSI;
@@ -242,7 +242,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 #endif
 	}
 	else if(huart->Instance == USART2){
-	#ifdef _Usart2
+	#ifdef _USART2
 		
 		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
 		PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_HSI;
@@ -287,7 +287,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 #endif
 	}
 	else if(huart->Instance == USART3){
-	#ifdef _Usart3
+	#ifdef _USART3
 		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART3;
 		PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_HSI;
 		HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
@@ -332,7 +332,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 #endif
 	}
 	else if(huart->Instance == USART4){
-	#ifdef _Usart4
+	#ifdef _USART4
 		/* USART4 clock enable */
 		__HAL_RCC_USART4_CLK_ENABLE();
 		__HAL_RCC_GPIOA_CLK_ENABLE();
@@ -374,7 +374,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 #endif
 	}
 	else if(huart->Instance == USART5){
-	#ifdef _Usart5
+	#ifdef _USART5
 		/* USART5 clock enable */
 		__HAL_RCC_USART5_CLK_ENABLE();
 		__HAL_RCC_GPIOD_CLK_ENABLE();
@@ -417,7 +417,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart){
 #endif
 	}
 	else if(huart->Instance == USART6){
-	#ifdef _Usart6
+	#ifdef _USART6
 		/* USART6 clock enable */
 		__HAL_RCC_USART6_CLK_ENABLE();
 		__HAL_RCC_GPIOB_CLK_ENABLE();
@@ -546,27 +546,27 @@ UART_HandleTypeDef* GetUart(uint8_t port){
 	switch(port){
 #ifdef _P1
 		case P1:
-			return P1uart;
+			return UART_P1;
 #endif
 #ifdef _P2
 		case P2:
-			return P2uart;
+			return UART_P2;
 #endif
 #ifdef _P3
 		case P3:
-			return P3uart;
+			return UART_P3;
 #endif
 #ifdef _P4
 		case P4:
-			return P4uart;
+			return UART_P4;
 #endif
 #ifdef _P5
 		case P5:
-			return P5uart;
+			return UART_P5;
 #endif
 #ifdef _P6
 		case P6:
-			return P6uart;
+			return UART_P6;
 #endif
 #ifdef _P7
 		case P7 :

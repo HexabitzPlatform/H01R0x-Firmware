@@ -454,27 +454,27 @@ BOS_Status RemovePortButton(uint8_t port) {
 	UART_HandleTypeDef *huart = GetUart(port);
 
 	if (huart->Instance == USART1) {
-#ifdef _Usart1		
+#ifdef _USART1
 		MX_USART1_UART_Init();
 #endif
 	} else if (huart->Instance == USART2) {
-#ifdef _Usart2	
+#ifdef _USART2
 		MX_USART2_UART_Init();
 #endif
 	} else if (huart->Instance == USART3) {
-#ifdef _Usart3	
+#ifdef _USART3
 		MX_USART3_UART_Init();
 #endif
 	} else if (huart->Instance == USART4) {
-#ifdef _Usart4	
+#ifdef _USART4
 		MX_USART4_UART_Init();
 #endif
 	} else if (huart->Instance == USART5) {
-#ifdef _Usart5	
+#ifdef _USART5
 		MX_USART5_UART_Init();
 #endif
 	} else if (huart->Instance == USART6) {
-#ifdef _Usart6	
+#ifdef _USART6
 		MX_USART6_UART_Init();
 #endif
 	} else

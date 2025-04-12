@@ -99,14 +99,14 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 	UART_HandleTypeDef *huart =GetUart(port);
 	
 	if(huart == &huart1){
-#ifdef _Usart1		
+#ifdef _USART1
 		*TX_Port =(uint32_t ) USART1_TX_PORT;
 		*TX_Pin = USART1_TX_PIN;
 		*RX_Port =(uint32_t ) USART1_RX_PORT;
 		*RX_Pin = USART1_RX_PIN;
 #endif
 	}
-#ifdef _Usart2	
+#ifdef _USART2
 	else if(huart == &huart2){
 		*TX_Port =(uint32_t ) USART2_TX_PORT;
 		*TX_Pin = USART2_TX_PIN;
@@ -114,7 +114,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART2_RX_PIN;
 	}
 #endif
-#ifdef _Usart3	
+#ifdef _USART3
 	else if(huart == &huart3){
 		*TX_Port =(uint32_t ) USART3_TX_PORT;
 		*TX_Pin = USART3_TX_PIN;
@@ -122,7 +122,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART3_RX_PIN;
 	}
 #endif
-#ifdef _Usart4
+#ifdef _USART4
 	else if(huart == &huart4){
 		*TX_Port =(uint32_t ) USART4_TX_PORT;
 		*TX_Pin = USART4_TX_PIN;
@@ -130,7 +130,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART4_RX_PIN;
 	}
 #endif
-#ifdef _Usart5	
+#ifdef _USART5
 	else if(huart == &huart5){
 		*TX_Port =(uint32_t ) USART5_TX_PORT;
 		*TX_Pin = USART5_TX_PIN;
@@ -138,7 +138,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART5_RX_PIN;
 	}
 #endif
-#ifdef _Usart6	
+#ifdef _USART6
 	else if(huart == &huart6){
 		*TX_Port =(uint32_t ) USART6_TX_PORT;
 		*TX_Pin = USART6_TX_PIN;
@@ -146,7 +146,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART6_RX_PIN;
 	}
 #endif
-#ifdef _Usart7
+#ifdef _USART7
 	else if (huart == &huart7) 
 	{		
 		*TX_Port = (uint32_t)USART7_TX_PORT;
@@ -155,7 +155,7 @@ BOS_Status GetPortGPIOs(uint8_t port,uint32_t *TX_Port,uint16_t *TX_Pin,uint32_t
 		*RX_Pin = USART7_RX_PIN;
 	} 
 #endif
-#ifdef _Usart8	
+#ifdef _USART8
 	else if (huart == &huart8) 
 	{	
 		*TX_Port = (uint32_t)USART8_TX_PORT;
