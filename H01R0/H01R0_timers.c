@@ -2,7 +2,7 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name     : H0BR4_timers.c
+ File Name     : H01R0_timers.c
  Description   : Peripheral timers setup source file.
 
  Required MCU resources :
@@ -35,6 +35,8 @@ extern TIM_HandleTypeDef htim4; /* Timer for RGB green */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
+/***************************************************************************/
+/* Configure Timers ********************************************************/
 /***************************************************************************/
 /* IWDG init function */
 void MX_IWDG_Init(void) {
@@ -229,6 +231,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timHandle) {
 }
 
 /***************************************************************************/
+/* Micro-seconds timebase init function - TIM16 (16-bit) */
 void TIM_USEC_Init(void) {
 	__TIM16_CLK_ENABLE();
 
@@ -246,7 +249,7 @@ void TIM_USEC_Init(void) {
 }
 
 /***************************************************************************/
-/* Milli-seconds timebase init function - TIM15 (16-bit) */
+/* Milli-seconds timebase init function - TIM17 (16-bit) */
 void TIM_MSEC_Init(void) {
 
 	__TIM17_CLK_ENABLE();
