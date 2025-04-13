@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2025 Hexabitz
+ BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
  File Name     : H01R0_it.c
@@ -10,8 +10,7 @@
 /* Includes ****************************************************************/
 #include "BOS.h"
 
-uint8_t temp_length[NUM_OF_PORTS] = { 0 };
-uint8_t temp_index[NUM_OF_PORTS] = { 0 };
+/* Local Variables *********************************************************/
 uint8_t *error_restart_message = "Restarting...\r\n";
 
 /* Exported Variables ******************************************************/

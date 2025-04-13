@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
+ BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
  
  File Name     : H01R0.h
@@ -33,7 +33,7 @@
 #define	NUM_OF_PORTS	6
 #define P_PROG 			P2		/* ST factory bootloader UART */
 
-/* Define available ports */
+/* Define Available ports */
 #define _P1
 #define _P2
 #define _P3

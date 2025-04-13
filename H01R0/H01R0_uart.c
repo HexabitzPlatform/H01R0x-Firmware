@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2025 Hexabitz
+ BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
  File Name     : H01R0_uart.c
@@ -570,19 +570,19 @@ UART_HandleTypeDef* GetUart(uint8_t port){
 #endif
 #ifdef _P7
 		case P7 :
-			return P7uart;
+			return UART_P7;
 	#endif
 #ifdef _P8
 		case P8 :
-			return P8uart;
+			return UART_P8;
 	#endif
 #ifdef _P9
 		case P9 :
-			return P9uart;
+			return UART_P9;
 	#endif
 #ifdef _P10
 		case P10 :
-			return P10uart;
+			return UART_P10;
 	#endif
 		default:
 			return 0;

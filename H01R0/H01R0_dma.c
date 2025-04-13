@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2025 Hexabitz
+ BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
  File Name     : H01R0_dma.c
@@ -28,9 +28,11 @@ __DMA2_CLK_ENABLE();
 /* DMA1_Channel1_IRQn interrupt configuration */
 HAL_NVIC_SetPriority(DMA1_Channel1_IRQn,0,0);
 HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
 /* DMA1_Channel2_3_IRQn interrupt configuration */
 HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn,0,0);
 HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+
 /* DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn interrupt configuration */
 HAL_NVIC_SetPriority(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn,0,0);
 HAL_NVIC_EnableIRQ(DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQn);
@@ -94,6 +96,7 @@ BOS_Status DMA_MSG_RX_Setup(UART_HandleTypeDef *huart,DMA_HandleTypeDef *hDMA){
 
 	if(HAL_OK != HAL_UARTEx_ReceiveToIdle_DMA(huart,(uint8_t* )&UARTRxBuf[GetPort(huart) - 1],MSG_RX_BUF_SIZE))
 		return Status =BOS_ERROR;
+
 	__HAL_DMA_DISABLE_IT(hDMA,DMA_IT_HT);
 
 	return Status;
@@ -109,6 +112,7 @@ BOS_Status DMA_STREAM_Setup(UART_HandleTypeDef *huartSrc,UART_HandleTypeDef *hua
 	port =GetPort(huartSrc);
 	dstPort =GetPort(huartDst);
 	hDMA =UARTDMAHandler[port - 1];
+
 	/* dstPort = 0 this mean we will receive stream data on RAM memory incoming from a destination module */
 	if(dstPort == 0){
 		/* set DMA index corresponding to UART to zero, so that the DMA starts writing from the beginning of the specific buffer */

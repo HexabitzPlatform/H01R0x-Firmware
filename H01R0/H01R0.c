@@ -1,5 +1,5 @@
 /*
- BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
+ BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
  File Name     : H01R0.c
@@ -45,7 +45,7 @@ uint32_t rgbPeriod = 0;
 /* Module Parameters */
 ModuleParam_t ModuleParam[NUM_MODULE_PARAMS] = { 0 };
 
-/* Private function prototypes *********************************************/
+/* Private Function Prototypes *********************************************/
 void MX_TIM2_Init(void);
 void MX_TIM3_Init(void);
 void MX_TIM4_Init(void);
@@ -53,7 +53,7 @@ void Module_Peripheral_Init(void);
 uint8_t ClearROtopology(void);
 Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst, uint8_t shift);
 
-/* Local function prototypes ***********************************************/
+/* Local Function Prototypes ***********************************************/
 void RGBdim(uint8_t mode);
 void RGBpulse(uint8_t mode);
 void RGBledTask(void *argument);
@@ -805,7 +805,6 @@ void RGBledTask(void *argument) {
 
 /***************************************************************************/
 /****************************** Local Functions ****************************/
-/***************************************************************************/
 /***************************************************************************/
 /* Load and start red LED PWM
  * red Duty cycle of red LED (0-255).
