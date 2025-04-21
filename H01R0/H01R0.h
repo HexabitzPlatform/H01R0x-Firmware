@@ -95,7 +95,7 @@
 #define	USART6_RX_PORT		GPIOB
 #define	USART6_AF			GPIO_AF8_USART6
 
-/* Module-specific Hardware Definitions */
+/* Timer Pin Definition */
 #define RGB_RED_PORT		GPIOA
 #define RGB_RED_PIN		    GPIO_PIN_15
 #define RGB_RED_TIM_CH		TIM_CHANNEL_1
@@ -179,9 +179,6 @@ Module_Status SetRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity
 Module_Status SetPulseColor(uint8_t color, uint32_t period, uint32_t dc, int32_t repeat);
 Module_Status LedDim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait, int32_t repeat);
 Module_Status SetPulseRGB(uint8_t red, uint8_t green, uint8_t blue, uint32_t period, uint32_t dc, int32_t repeat);
-
-void SetupPortForRemoteBootloaderUpdate(uint8_t port);
-void RemoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport, uint8_t outport);
 
 #endif /* H01R0_H */
 
