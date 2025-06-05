@@ -1,16 +1,15 @@
 /*
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
- 
- File Name     : H01R0.h
- Description   : Header file for module H01R0.
- (Description_of_module)
 
- (Description of Special module peripheral configuration):
- >>
- >>
- >>
-
+ File Name  : H01R0.h
+ Description: Header for H01R0 module, defining hardware and software interfaces.
+ Module: RGB LED control with UART communication.
+ Ports: 6 UART ports (USART1-6) mapped to P1-P6.
+ Timers: TIM2-4 for RGB PWM (red, green, blue).
+ LED: Indicator LED on GPIOB14.
+ Enums: Basic colors, RGB LED modes (pulse, sweep, dim).
+ Status: Module-specific error codes.
  */
 
 /* Define to prevent recursive inclusion ***********************************/

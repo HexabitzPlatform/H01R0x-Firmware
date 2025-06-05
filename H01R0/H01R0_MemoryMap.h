@@ -1,10 +1,11 @@
 /*
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
- 
- File Name     : H01R0_MemoryMap.h
- Description   : Module MCU memory map header file.
 
+ File Name  : H01R0_MemoryMap.h
+ Description: Defines memory layout for STM32G0B0.
+ Flash: 512 KB (500 KB app, 2 KB topology, 2 KB snippets, 8 KB EEPROM).
+ EEPROM: Emulates 1000 16-bit variables in 8 pages (4+4 backup).
  */
 
 /* Define to prevent recursive inclusion************************************/

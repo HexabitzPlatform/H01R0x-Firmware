@@ -2,9 +2,10 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name     : H01R0_it.c
- Description   :Interrupt Service Routines.
-
+ File Name  : H01R0_it.c
+ Description: Handles interrupts for system and peripherals.
+ Interrupts: System tick, UART (USART1-6), DMA (channels 1-6), error handling.
+ Callbacks: Manages UART RX/TX, DMA, wake-up, stack/heap errors.
  */
 
 /* Includes ****************************************************************/

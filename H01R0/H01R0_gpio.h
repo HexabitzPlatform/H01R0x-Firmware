@@ -2,10 +2,10 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name     : H01R0_gpio.h
- Description   : Header file contains all the functions prototypes for
- the GPIO .
-
+ File Name  : H01R0_gpio.h
+ Description: Declares functions for GPIO configuration.
+ GPIO: Initialize pins, configure LED, retrieve UART port/pin details.
+ UART: Check P1 TX to last port RX for factory reset.
  */
 
 

@@ -2,17 +2,13 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name     : H01R0.c
- Description   : Source code for module H01R0.
- (Description_of_module)
-
- (Description of Special module peripheral configuration):
- >>
- >>
- >>
-
+ File Name  : H01R0.c
+ Description: Core source for H01R0 module, managing RGB LED control.
+ Features: CLI commands for LED on/off, color, RGB, toggle, pulse, sweep, dim.
+ Peripherals: UART1-6, TIM2-4 (PWM for RGB), low-power modes (stop/standby).
+ Flash: Stores topology and command snippets in RO sections.
+ Tasks: RGBledTask handles dynamic LED effects (pulse, sweep, dim).
  */
-
 /* Includes ****************************************************************/
 #include "BOS.h"
 #include "H01R0_inputs.h"

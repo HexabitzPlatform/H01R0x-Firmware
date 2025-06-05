@@ -2,8 +2,9 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name     : H01R0_uart.h
- Description   : Header file provides configuration for USART instances.
+ File Name  : H01R0_uart.h
+ Description: Declares functions for USART configuration.
+ UART: Mutex-protected blocking/non-blocking read/write, port direction management.
  */
 
 /* Define to prevent recursive inclusion ***********************************/

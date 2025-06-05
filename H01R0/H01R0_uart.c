@@ -2,9 +2,10 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name     : H01R0_uart.c
- Description   : Source Code provides configuration for USART instances.
-
+ File Name  : H01R0_uart.c
+ Description: Configures USART instances for communication.
+ UART: Initializes USART1-6, supports DMA, pin swapping, baudrate updates.
+ Ports: Manages port directions, mutex-protected read/write operations.
  */
 
 /* Includes ****************************************************************/

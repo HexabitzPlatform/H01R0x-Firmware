@@ -1,10 +1,11 @@
 /*
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
- 
- File Name     : H01R0_dma.h
- Description   : Header file contains Peripheral DMA setup.
 
+ File Name  : H01R0_dma.h
+ Description: Declares functions for DMA and CRC8 operations for UART (P1-P6).
+ DMA: Setup, start/stop, mode switching for UART RX (Channels 1-6).
+ CRC8: Initialization and computation for message validation.
  */
 
 /* Define to prevent recursive inclusion ***********************************/
