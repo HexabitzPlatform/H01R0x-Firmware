@@ -2,10 +2,9 @@
  BitzOS (BOS) V0.4.0 - Copyright (C) 2017-2025 Hexabitz
  All rights reserved
 
- File Name  : H01R0_it.c
- Description: Handles interrupts for system and peripherals.
- Interrupts: System tick, UART (USART1-6), DMA (channels 1-6), error handling.
- Callbacks: Manages UART RX/TX, DMA, wake-up, stack/heap errors.
+ File Name     : H01R0_it.c
+ Description   :Interrupt Service Routines.
+
  */
 
 /* Includes ****************************************************************/
@@ -17,6 +16,7 @@ uint8_t *error_restart_message ="Restarting...\r\n";
 /* Exported Variables ******************************************************/
 extern uint8_t WakeupFromStopFlag;
 extern uint8_t UARTRxBuf[NUM_OF_PORTS][MSG_RX_BUF_SIZE];
+extern uint8_t StreamCplt;
 extern TaskHandle_t xCommandConsoleTaskHandle; /* CLI Task handler */
 
 /* Local Variables *********************************************************/
@@ -224,6 +224,9 @@ void DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR_IRQHandler(void) {
 /***************************************************************************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+	if(StreamCplt == 0)
+		StreamCplt =1;
 
 	/* Give back the mutex. */
 	xSemaphoreGiveFromISR(PxTxSemaphoreHandle[GetPort(huart)],&(xHigherPriorityTaskWoken));
