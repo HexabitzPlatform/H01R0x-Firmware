@@ -33,6 +33,7 @@ uint16_t adcValueTemp =0;
 uint16_t adcValueVref =0;
 float Percentage =0.0f;
 float Current =0.0f;
+uint8_t adcDeInitFlag;
 
 ADC_HandleTypeDef hadc;
 ADC_ChannelConfTypeDef sConfig ={0};
@@ -52,6 +53,7 @@ void MX_ADC_Init(void);
 void Error_Handler(void);
 uint8_t GetRank(uint8_t Port,ModuleLayer_t side);
 uint32_t GetChannel(UART_HandleTypeDef *huart,ModuleLayer_t side);
+
 /***************************************************************************/
 /* Private Functions *******************************************************/
 /***************************************************************************/
@@ -528,7 +530,11 @@ BOS_Status ADCSelectPort(uint8_t adcPort){
 		HAL_UART_DeInit(GetUart(adcPort));
 		PortStatus[adcPort] =CUSTOM;
 		if(adcEnableFlag == 0)
+		{
 			MX_ADC_Init();
+			adcDeInitFlag = 0;
+		}
+
 	}
 	else
 		return Status =BOS_ERR_ADC_WRONG_PORT;
@@ -565,7 +571,6 @@ BOS_Status ReadADCChannel(uint8_t adcPort, ModuleLayer_t side,float *adcVoltage)
 
 			/* calculate the average of measured samples */
 			adcChannelValue[adcChannelRank] = adcAverValue / count;
-
 			/* Disable chosen channel */
 			sConfig.Channel =Channel;
 			sConfig.Rank = ADC_RANK_NONE;
@@ -586,7 +591,11 @@ BOS_Status ReadADCChannel(uint8_t adcPort, ModuleLayer_t side,float *adcVoltage)
 void ReadTempAndVref(float *temp,float *Vref){
 
 	if(0 == adcEnableFlag)
+	{
 		MX_ADC_Init();
+		adcDeInitFlag = 0;
+	}
+
 
 	/* Enable internal temperature channel */
 	sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
@@ -638,6 +647,7 @@ BOS_Status GetReadPercentage(uint8_t adcPort,ModuleLayer_t side,float *precentag
 
 	return Status;
 }
+
 /***************************************************************************/
 BOS_Status ADCDeinitChannel(uint8_t adcPort){
 	BOS_Status Status =BOS_OK;
