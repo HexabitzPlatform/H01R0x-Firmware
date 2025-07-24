@@ -9,8 +9,8 @@
  */
 
 /* Define to prevent recursive inclusion ***********************************/
-#ifndef H0BR4_dma_H
-#define H0BR4_dma_H
+#ifndef H01R0_dma_H
+#define H01R0_dma_H
 
 #ifdef __cplusplus
  extern "C" {
