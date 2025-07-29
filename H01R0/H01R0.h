@@ -142,10 +142,10 @@ enum RGBLedMode {
 /* Module-status Type Definition */
 typedef enum {
 	H01R0_OK = 0,
-	H01R0_ERR_UnknownMessage,
-	H01R0_ERR_WrongColor,
-	H01R0_ERR_WrongIntensity,
-	H01R0_ERR_WrongMode,
+	H01R0_ERR_UNKNOWNMESSAGE,
+	H01R0_ERR_WRONGCOLOR,
+	H01R0_ERR_WRONGINTENSITY,
+	H01R0_ERR_WRONGMODE,
 	H01R0_ERROR = 255
 } Module_Status;
 

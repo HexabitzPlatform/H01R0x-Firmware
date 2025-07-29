@@ -677,7 +677,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 
 		break;
 	default:
-		result = H01R0_ERR_UnknownMessage;
+		result = H01R0_ERR_UNKNOWNMESSAGE;
 		break;
 	}
 
@@ -1035,7 +1035,7 @@ Module_Status LedOn(uint8_t intensity) {
 
 		return result;
 	} else
-		return H01R0_ERR_WrongIntensity;
+		return H01R0_ERR_WRONGINTENSITY;
 
 }
 
@@ -1076,7 +1076,7 @@ Module_Status SetRGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity
 	if (intensity == 0)
 		return LedOn(0);
 	else if (intensity > 100)
-		return H01R0_ERR_WrongIntensity;
+		return H01R0_ERR_WRONGINTENSITY;
 	else
 		return startPWM(red, green, blue, intensity);
 }
@@ -1089,7 +1089,7 @@ Module_Status SetColor(uint8_t color, uint8_t intensity) {
 	if (!intensity)
 		return LedOn(0);
 	else if (intensity > 100)
-		return H01R0_ERR_WrongIntensity;
+		return H01R0_ERR_WRONGINTENSITY;
 	else {
 		switch (color) {
 		case BLACK:
@@ -1125,7 +1125,7 @@ Module_Status SetColor(uint8_t color, uint8_t intensity) {
 			break;
 
 		default:
-			result = H01R0_ERR_WrongColor;
+			result = H01R0_ERR_WRONGCOLOR;
 			break;
 		}
 	}
@@ -1181,7 +1181,7 @@ Module_Status LedSweep(uint8_t mode, uint32_t period, int32_t repeat) {
 
 		return result;
 	} else {
-		return H01R0_ERR_WrongMode;
+		return H01R0_ERR_WRONGMODE;
 	}
 }
 
@@ -1199,7 +1199,7 @@ Module_Status LedDim(uint8_t color, uint8_t mode, uint32_t period, uint32_t wait
 
 		return result;
 	} else {
-		return H01R0_ERR_WrongMode;
+		return H01R0_ERR_WRONGMODE;
 	}
 }
 
@@ -1267,7 +1267,7 @@ portBASE_TYPE onCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int
 	/* Respond to the command */
 	if (result == H01R0_OK)
 		sprintf((char*) pcWriteBuffer, (char*) pcOKMessage, intensity);
-	else if (result == H01R0_ERR_WrongIntensity)
+	else if (result == H01R0_ERR_WRONGINTENSITY)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongIntensityMessage);
 
 	/* There is no more data to return after this single string, so return
@@ -1348,9 +1348,9 @@ portBASE_TYPE colorCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const 
 		/* Isolate first parameter string */
 		strncpy(par, (char*) pcParameterString1, xParameterStringLength1);
 		sprintf((char*) pcWriteBuffer, (char*) pcOKMessage, par, intensity);
-	} else if (result == H01R0_ERR_WrongColor)
+	} else if (result == H01R0_ERR_WRONGCOLOR)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongColorMessage);
-	else if (result == H01R0_ERR_WrongIntensity)
+	else if (result == H01R0_ERR_WRONGINTENSITY)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongIntensityMessage);
 
 	/* There is no more data to return after this single string, so return
@@ -1400,9 +1400,9 @@ portBASE_TYPE RGBCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const in
 	/* Respond to the command */
 	if (result == H01R0_OK)
 		sprintf((char*) pcWriteBuffer, (char*) pcOKMessage, red, green, blue, intensity);
-	else if (result == H01R0_ERR_WrongColor)
+	else if (result == H01R0_ERR_WRONGCOLOR)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongColorMessage);
-	else if (result == H01R0_ERR_WrongIntensity)
+	else if (result == H01R0_ERR_WRONGINTENSITY)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongIntensityMessage);
 
 	/* There is no more data to return after this single string, so return
@@ -1441,7 +1441,7 @@ portBASE_TYPE toggleCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const
 		sprintf((char*) pcWriteBuffer, (char*) pcOK1Message, intensity);
 	else if ((result == H01R0_OK) && !rgbLedState)
 		sprintf((char*) pcWriteBuffer, (char*) pcOK0Message, intensity);
-	else if (result == H01R0_ERR_WrongIntensity)
+	else if (result == H01R0_ERR_WRONGINTENSITY)
 		strcpy((char*) pcWriteBuffer, (char*) pcWrongIntensityMessage);
 
 	/* There is no more data to return after this single string, so return
